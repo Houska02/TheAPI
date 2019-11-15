@@ -79,9 +79,9 @@ public class PunishmentAPI {
 	
 		}
 		if(!silent) {
-			Bukkit.broadcastMessage(TheAPI.colorize(LoaderClass.config.getString("Format.Broadcast-BanIP-IPAddress")
+			TheAPI.broadcastMessage(LoaderClass.config.getString("Format.Broadcast-BanIP-IPAddress")
 					.replace("%ip%", ip)
-					.replace("%reason%", reason)));
+					.replace("%reason%", reason));
 		}else {
 			TheAPI.broadcast(LoaderClass.config.getString("Format.Broadcast-BanIP-IPAddress")
 					.replace("%ip%", ip)
@@ -103,9 +103,9 @@ public class PunishmentAPI {
 		//1year ago
 		
 		if(!silent) {
-			Bukkit.broadcastMessage(TheAPI.colorize(LoaderClass.config.getString("Format.Broadcast-BanIP-Player")
+			TheAPI.broadcastMessage(LoaderClass.config.getString("Format.Broadcast-BanIP-Player")
 					.replace("%player%", player)
-					.replace("%reason%", reason))); //i know
+					.replace("%reason%", reason)); //i know
 		}else {
 			TheAPI.broadcast(LoaderClass.config.getString("Format.Broadcast-BanIP-IPAddress")
 					.replace("%player%", player)
