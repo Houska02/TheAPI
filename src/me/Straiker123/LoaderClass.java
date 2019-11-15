@@ -107,7 +107,6 @@ public class LoaderClass extends JavaPlugin {
 		a.addDefault("Format.HelpOp-Permission", "TheAPI.HelpOp");
 		a.addDefault("Format.Report", "&0[&4Report&0] &c%sender% &6reported &c%reported% &6for &c%message%");
 		a.addDefault("Format.Report-Permission", "TheAPI.Report");
-		//essentialsApi ;( Ofc, EconomyAPI already exist, rankAPI is too easy, cooldowns.. hmm. let's do it
 		
 		a.create();
 		config=a.getConfig();

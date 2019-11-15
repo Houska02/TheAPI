@@ -9,7 +9,7 @@ public class NameTagAPI {
 	String prefix;
 	String suffix;
 	Player p;
-	public NameTagAPI(Player p, String prefix, String suffix) { //you can create cooldown in command
+	public NameTagAPI(Player p, String prefix, String suffix) {
 		this.p=p;
 		this.prefix=prefix;
 		this.suffix=suffix;

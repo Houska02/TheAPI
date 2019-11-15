@@ -17,29 +17,22 @@ public class PunishmentAPI {
 		
 			p.kickPlayer(TheAPI.colorize(LoaderClass.config.getString("Format.Ban")
 				.replace("%player%", player)
-				.replace("%reason%", reason))); //everything working? :D
-			if(!silent) { //back
+				.replace("%reason%", reason)));
+			if(!silent) {
 				TheAPI.broadcastMessage(LoaderClass.config.getString("Format.Broadcast.Ban")
 						.replace("%player%", player)
 						.replace("%reason%", reason));
-				//do you have VPN?
 			}else {
 			TheAPI.broadcast(LoaderClass.config.getString("Format.Broadcast-Ban")
 					.replace("%player%", player)
 					.replace("%reason%", reason),LoaderClass.config.getString("Format.Broadcast-Ban-Permission")); //perm :D hm i hate my mouse Czech republic
-			} //maybe later :D
+			}
 		}
 	public static boolean silent;
 	public void setSilent(boolean silent) {
 		PunishmentAPI.silent=silent;
 	}
-	
-	//example:
-	//setSilent(true);
-	//setBan(..);
-	//setMute(..);
-	//just try it :D
-	//sad.. okey ;(
+
 	public void setTempBan(String player, String reason, long time) {
 		if(reason==null)reason="Uknown";
 		LoaderClass.ban.set(player+".tempban.reason", reason);
@@ -51,21 +44,20 @@ public class PunishmentAPI {
 		p.kickPlayer(TheAPI.colorize(LoaderClass.config.getString("Format.TempBan")
 				.replace("%player%", player)
 				.replace("%reason%", reason)
-				.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time)))); //:D yeah 
-		if(!silent) { //back
+				.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time)))); 
+		if(!silent) {
 			TheAPI.broadcastMessage(LoaderClass.config.getString("Format.TempBan")
 					.replace("%player%", player)
 					.replace("%reason%", reason)
 					.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time)));
-			//do you have VPN?
 		}else {
 			TheAPI.broadcast(LoaderClass.config.getString("Format.Broadcast-TempBan")
 					.replace("%player%", player)
 					.replace("%reason%", reason)
 					.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time)),LoaderClass.config.getString("Format.Broadcast-TempBan-Permission"));
 		}
-	}//try use ban using API awesome
-	public void setBanIP_IPAddress(String ip, String reason) { //:D
+	}
+	public void setBanIP_IPAddress(String ip, String reason) { 
 		if(reason==null)reason="Uknown";
 		LoaderClass.ban.set(ip+".banip", reason);
 		LoaderClass.plugin.a.save();
@@ -90,7 +82,7 @@ public class PunishmentAPI {
 	}
 	public void setBanIP_Player(String player, String reason) {
 		if(reason==null)reason="Uknown";
-		String ip =LoaderClass.ban.getString(player+".ip"); // (:
+		String ip =LoaderClass.ban.getString(player+".ip");
 		LoaderClass.ban.set(ip+".banip", reason);
 		LoaderClass.plugin.a.save();
 	
@@ -98,14 +90,11 @@ public class PunishmentAPI {
 		if(p!=null)
 			p.kickPlayer(TheAPI.colorize(LoaderClass.config.getString("Format.BanIP-Player")
 					.replace("%player%", player)
-					.replace("%reason%", reason))); // :D
-		
-		//1year ago
-		
+					.replace("%reason%", reason))); 
 		if(!silent) {
 			TheAPI.broadcastMessage(LoaderClass.config.getString("Format.Broadcast-BanIP-Player")
 					.replace("%player%", player)
-					.replace("%reason%", reason)); //i know
+					.replace("%reason%", reason));
 		}else {
 			TheAPI.broadcast(LoaderClass.config.getString("Format.Broadcast-BanIP-IPAddress")
 					.replace("%player%", player)
@@ -203,4 +192,32 @@ public class PunishmentAPI {
 	public long getTempMuteStart(String player) {
 		return LoaderClass.ban.getLong(player+".tempmute.start");
 	}
+
+	
+	public void unMute(String player) {
+		LoaderClass.ban.set(player+".mute", null);
+		LoaderClass.plugin.a.save();
+	}
+	public void unTempMute(String player) {
+		LoaderClass.ban.set(player+".tempmute", null);
+		LoaderClass.plugin.a.save();
+	}
+	public void unBan(String player) {
+		LoaderClass.ban.set(player+".ban", null);
+		LoaderClass.plugin.a.save();
+	}
+	public void unTempBan(String player) {
+		LoaderClass.ban.set(player+".tempban", null);
+		LoaderClass.plugin.a.save();
+	}
+	public void unBanIP_Player(String player) {
+		LoaderClass.ban.set(player+".banip", null);
+		LoaderClass.plugin.a.save();
+	}
+	public void unBanIP_IPAddress(String ip) {
+		for(String i:findPlayerByIP(ip))
+		LoaderClass.ban.set(i+".banip", null);
+		LoaderClass.plugin.a.save();
+	}
+	
 }

@@ -12,9 +12,6 @@ public class ReportSystem {
 				.replace("%target%", target).replace("%message%", message), LoaderClass.config.getString("Format.Report-Permission"));
 	}
 	
-	
-	
-	//do you want something else in ReportSystem ?
 	public List<String> getAccounts(String player){
 		return TheAPI.getPunishmentAPI().findPlayerByIP(LoaderClass.ban.getString(player+".ip"));
 	}

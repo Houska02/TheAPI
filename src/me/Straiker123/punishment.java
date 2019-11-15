@@ -22,19 +22,19 @@ public class punishment implements Listener {
 				
 				e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getString("Format.TempBan")
 						.replace("%player%", s)
-						.replace("%reason%", TheAPI.getPunishmentAPI().getTempBanReason(s)))); // :D
+						.replace("%reason%", TheAPI.getPunishmentAPI().getTempBanReason(s))));
 		}
 		if(TheAPI.getPunishmentAPI().hasBanIP_Player(s)) {
 			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getString("Format.BanIP-Player")
 					.replace("%player%", s)
-					.replace("%reason%", TheAPI.getPunishmentAPI().getBanReason(s)))); // :D
+					.replace("%reason%", TheAPI.getPunishmentAPI().getBanReason(s))));
 		}
 	}
 	
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {
 		String s = e.getPlayer().getName();
-		if(TheAPI.getPunishmentAPI().hasTempBan(s)) { // :S yeah this is for test
+		if(TheAPI.getPunishmentAPI().hasTempBan(s)) {
 			int time = (int)(TheAPI.getPunishmentAPI().getTempBanStart(s) - System.currentTimeMillis() + TheAPI.getPunishmentAPI().getTempBanTime(s));
 			if(time < 0)
 				e.setCancelled(true);
@@ -47,7 +47,7 @@ public class punishment implements Listener {
 			e.setCancelled(true);
 			e.getPlayer().sendMessage(TheAPI.colorize(LoaderClass.config.getString("Format.Mute")
 					.replace("%player%", s)
-					.replace("%reason%", TheAPI.getPunishmentAPI().getTempMuteReason(s)))); //now messages in config
+					.replace("%reason%", TheAPI.getPunishmentAPI().getTempMuteReason(s))));
 		}
 	}
 }

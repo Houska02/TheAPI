@@ -73,8 +73,7 @@ public class TheAPI {
 	}
 	public static PunishmentAPI getPunishmentAPI() {
 		return new PunishmentAPI();
-	}//we need music XD
-	
+	}
 	
 	public static void setServerMotd(String motd) {
 		LoaderClass.plugin.motd=colorize(motd);
