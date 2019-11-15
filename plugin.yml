@@ -1,0 +1,12 @@
+author: Straiker123
+api-version: 1.14
+name: TheAPI
+version: 1.8
+main: me.Straiker123.LoaderClass
+commands:
+  TheAPI:
+    usage: /<command>
+    description: Reload configs
+permissions:
+  TheAPI.Reload:
+    default: op
