@@ -14,7 +14,7 @@ public class motd implements Listener {
 		if(LoaderClass.plugin.max!=-1)
 		e.setMaxPlayers(LoaderClass.plugin.max);
 	}
-	
+
 	@EventHandler
 	public void onChat(PlayerChatEvent e) {
 		if(LoaderClass.chatformat.get(e.getPlayer()) != null)

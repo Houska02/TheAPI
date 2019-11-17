@@ -10,4 +10,3 @@ commands:
 permissions:
   TheAPI.Reload:
     default: op
-    
