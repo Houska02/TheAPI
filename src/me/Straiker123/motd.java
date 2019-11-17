@@ -13,7 +13,6 @@ public class motd implements Listener {
 		e.setMotd(LoaderClass.plugin.motd);
 		if(LoaderClass.plugin.max!=-1)
 		e.setMaxPlayers(LoaderClass.plugin.max);
-		
 	}
 	
 	@EventHandler
