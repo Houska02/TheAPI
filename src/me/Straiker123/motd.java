@@ -18,6 +18,7 @@ public class motd implements Listener {
 	
 	@EventHandler
 	public void onChat(PlayerChatEvent e) {
+		if(LoaderClass.chatformat.get(e.getPlayer()) != null)
 		e.setFormat(LoaderClass.chatformat.get(e.getPlayer()).replace("%", "%%")
 				.replace("%%player%%", e.getPlayer().getName())
 				.replace("%%playername%%", e.getPlayer().getDisplayName())
@@ -27,6 +28,6 @@ public class motd implements Listener {
 				.replace("%%world%%", e.getPlayer().getWorld().getName()+"")
 				.replace("%%x%%", e.getPlayer().getLocation().getBlockX()+"")
 				.replace("%%y%%", e.getPlayer().getLocation().getBlockY()+"")
-				.replace("%%z%%", e.getPlayer().getLocation().getBlockZ()+"").replace("%message%", e.getMessage()));
+				.replace("%%z%%", e.getPlayer().getLocation().getBlockZ()+"").replace("%message%", e.getMessage().replace("%", "%%")));
 	}
 }
