@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Report bug that you found in TheAPI
 title: Bug report
 labels: bug, duplicate, enhancement, help wanted, invalid, wontfix
 assignees: ''
