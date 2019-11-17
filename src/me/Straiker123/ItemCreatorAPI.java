@@ -65,11 +65,6 @@ public class ItemCreatorAPI {
 	public void addLore(List<String> lore) {
 		this.lore=lore;
 	}
-	ItemMeta m;
-	public void setItemMeta(ItemMeta meta) {
-		if(meta!=null)
-		m=meta;
-	}
 	
 	int model = -1;
 	public void setCustomModelData(int i) {
@@ -120,24 +115,39 @@ public class ItemCreatorAPI {
 		if(data != null)
 		i.setData(data);
 		if(enchs != null && !enchs.isEmpty())i.addUnsafeEnchantments(enchs);
-		SkullMeta m = (SkullMeta)this.m;
-		if(m==null) {
-			m=(SkullMeta)i.getItemMeta();
+			if(type!=null) {
+				SkullMeta m=(SkullMeta)i.getItemMeta();
+				if(name!=null)
+					m.setDisplayName(name);
+					if(lore!=null && !lore.isEmpty())m.setLore(lore);
+					if(model != -1)
+					m.setCustomModelData(model);
+					m.setUnbreakable(unb);
+					if(map != null && !map.isEmpty())
+					for(ItemFlag f: map)
+					m.addItemFlags(f);
+					if(w!=null && !w.isEmpty())
+					m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);	
+					if(owner!=null)
+					m.setOwner(owner);
+					i.setItemMeta(m);
+			}else{
+			ItemMeta m=i.getItemMeta();
 			if(name!=null)
-			m.setDisplayName(name);
-			if(lore!=null && !lore.isEmpty())m.setLore(lore);
-			if(model != -1)
-			m.setCustomModelData(model);
-			m.setUnbreakable(unb);
-			if(map != null && !map.isEmpty())
-			for(ItemFlag f: map)
-			m.addItemFlags(f);
-			if(w!=null && !w.isEmpty())
-			m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);	
-			if(owner!=null)
-			m.setOwner(owner);
+				m.setDisplayName(name);
+				if(lore!=null && !lore.isEmpty())m.setLore(lore);
+				if(model != -1)
+				m.setCustomModelData(model);
+				m.setUnbreakable(unb);
+				if(map != null && !map.isEmpty())
+				for(ItemFlag f: map)
+				m.addItemFlags(f);
+				if(w!=null && !w.isEmpty())
+				m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);
+				i.setItemMeta(m);
+
+			
 			}
-		i.setItemMeta(m);
 		
 		
 		return i;
