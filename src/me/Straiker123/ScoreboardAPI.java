@@ -23,7 +23,7 @@ public class ScoreboardAPI {
 	}
 	
 	public void addLine(String line, int position) {
-		map.put(position,line);
+		map.put(position,TheAPI.colorize(line));
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -36,7 +36,9 @@ public class ScoreboardAPI {
 		d.setDisplayName(TheAPI.colorize(title));
 		if(map.isEmpty()==false && map!=null)
 		  for(Integer w:map.keySet()) {
-			  d.getScore(TheAPI.colorize(map.get(w))).setScore(w);
+			  String s = map.get(w);
+			  if(s.length() < 40)s=s.substring(0,39);
+			  d.getScore(s).setScore(w);
 			}
 		p.setScoreboard(s);
 	}

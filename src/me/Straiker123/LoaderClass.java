@@ -147,6 +147,7 @@ public class LoaderClass extends JavaPlugin {
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &cDisabling plugin and saving configs.."));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
+		new TimeConventorAPI();
 		if(EndWords.values() != null)
 		for(EndWords s : EndWords.values())
 		config.set("Words."+s.name(), TheAPI.getTimeConventorAPI().getEndWord(s));
