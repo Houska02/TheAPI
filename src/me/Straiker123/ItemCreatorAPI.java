@@ -55,7 +55,9 @@ public class ItemCreatorAPI {
 	public void addEnchantment(Enchantment e, int level) {
 		if(e!= null)enchs.put(e, level);
 	}
-	
+	public void addEnchantment(String e, int level) {
+		if(e!= null)enchs.put(TheAPI.getEnchantmentAPI().getByName(e), level);
+	}
 	int s = 1;
 	public void setAmount(int amount) {
 		if(amount > 64)amount=64;
@@ -117,7 +119,7 @@ public class ItemCreatorAPI {
 		if(enchs != null && !enchs.isEmpty())i.addUnsafeEnchantments(enchs);
 			if(type!=null) {
 				SkullMeta m=(SkullMeta)i.getItemMeta();
-				if(name!=null)
+					if(name!=null)
 					m.setDisplayName(name);
 					if(lore!=null && !lore.isEmpty())m.setLore(lore);
 					if(model != -1)
@@ -133,7 +135,7 @@ public class ItemCreatorAPI {
 					i.setItemMeta(m);
 			}else{
 			ItemMeta m=i.getItemMeta();
-			if(name!=null)
+				if(name!=null)
 				m.setDisplayName(name);
 				if(lore!=null && !lore.isEmpty())m.setLore(lore);
 				if(model != -1)

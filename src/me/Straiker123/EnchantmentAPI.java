@@ -22,18 +22,28 @@ public class EnchantmentAPI {
 	}
 	
 	public boolean isEnchantment(String string) {
-		if(string != null) {
-		return !replace("%"+string.toUpperCase()+"%").contains("%");
-		}
-		return false;
+		return getByName(string) != null;
+	}
+	
+	/**
+	 * 
+	 * @return String
+	 * Real name of enchantment (For example: SHARPNESS -> DAMAGE_ALL)
+	 */
+	@SuppressWarnings("deprecation")
+	public String getBukkitName(String enchant) {
+		if(isEnchantment(enchant))
+		return getByName(enchant).getName();
+		return null;
 	}
 	
 	@SuppressWarnings("deprecation")
-	public Enchantment getByName(String string) {
-	if(isEnchantment(string)) {
-		return Enchantment.getByName(replace("%"+string.toUpperCase()+"%"));
-	}
+	public Enchantment getByName(String enchant) {
+	try {
+		return Enchantment.getByName(replace("%"+enchant.toUpperCase()+"%"));
+	}catch(Exception e) {
 	return null;
+	}
 	}
 	
 	public Enchantment valueOf(String string) {

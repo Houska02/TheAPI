@@ -1,7 +1,5 @@
 package me.Straiker123;
 
-import java.util.List;
-
 public class CooldownAPI {
 	String c;
 	public CooldownAPI(String cooldownname) {
@@ -9,29 +7,37 @@ public class CooldownAPI {
 	}
 	
 	
-	public void createCooldown(double length) {
-		LoaderClass.col.set(c+".start", System.currentTimeMillis());
-		LoaderClass.col.set(c+".time", length);
-		LoaderClass.plugin.f.save();
-	}
-	public void addPlayerToCooldown(String player) {
-		LoaderClass.col.set(c+".users", LoaderClass.col.getStringList(c+".users").add(player));
+	public void createCooldown(String player, double length) {
+		LoaderClass.col.set(c+"."+player+".start", System.currentTimeMillis());
+		LoaderClass.col.set(c+"."+player+".time", length);
 		LoaderClass.plugin.f.save();
 	}
 	
-	public boolean expired(String c, String p) {
-		return (LoaderClass.col.getLong(c+".start")-System.currentTimeMillis())+LoaderClass.col.getInt(c+".time") < 0;
+	public boolean expired(String player) {
+		return (LoaderClass.col.getLong(c+"."+player+".start")-System.currentTimeMillis())+LoaderClass.col.getInt(c+"."+player+".time") < 0;
 	}
-	
+	/**
+	 * 
+	 * @return long
+	 * If return is -1, it mean cooldown isn't exist
+	 */
+	public long getStart(String player) {
+		if(LoaderClass.col.getString(c+"."+player)!=null)return LoaderClass.col.getLong(c+"."+player+".start");
+		return -1;
+	}
 
-	public void removeCooldown(String player, double length) {
-		List<String> a=  LoaderClass.col.getStringList(c+".users");
-		a.remove(player);
-		if(a.size()==0) {
-			LoaderClass.col.set(c, null);
-		}else {
-			LoaderClass.col.set(c+".users", a);
-		}
+	/**
+	 * 
+	 * @return double
+	 * If return is -1, it mean cooldown isn't exist
+	 */
+	public double getCooldown(String player) {
+		if(LoaderClass.col.getString(c+"."+player)!=null)return LoaderClass.col.getLong(c+"."+player+".time");
+		return -1;
+	}
+
+	public void removeCooldown(String player) {
+		LoaderClass.col.set(c+"."+player, null);
 		LoaderClass.plugin.f.save();
 	}
 }
