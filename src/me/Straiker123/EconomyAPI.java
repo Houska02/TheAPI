@@ -42,11 +42,13 @@ public class EconomyAPI {
 			return e.getBalance(player,world);
 		return 0.0;
 	}
+	@SuppressWarnings("deprecation")
 	public boolean has(String player, double money) {
-		return getBalance(player) < money  && LoaderClass.plugin.e;
+		return e.has(player,money) && e!=null && LoaderClass.plugin.e;
 	}
+	@SuppressWarnings("deprecation")
 	public boolean has(String player, String world, double money) {
-		return getBalance(player,world) < money && LoaderClass.plugin.e;
+		return e.has(player, world,money) && e!=null && LoaderClass.plugin.e;
 	}
 	
 	@SuppressWarnings("deprecation")

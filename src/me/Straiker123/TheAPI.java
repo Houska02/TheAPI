@@ -32,6 +32,7 @@ public class TheAPI {
 	}
 	
 	public static void giveItem(Player p, ItemStack item) {
+		if(item==null)return;
 		 if (p.getInventory().firstEmpty() == -1) {
 	            if(item != null)
 	            p.getWorld().dropItem(p.getLocation(), item);

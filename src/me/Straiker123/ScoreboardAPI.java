@@ -37,7 +37,7 @@ public class ScoreboardAPI {
 		if(map.isEmpty()==false && map!=null)
 		  for(Integer w:map.keySet()) {
 			  String s = map.get(w);
-			  if(s.length() < 40)s=s.substring(0,39);
+			  if(s.length() > 40)s=s.substring(0,39);
 			  d.getScore(s).setScore(w);
 			}
 		p.setScoreboard(s);

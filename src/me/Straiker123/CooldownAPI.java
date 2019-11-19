@@ -14,7 +14,7 @@ public class CooldownAPI {
 	}
 	
 	public boolean expired(String player) {
-		return (LoaderClass.col.getLong(c+"."+player+".start")-System.currentTimeMillis())+LoaderClass.col.getInt(c+"."+player+".time") < 0;
+		return getTimeToExpire(player) < 0;
 	}
 	/**
 	 * 
@@ -25,6 +25,18 @@ public class CooldownAPI {
 		if(LoaderClass.col.getString(c+"."+player)!=null)return LoaderClass.col.getLong(c+"."+player+".start");
 		return -1;
 	}
+
+	/**
+	 * 
+	 * @return long
+	 * If return is -1, it mean cooldown isn't exist
+	 */
+	public int getTimeToExpire(String player) {
+		if(getStart(player) != -1)
+		return (int) ((getStart(player)-System.currentTimeMillis())+getCooldown(player));
+		return -1;
+	}
+	
 
 	/**
 	 * 

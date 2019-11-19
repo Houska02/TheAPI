@@ -20,7 +20,7 @@ public class NumbersAPI {
 		return 0;
 	}
 	public double getDouble() {
-		String a =fromString.replaceAll("[a-zA-Z]+", "");
+		String a =fromString.replaceAll("[a-zA-Z]+", "").replace(",", ".");
 		if (isDouble()) {
 		return Double.parseDouble(a);
 		}
@@ -30,7 +30,7 @@ public class NumbersAPI {
 	
 	
 	private double getDouble(String s) {
-		s =s.replaceAll("[a-zA-Z]+", "");
+		s =s.replaceAll("[a-zA-Z]+", "").replace(",", ".");
 		if (isDouble(s)) {
 			return Double.parseDouble(s);
 			}
@@ -39,7 +39,7 @@ public class NumbersAPI {
 		}
 	}
 	private boolean isDouble(String a) {
-		 a =a.replaceAll("[a-zA-Z]+", "");
+		 a =a.replaceAll("[a-zA-Z]+", "").replace(",", ".");
 		try {
 			Double.parseDouble(a);
 		} catch (NumberFormatException e) {
@@ -49,7 +49,7 @@ public class NumbersAPI {
 	}
 	
 	public boolean isDouble() {
-		String a =fromString.replaceAll("[a-zA-Z]+", "");
+		String a =fromString.replaceAll("[a-zA-Z]+", "").replace(",", ".");
 		try {
 			Double.parseDouble(a);
 		} catch (NumberFormatException e) {
