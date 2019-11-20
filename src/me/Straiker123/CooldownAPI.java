@@ -8,8 +8,8 @@ public class CooldownAPI {
 	
 	
 	public void createCooldown(String player, double length) {
-		LoaderClass.col.set(c+"."+player+".start", System.currentTimeMillis());
-		LoaderClass.col.set(c+"."+player+".time", length);
+		LoaderClass.data.set("cooldown."+c+"."+player+".start", System.currentTimeMillis());
+		LoaderClass.data.set("cooldown."+c+"."+player+".time", length);
 		LoaderClass.plugin.f.save();
 	}
 	
@@ -22,7 +22,7 @@ public class CooldownAPI {
 	 * If return is -1, it mean cooldown isn't exist
 	 */
 	public long getStart(String player) {
-		if(LoaderClass.col.getString(c+"."+player)!=null)return LoaderClass.col.getLong(c+"."+player+".start");
+		if(LoaderClass.data.getString("cooldown."+c+"."+player)!=null)return LoaderClass.data.getLong("cooldown."+c+"."+player+".start");
 		return -1;
 	}
 
@@ -44,12 +44,12 @@ public class CooldownAPI {
 	 * If return is -1, it mean cooldown isn't exist
 	 */
 	public double getCooldown(String player) {
-		if(LoaderClass.col.getString(c+"."+player)!=null)return LoaderClass.col.getLong(c+"."+player+".time");
+		if(LoaderClass.data.getString("cooldown."+c+"."+player)!=null)return LoaderClass.data.getLong("cooldown."+c+"."+player+".time");
 		return -1;
 	}
 
 	public void removeCooldown(String player) {
-		LoaderClass.col.set(c+"."+player, null);
+		LoaderClass.data.set("cooldown."+c+"."+player, null);
 		LoaderClass.plugin.f.save();
 	}
 }

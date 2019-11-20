@@ -26,12 +26,27 @@ public class TheAPI {
 	public static NumbersAPI getNumbersAPI(String string) {
 		return new NumbersAPI(string);
 	}
-
-	public static void invsee(Player p, Player target) {
-		p.openInventory(target.getInventory());
+	
+	public static PlayerAPI getPlayerAPI(Player p) {
+		return new PlayerAPI(p);
+	}
+	public static enum SudoType {
+		CHAT,
+		COMMAND
 	}
 	
-	public static void giveItem(Player p, ItemStack item) {
+	public static void sudo(Player target, SudoType type, String value) {
+		switch(type) {
+		case CHAT:
+			target.chat(value);
+			break;
+		case COMMAND:
+			target.performCommand(value);
+			break;
+		}
+	}
+	
+	private static void giveItems(Player p, ItemStack item) {
 		if(item==null)return;
 		 if (p.getInventory().firstEmpty() == -1) {
 	            if(item != null)
@@ -40,6 +55,14 @@ public class TheAPI {
 	            if(item != null)
 	            p.getInventory().addItem(item);
       }
+	}
+
+	public static void giveItem(Player p, ItemStack... item) {
+		for(ItemStack i:item)
+		giveItems(p,i);
+	}
+	public static void giveItem(Player p, Material item, int amount) {
+		giveItems(p,new ItemStack(item,amount));
 	}
 	
 	public void setDisplayName(Player p, String name) {
@@ -102,13 +125,6 @@ public class TheAPI {
 		}
 	}
 	
-	public static void giveItem(Player p, ItemStack item, int amount) {
-		for(int i = 0; i<amount; ++i)
-		giveItem(p,item);
-	}
-	public static void giveItem(Player p, Material item, int amount) {
-			giveItem(p,new ItemStack(item),amount);
-	}
 	
 	public static CommandSender getConsole() {
 		return Bukkit.getConsoleSender();
