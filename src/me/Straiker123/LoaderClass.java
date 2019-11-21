@@ -55,7 +55,7 @@ public class LoaderClass extends JavaPlugin {
 			e=true;
 		}
 		new EconomyAPI();
-		startChecker();
+		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &aTheAPI using "+TheAPI.getCountingAPI().getPluginsUsingTheAPI().size()+" plugin(s)"));
 	}
 	
 	public static Economy economy;
@@ -110,26 +110,6 @@ public class LoaderClass extends JavaPlugin {
 		a.setCustomEnd("dat");
 		a.create();
 		data=a.getConfig();
-	}
-	private void startChecker() {
-		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-			@Override
-			public void run() {
-				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
-				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &eChecking for plugins that using TheAPI.."));
-				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
-				broadcast();
-			}
-		}, 100);
-	}
-	
-	private void broadcast() {
-		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-			@Override
-			public void run() {
-				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &aTheAPI using "+TheAPI.getCountingAPI().getPluginsUsingTheAPI().size()+" plugin(s)"));
-			}
-		}, 100);
 	}
 	
 	

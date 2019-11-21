@@ -1,7 +1,7 @@
 author: Straiker123
 api-version: 1.14
 name: TheAPI
-version: 1.9.9
+version: 2.0
 main: me.Straiker123.LoaderClass
 commands:
   TheAPI:

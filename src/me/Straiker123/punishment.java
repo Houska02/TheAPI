@@ -1,9 +1,9 @@
 package me.Straiker123;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
@@ -13,7 +13,7 @@ import me.Straiker123.TheAPI.SudoType;
 
 @SuppressWarnings("deprecation")
 public class punishment implements Listener {
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLogin(PlayerLoginEvent e) {
 		String s = e.getPlayer().getName();
 		LoaderClass.data.set("data."+s+".ip", e.getRealAddress().toString().replace(".", "_"));
@@ -36,9 +36,28 @@ public class punishment implements Listener {
 					.replace("%reason%", TheAPI.getPunishmentAPI().getBanReason(s))));
 		}
 	}
-	
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onMotd(ServerListPingEvent e) {
+		if(LoaderClass.plugin.motd!=null)
+		e.setMotd(LoaderClass.plugin.motd);
+		if(LoaderClass.plugin.max>0)
+		e.setMaxPlayers(LoaderClass.plugin.max);
+	}
+
 	@EventHandler
-	public void onChat(AsyncPlayerChatEvent e) {
+	public void onChat(PlayerChatEvent e) {
+		if(LoaderClass.chatformat.get(e.getPlayer()) != null)
+		e.setFormat(LoaderClass.chatformat.get(e.getPlayer()).replace("%", "%%")
+				.replace("%%player%%", e.getPlayer().getName())
+				.replace("%%playername%%", e.getPlayer().getDisplayName())
+				.replace("%%playercustom%%", e.getPlayer().getCustomName())
+				.replace("%%hp%%", e.getPlayer().getHealth()+"")
+				.replace("%%food%%", e.getPlayer().getFoodLevel()+"")
+				.replace("%%world%%", e.getPlayer().getWorld().getName()+"")
+				.replace("%%x%%", e.getPlayer().getLocation().getBlockX()+"")
+				.replace("%%y%%", e.getPlayer().getLocation().getBlockY()+"")
+				.replace("%%z%%", e.getPlayer().getLocation().getBlockZ()+"").replace("%message%", e.getMessage().replace("%", "%%")));
 		String s = e.getPlayer().getName();
 		if(TheAPI.getPunishmentAPI().hasTempBan(s)) {
 			int time = (int)(TheAPI.getPunishmentAPI().getTempBanStart(s) - System.currentTimeMillis() + TheAPI.getPunishmentAPI().getTempBanTime(s));
@@ -56,29 +75,6 @@ public class punishment implements Listener {
 					.replace("%reason%", TheAPI.getPunishmentAPI().getTempMuteReason(s))));
 		}
 	}
-
-	@EventHandler
-	public void onMotd(ServerListPingEvent e) {
-		if(LoaderClass.plugin.motd!=null)
-		e.setMotd(LoaderClass.plugin.motd);
-		if(LoaderClass.plugin.max!=-1)
-		e.setMaxPlayers(LoaderClass.plugin.max);
-	}
-
-	@EventHandler
-	public void onChat(PlayerChatEvent e) {
-		if(LoaderClass.chatformat.get(e.getPlayer()) != null)
-		e.setFormat(LoaderClass.chatformat.get(e.getPlayer()).replace("%", "%%")
-				.replace("%%player%%", e.getPlayer().getName())
-				.replace("%%playername%%", e.getPlayer().getDisplayName())
-				.replace("%%playercustom%%", e.getPlayer().getCustomName())
-				.replace("%%hp%%", e.getPlayer().getHealth()+"")
-				.replace("%%food%%", e.getPlayer().getFoodLevel()+"")
-				.replace("%%world%%", e.getPlayer().getWorld().getName()+"")
-				.replace("%%x%%", e.getPlayer().getLocation().getBlockX()+"")
-				.replace("%%y%%", e.getPlayer().getLocation().getBlockY()+"")
-				.replace("%%z%%", e.getPlayer().getLocation().getBlockZ()+"").replace("%message%", e.getMessage().replace("%", "%%")));
-	}
 	private String findGUI(String title) {
 		String w=null;
 		for(String a:LoaderClass.data.getConfigurationSection("guis").getKeys(false)) {
@@ -87,7 +83,7 @@ public class punishment implements Listener {
 	return w;
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onClick(InventoryClickEvent e) {
 		if(LoaderClass.data.getString("guis")==null) {
 			return;
