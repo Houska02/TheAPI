@@ -2,7 +2,7 @@
 name: Bug report
 about: Report bug that you found in TheAPI
 title: Bug report
-labels: bug, duplicate, enhancement, help wanted, invalid, wontfix
+labels: ''
 assignees: ''
 
 ---

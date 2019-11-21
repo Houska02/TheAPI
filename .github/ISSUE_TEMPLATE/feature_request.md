@@ -2,7 +2,7 @@
 name: Feature request
 about: Request for new feature for this plugin
 title: Request for add new feature to plugin/site
-labels: bug, documentation, duplicate, enhancement, invalid, question, wontfix
+labels: ''
 assignees: ''
 
 ---
