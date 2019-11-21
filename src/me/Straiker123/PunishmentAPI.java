@@ -7,7 +7,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class PunishmentAPI {
-	
+
+	public List<String> getAccounts(String player){
+		return findPlayerByIP(LoaderClass.data.getString(player+".ip"));
+	}
 	public void setBan(String player, String reason) {
 		if(reason==null)reason="Uknown";
 		LoaderClass.data.set("bans."+player+".ban", reason);

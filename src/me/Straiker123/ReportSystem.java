@@ -1,23 +1,18 @@
 package me.Straiker123;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class ReportSystem {
-	public void sendReport(String s, String target, String message) {
-		LoaderClass.data.set("data."+s+".reports."+target+".target", target);
-		LoaderClass.data.set("data."+s+".reports."+target+".message", message);
+	public void sendReport(String sender, String reported, String message) {
+		LoaderClass.data.set("data."+sender+".reports."+reported+".target", reported);
+		LoaderClass.data.set("data."+sender+".reports."+reported+".message", message);
 		LoaderClass.plugin.a.save();
-		TheAPI.broadcast(LoaderClass.config.getString("Format.Report").replace("%sender%", s).replace("%target%", target)
-				.replace("%target%", target).replace("%message%", message), LoaderClass.config.getString("Format.Report-Permission"));
-	}
-	
-	public List<String> getAccounts(String player){
-		return TheAPI.getPunishmentAPI().findPlayerByIP(LoaderClass.data.getString(player+".ip"));
+		TheAPI.broadcast(LoaderClass.config.getString("Format.Report").replace("%sender%", sender).replace("%target%", reported)
+				.replace("%target%", reported).replace("%message%", message), LoaderClass.config.getString("Format.Report-Permission"));
 	}
 	/**
 	 * 
-	 * @return HashMap<Message, ReportedPlayer>
+	 * @return HashMap<ReportMessage, ReportedPlayer>
 	 */
 	public HashMap<String, String> getReports(String player){
 		HashMap<String, String> a = new HashMap<String, String>();

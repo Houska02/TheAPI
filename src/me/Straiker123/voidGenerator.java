@@ -2,7 +2,6 @@ package me.Straiker123;
 
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.ChunkGenerator;
@@ -13,10 +12,10 @@ public class voidGenerator extends ChunkGenerator {
 	        ChunkGenerator.ChunkData data = this.createChunkData(world);
 	        for (int x = 0; x < 16; ++x) {
 	            for (int z = 0; z < 16; ++z) {
-
-	            	if(Bukkit.getVersion().contains("1.13")||Bukkit.getVersion().contains("1.14"))the_void="THE_VOID";
-	            	if(Bukkit.getVersion().contains("1.12")||Bukkit.getVersion().contains("1.11")
-	            			||Bukkit.getVersion().contains("1.10")||Bukkit.getVersion().contains("1.9"))the_void="VOID";
+	            	if(TheAPI.getServerVersion().contains("glowstone")||TheAPI.getServerVersion().contains("1_14"))the_void="VOID";
+	            	if(TheAPI.getServerVersion().contains("1_13")||TheAPI.getServerVersion().contains("1_14"))the_void="THE_VOID";
+	            	if(TheAPI.getServerVersion().contains("1_12")||TheAPI.getServerVersion().contains("1_11")
+	            			||TheAPI.getServerVersion().contains("1_10")||TheAPI.getServerVersion().contains("1_9"))the_void="VOID";
 	                biome.setBiome(x, z, Biome.valueOf(the_void));
 	                
 	            }
