@@ -122,13 +122,13 @@ public class ItemCreatorAPI {
 					if(name!=null)
 					m.setDisplayName(name);
 					if(lore!=null && !lore.isEmpty())m.setLore(lore);
-					if(model != -1)
+					if(model != -1 && !TheAPI.getServerVersion().equals("glowstone"))
 					m.setCustomModelData(model);
 					m.setUnbreakable(unb);
 					if(map != null && !map.isEmpty())
 					for(ItemFlag f: map)
 					m.addItemFlags(f);
-					if(w!=null && !w.isEmpty())
+					if(w!=null && !w.isEmpty() && !TheAPI.getServerVersion().equals("glowstone"))
 					m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);	
 					if(owner!=null)
 					m.setOwner(owner);
@@ -138,13 +138,13 @@ public class ItemCreatorAPI {
 				if(name!=null)
 				m.setDisplayName(name);
 				if(lore!=null && !lore.isEmpty())m.setLore(lore);
-				if(model != -1)
+				if(model != -1 && !TheAPI.getServerVersion().equals("glowstone"))
 				m.setCustomModelData(model);
 				m.setUnbreakable(unb);
 				if(map != null && !map.isEmpty())
 				for(ItemFlag f: map)
 				m.addItemFlags(f);
-				if(w!=null && !w.isEmpty())
+				if(w!=null && !w.isEmpty() && !TheAPI.getServerVersion().equals("glowstone"))
 				m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);
 				i.setItemMeta(m);
 

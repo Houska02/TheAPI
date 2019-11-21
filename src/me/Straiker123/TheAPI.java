@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 
+import net.glowstone.entity.GlowPlayer;
+
 public class TheAPI {
 
 	public static String colorize(String string) {
@@ -196,15 +198,21 @@ public class TheAPI {
 	}
 	
 	public static String getServerVersion() {
-		return LoaderClass.plugin.getServer().getClass().getPackage().getName().split("\\.")[3];
+		String serverVer = null;
+		try {
+			 serverVer= Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+	 }catch(Exception e) {
+			 serverVer=Bukkit.getServer().getClass().getPackage().getName().split("\\.")[1];
+	 }
+		return serverVer;
 	}
 	
 	public static double getServerTPS() {
-		try {
+		
 		try {
 	    	Object minecraftServer = null;
 	    	Field recentTps = null;
-	            Server server = Bukkit.getServer();
+	            Server server = LoaderClass.plugin.getServer();
 	            Field consoleField = server.getClass().getDeclaredField("console");
 	            consoleField.setAccessible(true);
 	            minecraftServer = consoleField.get(server);
@@ -218,12 +226,16 @@ public class TheAPI {
 	    	}catch(Throwable e) {
 	    		return 20.0;
 	    	}
-	    }catch(Exception e) {
-    		return 20.0;
-	    }
 	}
 	
 	public static int getPlayerPing(Player p) {
+		if(getServerVersion().equals("glowstone")) {
+			try {
+			return ((GlowPlayer)p).getUserListEntry().getPing();
+			}catch(Exception e) {
+				return -1;
+			}
+		}
 		try {
 	        Class<?> craftPlayer = Class.forName("org.bukkit.craftbukkit."
 	                + getServerVersion() + ".entity.CraftPlayer");

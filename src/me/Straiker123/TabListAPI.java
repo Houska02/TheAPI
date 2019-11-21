@@ -5,6 +5,9 @@ import java.lang.reflect.Field;
 
 import org.bukkit.entity.Player;
 
+import net.glowstone.entity.GlowPlayer;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+
 public class TabListAPI {
 
 	public void setTabListName(Player p, String name) {
@@ -12,6 +15,15 @@ public class TabListAPI {
 	}
 
 	public void setHeaderFooter(Player p, String header, String footer) {
+		if(TheAPI.getServerVersion().equals("glowstone")) {
+		try {
+		GlowPlayer s = (GlowPlayer) p;
+		s.setPlayerListHeaderFooter(new ComponentBuilder(TheAPI.colorize(header)).create(), new ComponentBuilder(TheAPI.colorize(footer)).create());
+			return;
+		}catch (Exception e) {
+			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &4Error when sending footer, server version: "+TheAPI.getServerVersion()));
+		}
+		}
 		try {
 			Object tabHeader = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[] { String.class }).invoke(null, new Object[] { "{\"text\":\"" + TheAPI.colorize(header) + "\"}" });
 			Object tabFooter = getNMSClass("IChatBaseComponent")
@@ -46,8 +58,8 @@ public class TabListAPI {
 		     try {
 		         return Class.forName("net.minecraft.server." + TheAPI.getServerVersion() + "." + name);
 		     } catch (ClassNotFoundException e) {
-				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &4Error when finding class 'net.minecraft.server."+TheAPI.getServerVersion() + "." + name+"', server version: "+TheAPI.getServerVersion()));
-		         return null;
+					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &4Error when finding class 'net.minecraft.server."+TheAPI.getServerVersion() + "." + name+"', server version: "+TheAPI.getServerVersion()));
+			         return null;
 		     }
 		}
 
