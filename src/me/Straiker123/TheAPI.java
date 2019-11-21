@@ -48,6 +48,18 @@ public class TheAPI {
 		}
 	}
 	
+
+	public static void sudoConsole(SudoType type, String value) {
+		switch(type) {
+		case CHAT:
+			Bukkit.dispatchCommand(getConsole(), "say "+value);
+			break;
+		case COMMAND:
+			Bukkit.dispatchCommand(getConsole(), value);
+			break;
+		}
+	}
+	
 	private static void giveItems(Player p, ItemStack item) {
 		if(item==null)return;
 		 if (p.getInventory().firstEmpty() == -1) {
