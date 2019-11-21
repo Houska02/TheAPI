@@ -65,7 +65,9 @@ public class ItemCreatorAPI {
 	}
 	
 	public void addLore(List<String> lore) {
-		this.lore=lore;
+		if(lore!=null)
+			for(String s:lore)
+				addLore(s);
 	}
 	
 	int model = -1;

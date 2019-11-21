@@ -20,7 +20,10 @@ public class LoaderClass extends JavaPlugin {
 	public static FileConfiguration data;
 	public ConfigAPI f;
 	
+	public static HashMap<String, Runnable> actions = new HashMap<String, Runnable>();
+	
 	public ConfigAPI a;
+	
 	public void onLoad() {
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &6Loading plugin.."));
@@ -137,7 +140,8 @@ public class LoaderClass extends JavaPlugin {
 		new TimeConventorAPI();
 		if(EndWords.values() != null)
 		for(EndWords s : EndWords.values())
-		config.set("Words."+s.name(), TheAPI.getTimeConventorAPI().getEndWord(s));
+			config.set("Words."+s.name(), TheAPI.getTimeConventorAPI().getEndWord(s));
+		data.set("guis", null);
 		for(ConfigAPI s:list) {
 			s.save();
 		}

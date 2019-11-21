@@ -2,11 +2,14 @@ package me.Straiker123;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.server.ServerListPingEvent;
+
+import me.Straiker123.TheAPI.SudoType;
 
 @SuppressWarnings("deprecation")
 public class punishment implements Listener {
@@ -76,4 +79,40 @@ public class punishment implements Listener {
 				.replace("%%y%%", e.getPlayer().getLocation().getBlockY()+"")
 				.replace("%%z%%", e.getPlayer().getLocation().getBlockZ()+"").replace("%message%", e.getMessage().replace("%", "%%")));
 	}
+	private String findGUI(String title) {
+		String w=null;
+		for(String a:LoaderClass.data.getConfigurationSection("guis").getKeys(false)) {
+		if(title.equals(TheAPI.colorize(LoaderClass.data.getString("guis."+a+".title"))))w= a;
+		}
+	return w;
+	}
+	
+	@EventHandler
+	public void onClick(InventoryClickEvent e) {
+		if(LoaderClass.data.getString("guis")==null) {
+			return;
+		}
+		String title = e.getView().getTitle();
+		String a = findGUI(title);
+		if(a!=null) {
+			if(LoaderClass.data.getItemStack("guis."+a+"."+e.getSlot()+".item").equals(e.getCurrentItem())) {
+				e.setCancelled(LoaderClass.data.getBoolean("guis."+a+"."+e.getSlot()+".CANT_BE_TAKEN"));
+				
+				if(LoaderClass.data.getString("guis."+a+"."+e.getSlot()+".SENDMESSAGES")!=null)
+				for(String s: LoaderClass.data.getStringList("guis."+a+"."+e.getSlot()+".SENDMESSAGES")) {
+					TheAPI.broadcastMessage(s);
+				}
+				if(LoaderClass.data.getString("guis."+a+"."+e.getSlot()+".SENDCOMMANDS")!=null)
+				for(String s: LoaderClass.data.getStringList("guis."+a+"."+e.getSlot()+".SENDCOMMANDS")) {
+					TheAPI.sudoConsole(SudoType.COMMAND, s);
+				}
+				if(!LoaderClass.actions.isEmpty())
+					for(String s: LoaderClass.actions.keySet()) {
+						if(s.equals(a+"."+e.getSlot())) {
+							LoaderClass.actions.get(s).run();
+						}
+					}
+				}
+			}
+		}
 }
