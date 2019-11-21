@@ -83,6 +83,28 @@ public class GUICreatorAPI {
 		}
 		LoaderClass.data.set("guis."+getID()+"."+position+".item", item);
 	}
+
+	public void addItem(ItemStack item) {
+		
+	}
+	
+	private int find() {
+		int i = -1;
+		boolean find=false;
+		for(int a=0; a<f; ++a) {
+			if(find)break;
+			if(map.get(a)==null) {
+				i=a;
+				find=true;
+			}
+		}
+		return i;
+	}
+	
+	public void addItem(ItemStack item, HashMap<Options, Object> options) {
+		if(find()!=-1)
+		setItem(find(), item, options);
+	}
 	
 	
 	public void setItem(int position, ItemStack item) {

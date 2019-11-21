@@ -48,7 +48,7 @@ public class PlayerAPI {
 	public void invsee(Player target, InvseeType type) {
 		switch(type) {
 		case INVENTORY:
-			s.openInventory(target.getInventory());
+			s.openInventory(target.getInventory()); 
 			break;
 		case ENDERCHEST:
 			s.openInventory(target.getEnderChest());
