@@ -15,12 +15,16 @@ public class TabListAPI {
 	}
 
 	public void setHeaderFooter(Player p, String header, String footer) {
+		if(p==null) {
+			Error.err("sending header/footer", "Player is null");
+			return;
+		}
 		if(TheAPI.getServerVersion().equals("glowstone")) {
 		try {
 		((GlowPlayer) p).setPlayerListHeaderFooter(new ComponentBuilder(TheAPI.colorize(header)).create(), new ComponentBuilder(TheAPI.colorize(footer)).create());
 			return;
 		}catch (Exception e) {
-			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &4Error when sending footer, server version: "+TheAPI.getServerVersion()));
+			Error.err("sending header/footer to "+p.getName(), "Header/Footer is null");
 		}
 		}
 		try {
@@ -45,7 +49,7 @@ public class TabListAPI {
 			bField.set(packet, tabFooter);
 			Packets.sendPacket(p,packet);
 			} catch (Exception e) {
-				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &4Error when sending footer, server version: "+TheAPI.getServerVersion()));
+				Error.err("sending header/footer to "+p.getName(), "Header/Footer is null");
 			}
 	}
 }

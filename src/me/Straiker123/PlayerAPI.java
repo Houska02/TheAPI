@@ -1,24 +1,17 @@
 package me.Straiker123;
 
 import java.lang.reflect.Constructor;
-import java.util.Collection;
+import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.MainHand;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 
 import net.glowstone.entity.GlowPlayer;
@@ -29,16 +22,47 @@ public class PlayerAPI {
 		s=a;
 	}
 	public void teleport(Location loc) {
+		if(loc.getWorld()!=null && loc!=null)
 		s.teleport(loc);
+		else {
+			Error.err("teleporting "+s.getName(), "Location is null");
+		}
 	}
 	public void teleport(Entity entity) {
+		if(entity!=null)
 		s.teleport(entity);
+		else {
+			Error.err("teleporting "+s.getName(), "Entity is null");
+		}
 	}
 	public void teleport(Location loc,TeleportCause cause) {
+		if(loc.getWorld()!=null && loc!=null) {
+			if(cause!=null)
 		s.teleport(loc,cause);
+			else {
+				Error.err("teleporting "+s.getName(), "TeleportCause is null");
+			}
+		}else {
+			Error.err("teleporting "+s.getName(), "Location is null");
+		}
 	}
 	public void teleport(Entity entity,TeleportCause cause) {
+		if(entity!=null) {
+			if(cause!=null)
 		s.teleport(entity,cause);
+			else {
+				Error.err("teleporting "+s.getName(), "TeleportCause is null");
+			}
+		}else {
+			Error.err("teleporting "+s.getName(), "Entity is null");
+		}
+	}
+
+	public void setFreeze(boolean freeze) {
+		s.setAI(!freeze);
+	}
+	public boolean isFreezen() {
+		return !s.hasAI();
 	}
 	
 	public static enum InvseeType {
@@ -46,6 +70,15 @@ public class PlayerAPI {
 		ENDERCHEST
 	}
 	public void invsee(Player target, InvseeType type) {
+		if(target==null) {
+			Error.err("opening inventory to "+s.getName(), "Target is null");
+			return;
+		}
+		if(type==null) {
+			Error.err("opening inventory to "+s.getName(), "InvseeType is null");
+			return;
+		}
+		try {
 		switch(type) {
 		case INVENTORY:
 			s.openInventory(target.getInventory()); 
@@ -54,20 +87,35 @@ public class PlayerAPI {
 			s.openInventory(target.getEnderChest());
 			break;
 		}
+		}catch(Exception e) {
+			Error.err("opening inventory to "+s.getName(), "Uknown");
+		}
 	}
 	public void msg(String message) {
+		try {
 		s.sendMessage(TheAPI.colorize(message));
+		}catch(Exception e) {
+			Error.err("sending message to "+s.getName(), "Message is null");
+		}
 	}
 	@SuppressWarnings("deprecation")
 	public void setHealth(double health) {
+		try {
 		if(s.getMaxHealth()<health) {
 			s.setMaxHealth(health);
 		}
 		s.setHealth(health);
+		}catch(Exception e) {
+			Error.err("setting health on "+s.getName(), "Health limit reached");
+		}
 	}
 	
 	public void setFood(int food) {
+		try {
 		s.setFoodLevel(food);
+		}catch(Exception e) {
+			Error.err("setting food on "+s.getName(), "Food limit reached");
+		}
 	}
 
 	public void setFly(boolean allowFlying, boolean enableFlying) {
@@ -86,30 +134,9 @@ public class PlayerAPI {
 	public boolean allowedFly() {
 		return LoaderClass.data.getBoolean("data."+s.getName()+".fly");
 	}
-	
-	public Inventory getInventory() {
-		return s.getInventory();
-	}
 
-	public float getExp() {
-		return s.getExp();
-	}
-	public int getLevel() {
-		return s.getLevel();
-	}
-	public int getExpToLevel() {
-		return s.getExpToLevel();
-	}
-	public void giveExp(int exp) {
-		s.giveExp(exp);
-	}
-	
-	public void setExp(float exp) {
-		s.setExp(exp);
-	}
-	
 	public void takeExp(int exp) {
-		int take = (int)getExp();
+		int take = (int)s.getExp();
 		if(take-exp < 0) {
 			s.setExp(take);
 		}else
@@ -120,17 +147,26 @@ public class PlayerAPI {
 	public void resetMaxHealth() {
 		s.setMaxHealth(20);
 	}
-	
+
 	public void resetExp() {
-		s.setExp(getExp());
+		s.setExp(0);
+	}
+	public void resetLevel() {
+		s.setLevel(0);
 	}
 	
 	@SuppressWarnings("deprecation")
 	public void sendTitle(String firstLine, String nextLine) {
+		try {
 		s.sendTitle(TheAPI.colorize(firstLine), TheAPI.colorize(nextLine));
+		}catch(Exception e) {
+			Error.err("sending title to "+s.getName(), "Line is null");
+		}
 	}
 	
 	public void sendBossBar(String line, double progress, double timeToExpire) {
+		try {
+			if(timeToExpire<0)timeToExpire=0;
 		BossBar a = Bukkit.createBossBar(TheAPI.colorize(line), BarColor.GREEN, BarStyle.SEGMENTED_20);
 		if(progress<0)progress=0;
 		if(progress>1)progress=1;
@@ -144,6 +180,9 @@ public class PlayerAPI {
 			}
 			
 		},(long) (20*timeToExpire));
+		}catch(Exception e) {
+			Error.err("sending bossbar to "+s.getName(), "Line is null");
+		}
 	}
    public void sendActionBar(String line) {
 	   if(TheAPI.getServerVersion().equals("glowstone")) {
@@ -190,65 +229,36 @@ public class PlayerAPI {
      }
    }
 	
-	public void giveExpToLever(int exp) {
-		s.giveExpLevels(exp);
-	}
-	
 	public void giveLevel(int level) {
-		s.setLevel(getLevel()+level);
+		s.setLevel(s.getLevel()+level);
 	}
 	
-	public Collection<Entity> getNearbyEntities(double x, double y, double z){
+	public List<Entity> getNearbyEntities(double x, double y, double z){
 		return s.getNearbyEntities(x, y, z);
 	}
-	
-	public void setLevel(int level) {
-		s.setLevel(level);
-	}
-	
-	public void addPotionEffect(PotionEffect e) {
-		if(e!=null) {
-			s.addPotionEffect(e);
-		}
-	}
-	public void addPotionEffects(Collection<PotionEffect> effects) {
-		for(PotionEffect e: effects) {
-			if(e!=null)
-		s.addPotionEffect(e);}
-	}
-	public void removePotionEffect(PotionEffectType e) {
-		if(e!=null) {
-			s.removePotionEffect(e);
-		}
-	}
-	public boolean hasPotionEffect(PotionEffectType e) {
-		if(e!=null) {
-			return s.hasPotionEffect(e);
-		}
-		return false;
-	}
-	
-	public void closeInventory() {
-		s.getOpenInventory().close();
-	}
 
-	public void damage(double damage) {
-		s.damage(damage);
-	}
-	public void hurt(double damage) {
-		s.damage(damage);
+	public void closeOpenInventory() {
+		s.getOpenInventory().close();
 	}
 	
 	public String getAddress() {
+	try {
 		return TheAPI.getPunishmentAPI().getIP(s.getName());
+	}catch(Exception e) {
+		Error.err("getting ip address of "+s.getName(), "Address is null");
+		return null;
+	}
 	}
 	
 	public void setScoreboard(Scoreboard sb) {
+		try {
+		if(sb!=null)
 		s.setScoreboard(sb);
-	}
-	
-	public Location getLocation() {
-		return s.getLocation();
+		else
+			s.setScoreboard(s.getServer().getScoreboardManager().getNewScoreboard());
+		}catch(Exception e) {
+			Error.err("setting scoreboard on "+s.getName(), "Scoreboard is null");
+		}
 	}
 	/**
 	 * int from -10 to 10
@@ -270,35 +280,8 @@ public class PlayerAPI {
 		if(speed>10)speed=10;
 		s.setWalkSpeed(speed/10);
 	}
-
-	public int getFlySpeed() {
-		return (int)s.getFlySpeed()*10;
-	}
-	public int getWalkSpeed() {
-		return (int)s.getWalkSpeed()*10;
-	}
-	
-	public Inventory getEnderChest() {
-		return s.getEnderChest();
-	}
-
-	public GameMode getGameMode() {
-		return s.getGameMode();
-	}
-	public double getHealth() {
-		return s.getHealth();
-	}
-	public int getFood() {
-		return s.getFoodLevel();
-	}
-	public int getAir() {
-		return s.getRemainingAir();
-	}
-	public int getMaxAir() {
-		return s.getMaximumAir();
-	}
 	public void setMaxAir() {
-		 s.setRemainingAir(getAir());
+		 s.setRemainingAir(s.getMaximumAir());
 	}
 	public void setAir(int air) {
 		 s.setRemainingAir(air);
@@ -306,34 +289,10 @@ public class PlayerAPI {
 	public void setGodOnTime(int time) {
 		 s.setNoDamageTicks(time*20);
 	}
-
-	public Entity getKiller() {
-		return s.getKiller();
-	}
 	@SuppressWarnings("deprecation")
 	public ItemStack getItemInHand() {
 		return s.getItemInHand();
 	}
-	public MainHand getMainHand() {
-		return s.getMainHand();
-	}
-
-	public int getMaxFireTicks() {
-		return s.getMaxFireTicks();
-	}
-	
-	/**
-	 * Set int -1 to set fire off
-	 * @param fire
-	 */
-	public void setFireTicks(int fire) {
-		 s.setFireTicks(fire);
-	}
-	
-	public InventoryView getOpenInventory() {
-		return s.getOpenInventory();
-	}
-	
 	/**
 	 * Kick player from serveer with reason
 	 */
@@ -341,37 +300,6 @@ public class PlayerAPI {
 		if(reason==null)reason="Uknown";
 		 s.kickPlayer(TheAPI.colorize(reason));
 	}
-	
-	public boolean hasPerm(String permission) {
-		return s.hasPermission(permission);
-	}
-	
-	public World getWorld() {
-		return s.getWorld();
-	}
-	
-	public int getSleepTicks() {
-		return s.getSleepTicks();
-	}
-
-	public void setSleepingIgnored(boolean ignore) {
-		s.setSleepingIgnored(ignore);
-	}
-	public void isSleepingIgnored() {
-		s.isSleepingIgnored();
-	}
-	
-	public PotionEffect getPotionEffect(PotionEffectType e) {
-		if(e!=null) {
-			return s.getPotionEffect(e);
-		}
-		return null;
-	}
-	
-	public Collection<PotionEffect> getPotionEffects() {
-			return s.getActivePotionEffects();
-	}
-	
 	
 	public void setGod(boolean enable) {
 			LoaderClass.data.set("data."+s.getName()+".god",enable);

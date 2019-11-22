@@ -55,7 +55,24 @@ public class LoaderClass extends JavaPlugin {
 			e=true;
 		}
 		new EconomyAPI();
-		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &aTheAPI using "+TheAPI.getCountingAPI().getPluginsUsingTheAPI().size()+" plugin(s)"));
+		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+
+			@Override
+			public void run() {
+				if(TheAPI.getCountingAPI().getPluginsUsingTheAPI().size() != 0)
+				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &aTheAPI using "+TheAPI.getCountingAPI().getPluginsUsingTheAPI().size()+" plugin(s)"));
+				else {
+					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6TheAPI isn't used in any plugin, disabling plugin.."));
+					stop();
+				}
+			}
+			
+		}, 200);
+		
+	}
+	
+	private void stop() {					
+		Bukkit.getPluginManager().disablePlugin(this);
 	}
 	
 	public static Economy economy;

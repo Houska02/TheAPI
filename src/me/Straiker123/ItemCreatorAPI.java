@@ -64,7 +64,7 @@ public class ItemCreatorAPI {
 		s=amount;
 	}
 	
-	public void addLore(List<String> lore) {
+	public void setLore(List<String> lore) {
 		if(lore!=null)
 			for(String s:lore)
 				addLore(s);
@@ -104,7 +104,6 @@ public class ItemCreatorAPI {
 	public void setMaterialData(MaterialData data) {
 		this.data=data;
 	}
-	
 	@SuppressWarnings("unchecked")
 	public ItemStack create() {
 		
