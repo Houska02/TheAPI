@@ -102,7 +102,7 @@ public class punishment implements Listener {
 				for(String s: LoaderClass.data.getStringList("guis."+a+"."+e.getSlot()+".SENDCOMMANDS")) {
 					TheAPI.sudoConsole(SudoType.COMMAND, s);
 				}
-				if(!LoaderClass.actions.isEmpty())
+				if(!LoaderClass.actions.isEmpty() && LoaderClass.actions != null)
 					for(String s: LoaderClass.actions.keySet()) {
 						if(s.equals(a+"."+e.getSlot())) {
 							LoaderClass.actions.get(s).run();
