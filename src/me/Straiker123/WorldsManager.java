@@ -90,6 +90,7 @@ public class WorldsManager {
 				TheAPI.getPlayerAPI(p).teleport(new Location(w.get(0),0,200,0));
 			}
 		Bukkit.unloadWorld(name, saveWorld);
+		return true;
 	}return false;
 		}return false;
 	}

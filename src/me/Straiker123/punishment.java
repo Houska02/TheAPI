@@ -1,5 +1,7 @@
 package me.Straiker123;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -7,6 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 
 import me.Straiker123.TheAPI.SudoType;
@@ -38,6 +41,14 @@ public class punishment implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
+	public void onLeave(PlayerQuitEvent e) {
+		if(Bukkit.getOnlinePlayers().size()-1 == 0) {
+			LoaderClass.data.set("guis", null);
+			LoaderClass.plugin.a.save();
+			LoaderClass.actions.clear();
+		}
+	}
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onMotd(ServerListPingEvent e) {
 		if(LoaderClass.plugin.motd!=null)
 		e.setMotd(LoaderClass.plugin.motd);
@@ -45,7 +56,7 @@ public class punishment implements Listener {
 		e.setMaxPlayers(LoaderClass.plugin.max);
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onChat(PlayerChatEvent e) {
 		if(LoaderClass.chatformat.get(e.getPlayer()) != null)
 		e.setFormat(LoaderClass.chatformat.get(e.getPlayer()).replace("%", "%%")
@@ -75,38 +86,37 @@ public class punishment implements Listener {
 					.replace("%reason%", TheAPI.getPunishmentAPI().getTempMuteReason(s))));
 		}
 	}
-	private String findGUI(String title) {
+	private String findGUI(String title, Player p) {
 		String w=null;
-		for(String a:LoaderClass.data.getConfigurationSection("guis").getKeys(false)) {
-		if(title.equals(TheAPI.colorize(LoaderClass.data.getString("guis."+a+".title"))))w= a;
+		for(String a:LoaderClass.data.getConfigurationSection("guis."+p.getName()).getKeys(false)) {
+		if(title.equals(TheAPI.colorize(LoaderClass.data.getString("guis."+p.getName()+"."+a+".title"))))w= a;
 		}
 	return w;
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onClick(InventoryClickEvent e) {
-		if(LoaderClass.data.getString("guis")==null) {
+		Player p = (Player)e.getWhoClicked();
+		if(LoaderClass.data.getString("guis."+p.getName())==null) {
 			return;
 		}
 		String title = e.getView().getTitle();
-		String a = findGUI(title);
-		if(a!=null) {
-			if(LoaderClass.data.getItemStack("guis."+a+"."+e.getSlot()+".item").equals(e.getCurrentItem())) {
-				e.setCancelled(LoaderClass.data.getBoolean("guis."+a+"."+e.getSlot()+".CANT_BE_TAKEN"));
+		String a = findGUI(title,p);
+		if(a!=null && e.getCurrentItem() != null) {
+			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item").equals(e.getCurrentItem())) {
+				e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+"."+e.getSlot()+".CANT_BE_TAKEN"));
 				
-				if(LoaderClass.data.getString("guis."+a+"."+e.getSlot()+".SENDMESSAGES")!=null)
-				for(String s: LoaderClass.data.getStringList("guis."+a+"."+e.getSlot()+".SENDMESSAGES")) {
+				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES")!=null)
+				for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES")) {
 					TheAPI.broadcastMessage(s);
 				}
-				if(LoaderClass.data.getString("guis."+a+"."+e.getSlot()+".SENDCOMMANDS")!=null)
-				for(String s: LoaderClass.data.getStringList("guis."+a+"."+e.getSlot()+".SENDCOMMANDS")) {
+				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS")!=null)
+				for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS")) {
 					TheAPI.sudoConsole(SudoType.COMMAND, s);
 				}
-				if(!LoaderClass.actions.isEmpty() && LoaderClass.actions != null)
-					for(String s: LoaderClass.actions.keySet()) {
-						if(s.equals(a+"."+e.getSlot())) {
-							LoaderClass.actions.get(s).run();
-						}
+				if(!LoaderClass.actions.isEmpty() && LoaderClass.actions != null) {
+					if(LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot())!=null)
+							LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()).run();
 					}
 				}
 			}

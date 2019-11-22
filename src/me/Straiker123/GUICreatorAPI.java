@@ -11,8 +11,8 @@ public class GUICreatorAPI {
 	Player p;
 	public GUICreatorAPI(Player s) {
 		p=s;
-		if(LoaderClass.data.getString("guis")!=null)
-			id=LoaderClass.data.getConfigurationSection("guis").getKeys(false).size()+"";
+		if(LoaderClass.data.getString("guis."+s.getName())!=null)
+			id=LoaderClass.data.getConfigurationSection("guis."+s.getName()).getKeys(false).size()+"";
 	}
 	String t = "TheAPI - Missing name of GUI";
 	public void setTitle(String title) {
@@ -68,20 +68,21 @@ public class GUICreatorAPI {
 
 			switch(a) {
 			case CANT_BE_TAKEN:
-				LoaderClass.data.set("guis."+getID()+"."+position+".CANT_BE_TAKEN", options.get(a));
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".CANT_BE_TAKEN", options.get(a));
 				break;
 			case RUNNABLE:
-				LoaderClass.actions.put(getID()+"."+position,(Runnable) options.get(a));
+				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position)==null)
+				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position,(Runnable) options.get(a));
 				break;
 			case SENDMESSAGES:
-				LoaderClass.data.set("guis."+getID()+"."+position+".SENDMESSAGES", options.get(a));
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES", options.get(a));
 				break;
 			case SENDCOMMANDS:
-				LoaderClass.data.set("guis."+getID()+"."+position+".SENDCOMMANDS", options.get(a));
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS", options.get(a));
 				break;
 			}
 		}
-		LoaderClass.data.set("guis."+getID()+"."+position+".item", item);
+		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
 	}
 
 	public void addItem(ItemStack item) {
@@ -108,8 +109,11 @@ public class GUICreatorAPI {
 	
 	
 	public void setItem(int position, ItemStack item) {
+		if(map.get(position)==null)
 		map.put(position,item);
-		LoaderClass.data.set("guis."+getID()+"."+position+".item", item);
+		else
+			map.replace(position,item);
+		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
 	}
 	
 	public void open() {
@@ -117,7 +121,7 @@ public class GUICreatorAPI {
 		for(Integer a : map.keySet()) {
 			i.setItem(a, map.get(a));
 		}
-		LoaderClass.data.set("guis."+getID()+".title", t);
+		LoaderClass.data.set("guis."+p.getName()+"."+getID()+".title", t);
 		LoaderClass.plugin.a.save();
 		p.openInventory(i);
 	}
