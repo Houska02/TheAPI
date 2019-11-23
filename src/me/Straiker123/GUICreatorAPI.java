@@ -56,16 +56,35 @@ public class GUICreatorAPI {
 	
 	public static enum Options{
 		CANT_BE_TAKEN,
+		
 		RUNNABLE,
 		SENDMESSAGES,
-		SENDCOMMANDS
+		SENDCOMMANDS,
+
+		RUNNABLE_RIGHT_CLICK,
+		SENDMESSAGES_RIGHT_CLICK,
+		SENDCOMMANDS_RIGHT_CLICK,
+		
+		RUNNABLE_LEFT_CLICK,
+		SENDMESSAGES_LEFT_CLICK,
+		SENDCOMMANDS_LEFT_CLICK,
+		
+		RUNNABLE_SHIFT_WITH_RIGHT_CLICK,
+		SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK,
+		SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK,
+		
+		RUNNABLE_SHIFT_WITH_LEFT_CLICK,
+		SENDMESSAGES_SHIFT_WITH_LEFT_CLICK,
+		SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK,
+		
+		RUNNABLE_MIDDLE_CLICK,
+		SENDMESSAGES_MIDDLE_CLICK,
+		SENDCOMMANDS_MIDDLE_CLICK,
 	}
 	
 	HashMap<Integer,ItemStack> map = new HashMap<Integer,ItemStack>();
 	public void setItem(int position, ItemStack item, HashMap<Options, Object> options) {
 		map.put(position,item);
-		
-		String click = ".ALL";
 		for(Options a:options.keySet()) {
 
 			switch(a) {
@@ -73,57 +92,78 @@ public class GUICreatorAPI {
 				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".CANT_BE_TAKEN", options.get(a));
 				break;
 			case RUNNABLE:
-				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position+click)==null)
-				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+click,(Runnable) options.get(a));
+				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position)==null)
+				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position,(Runnable) options.get(a));
 				break;
 			case SENDMESSAGES:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES"+click, options.get(a));
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES", options.get(a));
 				break;
 			case SENDCOMMANDS:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS"+click, options.get(a));
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS", options.get(a));
 				break;
-			}
-		}
-		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
-	}
-	
-	public static enum ClickTypes{
-		LEFT,
-		RIGHT,
-		MIDDLE,
-		MIDDLE_WITH_SHIFT,
-		LEFT_WITH_SHIFT,
-		RIGHT_WITH_SHIFT,
-		ALL
-	}
-	
-	public void setItem(int position, ItemStack item, HashMap<Options, Object> options, ClickTypes click) {
 
-		String c = "."+click.toString();
-		map.put(position,item);
-		for(Options a:options.keySet()) {
+			case RUNNABLE_LEFT_CLICK:
+				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position)==null)
+				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+".RUNNABLE_LEFT_CLICK",(Runnable) options.get(a));
+				break;
+			case SENDMESSAGES_LEFT_CLICK:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_LEFT_CLICK", options.get(a));
+				break;
+			case SENDCOMMANDS_LEFT_CLICK:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_LEFT_CLICK", options.get(a));
+				break;
 
-			switch(a) {
-			case CANT_BE_TAKEN:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".CANT_BE_TAKEN", options.get(a));
+			case RUNNABLE_RIGHT_CLICK:
+				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position)==null)
+				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+".RUNNABLE_RIGHT_CLICK",(Runnable) options.get(a));
 				break;
-			case RUNNABLE:
-				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position+c)==null)
-				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+c,(Runnable) options.get(a));
+			case SENDMESSAGES_RIGHT_CLICK:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_RIGHT_CLICK", options.get(a));
 				break;
-			case SENDMESSAGES:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES"+c, options.get(a));
+			case SENDCOMMANDS_RIGHT_CLICK:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_RIGHT_CLICK", options.get(a));
 				break;
-			case SENDCOMMANDS:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS"+c, options.get(a));
+
+			case RUNNABLE_MIDDLE_CLICK:
+				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position)==null)
+				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+".RUNNABLE_MIDDLE_CLICK",(Runnable) options.get(a));
 				break;
+			case SENDMESSAGES_MIDDLE_CLICK:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_MIDDLE_CLICK", options.get(a));
+				break;
+			case SENDCOMMANDS_MIDDLE_CLICK:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_MIDDLE_CLICK", options.get(a));
+				break;
+
+			case RUNNABLE_SHIFT_WITH_LEFT_CLICK:
+				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position)==null)
+				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+".RUNNABLE_SHIFT_WITH_LEFT_CLICK",(Runnable) options.get(a));
+				break;
+			case SENDMESSAGES_SHIFT_WITH_LEFT_CLICK:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_SHIFT_WITH_LEFT_CLICK", options.get(a));
+				break;
+			case SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK", options.get(a));
+				break;
+
+			case RUNNABLE_SHIFT_WITH_RIGHT_CLICK:
+				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position)==null)
+				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+".RUNNABLE_SHIFT_WITH_RIGHT_CLICK",(Runnable) options.get(a));
+				break;
+			case SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK", options.get(a));
+				break;
+			case SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK", options.get(a));
+				break;
+				
 			}
 		}
 		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
 	}
 
 	public void addItem(ItemStack item) {
-		
+		setItem(find(), item);
 	}
 	
 	private int find() {
@@ -138,7 +178,6 @@ public class GUICreatorAPI {
 		}
 		return i;
 	}
-	
 	public void addItem(ItemStack item, HashMap<Options, Object> options) {
 		if(find()!=-1)
 		setItem(find(), item, options);

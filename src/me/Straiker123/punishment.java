@@ -1,14 +1,10 @@
 package me.Straiker123;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -16,7 +12,6 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 
-import me.Straiker123.GUICreatorAPI.ClickTypes;
 import me.Straiker123.TheAPI.SudoType;
 
 @SuppressWarnings("deprecation")
@@ -99,35 +94,6 @@ public class punishment implements Listener {
 	return w;
 	}
 	
-	private ClickTypes getType(ClickType e, String s) {
-		ClickTypes w = null;
-		if(e.isLeftClick() && !e.isShiftClick())if(ClickTypes.LEFT == ClickTypes.valueOf(s))w=ClickTypes.LEFT;
-		else
-		if(e.isLeftClick() && e.isShiftClick())if(ClickTypes.LEFT_WITH_SHIFT == ClickTypes.valueOf(s))w= ClickTypes.LEFT_WITH_SHIFT;
-		else
-		if(e.isRightClick() && !e.isShiftClick())if(ClickTypes.RIGHT == ClickTypes.valueOf(s))w=  ClickTypes.RIGHT;
-		else
-		if(e.isRightClick() && e.isShiftClick())if(ClickTypes.RIGHT_WITH_SHIFT == ClickTypes.valueOf(s))w=  ClickTypes.RIGHT_WITH_SHIFT;
-		else
-		if(e==ClickType.MIDDLE && !e.isShiftClick())if(ClickTypes.MIDDLE == ClickTypes.valueOf(s))w=  ClickTypes.MIDDLE;
-		else
-		if(e==ClickType.MIDDLE && e.isShiftClick())if(ClickTypes.MIDDLE_WITH_SHIFT == ClickTypes.valueOf(s))w=  ClickTypes.MIDDLE_WITH_SHIFT;
-		if(s.equalsIgnoreCase("ALL"))w=ClickTypes.ALL;
-		return w;
-	}
-	
-	private String getSearch(String p, String g, String where, int slot) {
-		List<String> list = new ArrayList<String>();
-		for(String w:LoaderClass.data.getConfigurationSection
-				("guis."+p+"."+g+"."+slot+"."+where).getKeys(false)) {
-			list.add(w);
-		}
-		if(list.get(0)!=null)
-		return list.get(0);
-		else
-			return "ALL";
-	}
-	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onClick(InventoryClickEvent e) {
 		Player p = (Player)e.getWhoClicked();
@@ -139,20 +105,78 @@ public class punishment implements Listener {
 		if(a!=null && e.getCurrentItem() != null) {
 			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item").equals(e.getCurrentItem())) {
 				e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+"."+e.getSlot()+".CANT_BE_TAKEN"));
-				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES")!=null) {
-					String w = getSearch(p.getName(),a,"SENDMESSAGES",e.getSlot());
-					if(w!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES."+getType(e.getClick(),w))) {
+				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES")!=null)
+					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES"))
 						TheAPI.broadcastMessage(s);
-					}}
+					if(e.getClick().isLeftClick()&& !e.getClick().isShiftClick())
+						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_LEFT_CLICK")!=null)
+					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_LEFT_CLICK"))
+						TheAPI.broadcastMessage(s);
+					if(e.getClick().isRightClick()&& !e.getClick().isShiftClick())
+						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_RIGHT_CLICK")!=null)
+					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_RIGHT_CLICK"))
+						TheAPI.broadcastMessage(s);
+					if(e.getClick().isCreativeAction())
+						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_MIDDLE_CLICK")!=null)
+					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_MIDDLE_CLICK"))
+						TheAPI.broadcastMessage(s);
+					if(e.getClick().isLeftClick() && e.getClick().isShiftClick())
+						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_LEFT_CLICK")!=null)
+					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_LEFT_CLICK"))
+						TheAPI.broadcastMessage(s);
+					if(e.getClick().isRightClick() && e.getClick().isShiftClick())
+						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK")!=null)
+					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK"))
+						TheAPI.broadcastMessage(s);
 				}}
 				
-				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS")!=null) {
-					String w = getSearch(p.getName(),a,"SENDCOMMANDS",e.getSlot());
-					if(w!=null)
-						for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS."+getType(e.getClick(),w))) {
-							TheAPI.sudoConsole(SudoType.COMMAND, s);
-						}
-					}
+				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS")!=null)
+					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS"))
+						TheAPI.sudoConsole(SudoType.COMMAND, s);
+					if(e.getClick().isLeftClick()&& !e.getClick().isShiftClick())
+						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_LEFT_CLICK")!=null)
+					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_LEFT_CLICK"))
+						TheAPI.sudoConsole(SudoType.COMMAND, s);
+					if(e.getClick().isRightClick()&& !e.getClick().isShiftClick())
+						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_RIGHT_CLICK")!=null)
+					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_RIGHT_CLICK"))
+						TheAPI.sudoConsole(SudoType.COMMAND, s);
+					
+					if(e.getClick().isLeftClick() && e.getClick().isShiftClick())
+						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK")!=null)
+					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK"))
+						TheAPI.sudoConsole(SudoType.COMMAND, s);
+					if(e.getClick().isRightClick() && e.getClick().isShiftClick())
+						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK")!=null)
+					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK"))
+						TheAPI.sudoConsole(SudoType.COMMAND, s);
+					
+					if(e.getClick().isCreativeAction())
+						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_MIDDLE_CLICK")!=null)
+					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_MIDDLE_CLICK"))
+						TheAPI.sudoConsole(SudoType.COMMAND, s);
+					
+				if(LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE")!=null)
+					LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE").run();
+
+				if(e.getClick().isLeftClick()&& !e.getClick().isShiftClick())
+				if(LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_LEFT_CLICK")!=null)
+					LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_LEFT_CLICK").run();
+
+				if(e.getClick().isRightClick()&& !e.getClick().isShiftClick())
+				if(LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_RIGHT_CLICK")!=null)
+					LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_RIGHT_CLICK").run();
+
+				if(e.getClick().isCreativeAction())
+				if(LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_MIDDLE_CLICK")!=null)
+					LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_MIDDLE_CLICK").run();
+
+				if(e.getClick().isLeftClick()&& e.getClick().isShiftClick())
+				if(LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_SHIFT_WITH_LEFT_CLICK")!=null)
+					LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_SHIFT_WITH_LEFT_CLICK").run();
+
+				if(e.getClick().isRightClick()&& e.getClick().isShiftClick())
+				if(LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_SHIFT_WITH_RIGHT_CLICK")!=null)
+					LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_SHIFT_WITH_RIGHT_CLICK").run();
 		}
 }
