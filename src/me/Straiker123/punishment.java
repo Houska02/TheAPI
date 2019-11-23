@@ -103,43 +103,53 @@ public class punishment implements Listener {
 		}
 		String title = e.getView().getTitle();
 		String a = findGUI(title,p);
-		if(a!=null && e.getCurrentItem() != null) {
-			if(e.getClickedInventory().getType()==InventoryType.PLAYER)
+		if(a!=null) {
+		if(e.getCurrentItem() != null) {
+			if(e.getClickedInventory().getType()==InventoryType.PLAYER 
+					&& LoaderClass.data.getString("guis."+p.getName()+"."+a+".CAN_PUT_ITEM")!=null) {
 			e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+".CAN_PUT_ITEM"));
+			}
 			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item").equals(e.getCurrentItem())) {
 				e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+"."+e.getSlot()+".CANT_BE_TAKEN"));
+				
 				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES")!=null)
 					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES"))
 						TheAPI.broadcastMessage(s);
+				
 					if(e.getClick().isLeftClick()&& !e.getClick().isShiftClick())
 						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_LEFT_CLICK")!=null)
 					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_LEFT_CLICK"))
 						TheAPI.broadcastMessage(s);
+					
 					if(e.getClick().isRightClick()&& !e.getClick().isShiftClick())
 						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_RIGHT_CLICK")!=null)
 					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_RIGHT_CLICK"))
 						TheAPI.broadcastMessage(s);
+					
 					if(e.getClick().isCreativeAction())
 						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_MIDDLE_CLICK")!=null)
 					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_MIDDLE_CLICK"))
 						TheAPI.broadcastMessage(s);
+					
 					if(e.getClick().isLeftClick() && e.getClick().isShiftClick())
 						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_LEFT_CLICK")!=null)
 					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_LEFT_CLICK"))
 						TheAPI.broadcastMessage(s);
+					
 					if(e.getClick().isRightClick() && e.getClick().isShiftClick())
 						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK")!=null)
 					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK"))
 						TheAPI.broadcastMessage(s);
-				}}
 				
 				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS")!=null)
 					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS"))
 						TheAPI.sudoConsole(SudoType.COMMAND, s);
+				
 					if(e.getClick().isLeftClick()&& !e.getClick().isShiftClick())
 						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_LEFT_CLICK")!=null)
 					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_LEFT_CLICK"))
 						TheAPI.sudoConsole(SudoType.COMMAND, s);
+					
 					if(e.getClick().isRightClick()&& !e.getClick().isShiftClick())
 						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_RIGHT_CLICK")!=null)
 					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_RIGHT_CLICK"))
@@ -149,6 +159,7 @@ public class punishment implements Listener {
 						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK")!=null)
 					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK"))
 						TheAPI.sudoConsole(SudoType.COMMAND, s);
+					
 					if(e.getClick().isRightClick() && e.getClick().isShiftClick())
 						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK")!=null)
 					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK"))
@@ -181,5 +192,6 @@ public class punishment implements Listener {
 				if(e.getClick().isRightClick()&& e.getClick().isShiftClick())
 				if(LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_SHIFT_WITH_RIGHT_CLICK")!=null)
 					LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_SHIFT_WITH_RIGHT_CLICK").run();
-		}
+		}}}
+	}
 }

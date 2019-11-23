@@ -41,20 +41,17 @@ public class WorldsManager {
 		}
 		return true;
 	}return false;}
-	
-	  public static boolean deleteDirectory(File path) {
-	        if (path.exists()) {
-	            File[] files = path.listFiles();
-	            for (int i = 0; i < files.length; ++i) {
-	                if (files[i].isDirectory()) {
-	                    deleteDirectory(files[i]);
-	                    continue;
-	                }
-	                files[i].delete();
-	            }
-	        }
-	        return path.delete();
-	    }
+	public static boolean deleteDirectory(File path) {
+		if( path.exists() ) {
+		File[] files = path.listFiles();
+		for(int i=0; i<files.length; i++) {
+		if(files[i].isDirectory()) {
+		deleteDirectory(files[i]);
+		}else {
+		files[i].delete();
+		}}}
+		return( path.delete() );
+	}
 	public boolean delete(World name, boolean safeUnloadWorld) {
 		if(!safeUnloadWorld) {
 			List<World> w = Bukkit.getWorlds();
@@ -79,12 +76,8 @@ public class WorldsManager {
 					TheAPI.getPlayerAPI(p).teleport(new Location(w.get(0),0,160,0));
 				}
 			Bukkit.unloadWorld(name, true);
-			 if (name.getWorldFolder().exists()) {
-		            for (File f:name.getWorldFolder().listFiles()) {
-		                f.delete();
-		            }
-		        }
-			return true;
+			boolean delete = deleteDirectory(name.getWorldFolder());
+			 return delete;
 		}return false;
 	}
 }

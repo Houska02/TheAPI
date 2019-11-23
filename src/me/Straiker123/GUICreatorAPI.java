@@ -104,8 +104,8 @@ public class GUICreatorAPI {
 				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".CANT_BE_TAKEN", options.get(a));
 				break;
 			case RUNNABLE:
-				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position)==null)
-				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position,(Runnable) options.get(a));
+				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position+".RUNNABLE")==null)
+				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+".RUNNABLE",(Runnable) options.get(a));
 				break;
 			case SENDMESSAGES:
 				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES", options.get(a));
