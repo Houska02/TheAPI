@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
@@ -103,6 +104,8 @@ public class punishment implements Listener {
 		String title = e.getView().getTitle();
 		String a = findGUI(title,p);
 		if(a!=null && e.getCurrentItem() != null) {
+			if(e.getClickedInventory().getType()==InventoryType.PLAYER)
+			e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+".CAN_PUT_ITEM"));
 			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item").equals(e.getCurrentItem())) {
 				e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+"."+e.getSlot()+".CANT_BE_TAKEN"));
 				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES")!=null)

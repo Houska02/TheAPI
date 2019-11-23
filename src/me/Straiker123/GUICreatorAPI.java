@@ -52,10 +52,18 @@ public class GUICreatorAPI {
 	public String getID() {
 		return id;
 	}
-
 	
+	/**
+	 * CAN_PUT_ITEM - Global, can player put to the gui item from his inventory (true/false)
+	 * CANT_BE_TAKEN - Can player take item from gui (true/false)
+	 * 
+	 * RUNNABLE - Ignoring click type, run everything in runnable (Runnable)
+	 * SENDMESSAGES - Ignoring click type, send list of messages to the player (List<String>)
+	 * SENDCOMMANDS - Ignoring click type, send list of commands as console (List<String>)
+	 */
 	public static enum Options{
 		CANT_BE_TAKEN,
+		CAN_PUT_ITEM,
 		
 		RUNNABLE,
 		SENDMESSAGES,
@@ -83,11 +91,15 @@ public class GUICreatorAPI {
 	}
 	
 	HashMap<Integer,ItemStack> map = new HashMap<Integer,ItemStack>();
+	
 	public void setItem(int position, ItemStack item, HashMap<Options, Object> options) {
 		map.put(position,item);
 		for(Options a:options.keySet()) {
 
 			switch(a) {
+			case CAN_PUT_ITEM:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+".CAN_PUT_ITEM", options.get(a));
+				break;
 			case CANT_BE_TAKEN:
 				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".CANT_BE_TAKEN", options.get(a));
 				break;

@@ -158,8 +158,8 @@ public class TheAPI {
 	}
 	
 	public static void sendHelpOp(CommandSender s, String message) {
-		broadcast(colorize(LoaderClass.config.getString("Format.HelpOp")
-					.replace("%message%", message).replace("%sender%", s.getName())),LoaderClass.config.getString("Format.HelpOp-Permission"));
+		broadcast(LoaderClass.config.getString("Format.HelpOp")
+					.replace("%message%", message).replace("%sender%", s.getName()),LoaderClass.config.getString("Format.HelpOp-Permission"));
 		
 		if(!s.hasPermission(LoaderClass.config.getString("Format.HelpOp-Permission")))
 			s.sendMessage(colorize(LoaderClass.config.getString("Format.HelpOp")
