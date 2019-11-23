@@ -169,7 +169,7 @@ public class punishment implements Listener {
 						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_MIDDLE_CLICK")!=null)
 					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_MIDDLE_CLICK"))
 						TheAPI.sudoConsole(SudoType.COMMAND, s);
-					
+			    if(LoaderClass.actions.isEmpty()==false) {
 				if(LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE")!=null)
 					LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE").run();
 
@@ -192,6 +192,6 @@ public class punishment implements Listener {
 				if(e.getClick().isRightClick()&& e.getClick().isShiftClick())
 				if(LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_SHIFT_WITH_RIGHT_CLICK")!=null)
 					LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_SHIFT_WITH_RIGHT_CLICK").run();
-		}}}
+		}}}}
 	}
 }
