@@ -64,6 +64,8 @@ public class GUICreatorAPI {
 	HashMap<Integer,ItemStack> map = new HashMap<Integer,ItemStack>();
 	public void setItem(int position, ItemStack item, HashMap<Options, Object> options) {
 		map.put(position,item);
+		
+		String click = ".ALL";
 		for(Options a:options.keySet()) {
 
 			switch(a) {
@@ -71,14 +73,49 @@ public class GUICreatorAPI {
 				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".CANT_BE_TAKEN", options.get(a));
 				break;
 			case RUNNABLE:
-				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position)==null)
-				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position,(Runnable) options.get(a));
+				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position+click)==null)
+				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+click,(Runnable) options.get(a));
 				break;
 			case SENDMESSAGES:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES", options.get(a));
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES"+click, options.get(a));
 				break;
 			case SENDCOMMANDS:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS", options.get(a));
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS"+click, options.get(a));
+				break;
+			}
+		}
+		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
+	}
+	
+	public static enum ClickTypes{
+		LEFT,
+		RIGHT,
+		MIDDLE,
+		MIDDLE_WITH_SHIFT,
+		LEFT_WITH_SHIFT,
+		RIGHT_WITH_SHIFT,
+		ALL
+	}
+	
+	public void setItem(int position, ItemStack item, HashMap<Options, Object> options, ClickTypes click) {
+
+		String c = "."+click.toString();
+		map.put(position,item);
+		for(Options a:options.keySet()) {
+
+			switch(a) {
+			case CANT_BE_TAKEN:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".CANT_BE_TAKEN", options.get(a));
+				break;
+			case RUNNABLE:
+				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position+c)==null)
+				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+c,(Runnable) options.get(a));
+				break;
+			case SENDMESSAGES:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES"+c, options.get(a));
+				break;
+			case SENDCOMMANDS:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS"+c, options.get(a));
 				break;
 			}
 		}
