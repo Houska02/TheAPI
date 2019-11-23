@@ -11,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class WorldsManager {
@@ -43,17 +42,28 @@ public class WorldsManager {
 		return true;
 	}return false;}
 	
-	
-	public boolean delete(String name, boolean safeUnloadWorld) {
-		if(Bukkit.getWorld(name)!=null) {
+	  public static boolean deleteDirectory(File path) {
+	        if (path.exists()) {
+	            File[] files = path.listFiles();
+	            for (int i = 0; i < files.length; ++i) {
+	                if (files[i].isDirectory()) {
+	                    deleteDirectory(files[i]);
+	                    continue;
+	                }
+	                files[i].delete();
+	            }
+	        }
+	        return path.delete();
+	    }
+	public boolean delete(World name, boolean safeUnloadWorld) {
 		if(!safeUnloadWorld) {
 			List<World> w = Bukkit.getWorlds();
-			w.remove(Bukkit.getWorld(name));
+			w.remove(name);
 			if(w.isEmpty()==false) {
 			for(Player p : TheAPI.getCountingAPI().getOnlinePlayers())
-				if(p.getWorld().getName().equals(name)) {
+				if(p.getWorld().equals(name)) {
 					TheAPI.getPlayerAPI(p).setGodOnTime(30);
-					TheAPI.getPlayerAPI(p).teleport(new Location(w.get(0),0,200,0));
+					TheAPI.getPlayerAPI(p).teleport(new Location(w.get(0),0,160,0));
 				}
 			Bukkit.unloadWorld(name, false);
 			new File(Bukkit.getWorldContainer().getPath()+"/"+name).delete();
@@ -61,23 +71,22 @@ public class WorldsManager {
 			}return false;
 		}else {
 			List<World> w = Bukkit.getWorlds();
-			w.remove(Bukkit.getWorld(name));
+			w.remove(name);
 			if(w.isEmpty()==false) {
 			for(Player p : TheAPI.getCountingAPI().getOnlinePlayers())
-				if(p.getWorld().getName().equals(name)) {
+				if(p.getWorld().equals(name)) {
 					TheAPI.getPlayerAPI(p).setGodOnTime(30);
-					TheAPI.getPlayerAPI(p).teleport(new Location(w.get(0),0,200,0));
+					TheAPI.getPlayerAPI(p).teleport(new Location(w.get(0),0,160,0));
 				}
-			for(Entity e: Bukkit.getWorld(name).getEntities()) {
-				e.remove();
-			}
 			Bukkit.unloadWorld(name, true);
-			new File(Bukkit.getWorldContainer().getPath()+"/"+name).delete();
+			 if (name.getWorldFolder().exists()) {
+		            for (File f:name.getWorldFolder().listFiles()) {
+		                f.delete();
+		            }
+		        }
 			return true;
 		}return false;
 	}
-		}
-		return false;
 }
 	public boolean unloadWorld(String name, boolean saveWorld) {
 		if(Bukkit.getWorld(name)!=null) {
