@@ -1,22 +1,50 @@
 package me.Straiker123;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import me.Straiker123.TheAPI.SudoType;
 
 @SuppressWarnings("deprecation")
 public class punishment implements Listener {
+	
+	private ItemStack createWrittenBook(ItemStack a) {
+		 ItemStack w = new ItemStack(Material.WRITABLE_BOOK);
+		 ItemMeta m = w.getItemMeta();
+		 m.setDisplayName(a.getItemMeta().getDisplayName());
+		 if(a.getItemMeta().hasLore())m.setLore(a.getItemMeta().getLore());
+			if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 m.setUnbreakable(a.getItemMeta().isUnbreakable());
+		 w.setItemMeta(m);
+		 return w;
+	}
+	
+	private ItemStack createHead(ItemStack a) {
+		 ItemStack w = new ItemStack(Material.PLAYER_HEAD);
+		 SkullMeta m = (SkullMeta)w.getItemMeta();
+		 m.setDisplayName(a.getItemMeta().getDisplayName());
+		 if(a.getItemMeta().hasLore())m.setLore(a.getItemMeta().getLore());
+			if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 m.setUnbreakable(a.getItemMeta().isUnbreakable());
+		 w.setItemMeta(m);
+		 return w;
+	}
+	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLogin(PlayerLoginEvent e) {
 		String s = e.getPlayer().getName();
@@ -96,6 +124,28 @@ public class punishment implements Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
+	public void onClose(InventoryCloseEvent e) {
+		Player p = (Player)e.getPlayer();
+		if(LoaderClass.data.getString("guis."+p.getName())==null) {
+			return;
+		}
+		String title = e.getView().getTitle();
+		String a = findGUI(title,p);
+		if(a!=null) {
+			if(LoaderClass.data.getString("guis."+p.getName()+"."+a+".SENDMESSAGES_ON_INV_CLOSE")!=null)
+				for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+".SENDMESSAGES_ON_INV_CLOSE"))
+					TheAPI.broadcastMessage(s);
+			if(LoaderClass.data.getString("guis."+p.getName()+"."+a+".SENDCOMMANDS_ON_INV_CLOSE")!=null)
+				for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+".SENDCOMMANDS_ON_INV_CLOSE"))
+					TheAPI.sudoConsole(SudoType.COMMAND, s);
+		    if(LoaderClass.actions.isEmpty()==false) {
+			if(LoaderClass.actions.get(p.getName()+"."+a+".RUNNABLE_ON_INV_CLOSE")!=null)
+				LoaderClass.actions.get(p.getName()+"."+a+".RUNNABLE_ON_INV_CLOSE").run();
+		    }
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onClick(InventoryClickEvent e) {
 		Player p = (Player)e.getWhoClicked();
 		if(LoaderClass.data.getString("guis."+p.getName())==null) {
@@ -104,13 +154,23 @@ public class punishment implements Listener {
 		String title = e.getView().getTitle();
 		String a = findGUI(title,p);
 		if(a!=null) {
-		if(e.getCurrentItem() != null) {
+			ItemStack i = e.getCurrentItem();
+		if(i != null) {
 			if(e.getClickedInventory().getType()==InventoryType.PLAYER 
 					&& LoaderClass.data.getString("guis."+p.getName()+"."+a+".CAN_PUT_ITEM")!=null) {
 			e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+".CAN_PUT_ITEM"));
 			}
+			if(i.getType().equals(Material.WRITTEN_BOOK))i=createWrittenBook(i);
+
+			Material m = Material.matchMaterial("LEGACY_SKULL_ITEM");
+			if(m==null)m=Material.matchMaterial("SKULL_ITEM");
+
+			if(i.getType().equals(m)||i.getType().equals(Material.PLAYER_HEAD)
+					||i.getType().equals(Material.PLAYER_WALL_HEAD))i=createHead(i);
+			
 			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item")!=null)
-			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item").equals(e.getCurrentItem())) {
+				
+			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item").equals(i)) {
 				e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+"."+e.getSlot()+".CANT_BE_TAKEN"));
 				
 				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES")!=null)

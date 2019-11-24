@@ -113,7 +113,7 @@ public class TimeConventorAPI {
 		if(months>=12)months = months%12;
 		if(years>=100)years = years%100;
 		if(centuries>=1000)centuries = centuries%1000;
-		    String s = "0"+sec;
+		    String s = sec;
 
 			if(millenniums > 0) {
 			s = millenniums+mil+" : "+centuries+c+" "+ years +y;

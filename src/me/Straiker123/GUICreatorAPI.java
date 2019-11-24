@@ -3,9 +3,12 @@ package me.Straiker123;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 public class GUICreatorAPI {
 	Player p;
@@ -37,6 +40,11 @@ public class GUICreatorAPI {
 	return 9;
 	}
 	}
+	
+	public Player getPlayer() {
+		return p;
+	}
+	
 	int f = 9;
 	public void setSize(int size) {
 		f = size(size);
@@ -53,17 +61,13 @@ public class GUICreatorAPI {
 		return id;
 	}
 	
-	/**
-	 * CAN_PUT_ITEM - Global, can player put to the gui item from his inventory (true/false)
-	 * CANT_BE_TAKEN - Can player take item from gui (true/false)
-	 * 
-	 * RUNNABLE - Ignoring click type, run everything in runnable (Runnable)
-	 * SENDMESSAGES - Ignoring click type, send list of messages to the player (List<String>)
-	 * SENDCOMMANDS - Ignoring click type, send list of commands as console (List<String>)
-	 */
 	public static enum Options{
 		CANT_BE_TAKEN,
-		CAN_PUT_ITEM,
+		CANT_PUT_ITEM,
+
+		RUNNABLE_ON_INV_CLOSE,
+		SENDMESSAGES_ON_INV_CLOSE,
+		SENDCOMMANDS_ON_INV_CLOSE,
 		
 		RUNNABLE,
 		SENDMESSAGES,
@@ -91,13 +95,45 @@ public class GUICreatorAPI {
 	}
 	
 	HashMap<Integer,ItemStack> map = new HashMap<Integer,ItemStack>();
+	/**
+	 * @param options
+	 * CANT_PUT_ITEM - Global, can player put to the gui item from his inventory (true/false)
+	 * CANT_BE_TAKEN - Can player take item from gui (true/false)
+	 * 
+	 * RUNNABLE - Ignoring click type, run everything in runnable (Runnable)
+	 * SENDMESSAGES - Ignoring click type, send list of messages to the player (List<String>)
+	 * SENDCOMMANDS - Ignoring click type, send list of commands as console (List<String>)
+	 */
+	
+	
+	
+	private ItemStack createWrittenBook(ItemStack a) {
+		 ItemStack w = new ItemStack(Material.WRITABLE_BOOK);
+		 ItemMeta m = w.getItemMeta();
+		 m.setDisplayName(a.getItemMeta().getDisplayName());
+		 if(a.getItemMeta().hasLore())m.setLore(a.getItemMeta().getLore());
+		if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 m.setUnbreakable(a.getItemMeta().isUnbreakable());
+		 w.setItemMeta(m);
+		 return w;
+	}
+	
+	private ItemStack createHead(ItemStack a) {
+		 ItemStack w = new ItemStack(Material.PLAYER_HEAD);
+		 SkullMeta m = (SkullMeta)w.getItemMeta();
+		 m.setDisplayName(a.getItemMeta().getDisplayName());
+		 if(a.getItemMeta().hasLore())m.setLore(a.getItemMeta().getLore());
+			if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 m.setUnbreakable(a.getItemMeta().isUnbreakable());
+		 w.setItemMeta(m);
+		 return w;
+	}
 	
 	public void setItem(int position, ItemStack item, HashMap<Options, Object> options) {
 		map.put(position,item);
 		for(Options a:options.keySet()) {
-
 			switch(a) {
-			case CAN_PUT_ITEM:
+			case CANT_PUT_ITEM:
 				LoaderClass.data.set("guis."+p.getName()+"."+getID()+".CAN_PUT_ITEM", options.get(a));
 				break;
 			case CANT_BE_TAKEN:
@@ -112,6 +148,18 @@ public class GUICreatorAPI {
 				break;
 			case SENDCOMMANDS:
 				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS", options.get(a));
+				break;
+				
+
+			case RUNNABLE_ON_INV_CLOSE:
+				if(LoaderClass.actions.get(p.getName()+"."+getID()+".RUNNABLE_ON_INV_CLOSE")==null)
+				LoaderClass.actions.put(p.getName()+"."+getID()+".RUNNABLE_ON_INV_CLOSE",(Runnable) options.get(a));
+				break;
+			case SENDMESSAGES_ON_INV_CLOSE:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+".SENDMESSAGES_ON_INV_CLOSE", options.get(a));
+				break;
+			case SENDCOMMANDS_ON_INV_CLOSE:
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+".SENDCOMMANDS_ON_INV_CLOSE", options.get(a));
 				break;
 
 			case RUNNABLE_LEFT_CLICK:
@@ -171,11 +219,26 @@ public class GUICreatorAPI {
 				
 			}
 		}
+		
+		Material m = Material.matchMaterial("LEGACY_SKULL_ITEM");
+		if(m==null)m=Material.matchMaterial("SKULL_ITEM");
+		if(item.getType().equals(Material.WRITTEN_BOOK))
+			LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createWrittenBook(item));
+		else
+			if(item.getType().equals(m)||item.getType().equals(Material.PLAYER_HEAD)
+					||item.getType().equals(Material.PLAYER_WALL_HEAD))
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createHead(item));
+			else
 		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
 	}
 
 	public void addItem(ItemStack item) {
 		setItem(find(), item);
+	}
+		
+	Inventory inv;
+	public Inventory getGUI() {
+		return inv;
 	}
 	
 	private int find() {
@@ -190,6 +253,15 @@ public class GUICreatorAPI {
 		}
 		return i;
 	}
+	/**
+	 * @param options
+	 * CAN_PUT_ITEM - Global, can player put to the gui item from his inventory (true/false)
+	 * CANT_BE_TAKEN - Can player take item from gui (true/false)
+	 * 
+	 * RUNNABLE - Ignoring click type, run everything in runnable (Runnable)
+	 * SENDMESSAGES - Ignoring click type, send list of messages to the player (List<String>)
+	 * SENDCOMMANDS - Ignoring click type, send list of commands as console (List<String>)
+	 */
 	public void addItem(ItemStack item, HashMap<Options, Object> options) {
 		if(find()!=-1)
 		setItem(find(), item, options);
@@ -201,6 +273,15 @@ public class GUICreatorAPI {
 		map.put(position,item);
 		else
 			map.replace(position,item);
+		Material m = Material.matchMaterial("LEGACY_SKULL_ITEM");
+		if(m==null)m=Material.matchMaterial("SKULL_ITEM");
+		if(item.getType().equals(Material.WRITTEN_BOOK))
+			LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createWrittenBook(item));
+		else
+			if(item.getType().equals(m)||item.getType().equals(Material.PLAYER_HEAD)
+					||item.getType().equals(Material.PLAYER_WALL_HEAD))
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createHead(item));
+			else
 		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
 	}
 	
@@ -212,5 +293,6 @@ public class GUICreatorAPI {
 		LoaderClass.data.set("guis."+p.getName()+"."+getID()+".title", t);
 		LoaderClass.plugin.a.save();
 		p.openInventory(i);
+		inv=i;
 	}
 }
