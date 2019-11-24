@@ -28,7 +28,7 @@ public class TheAPI {
 	public static ConfigAPI getConfig(String localization,  String name) {
 		return new ConfigAPI(name,localization);
 	}
-	public void sendBossBar(Player p, String text, double progress, int timeToExpire) {
+	public static void sendBossBar(Player p, String text, double progress, int timeToExpire) {
 	try {
 		if(timeToExpire<0)timeToExpire=0;
 	BossBar a = Bukkit.createBossBar(TheAPI.colorize(text), BarColor.GREEN, BarStyle.SEGMENTED_20);

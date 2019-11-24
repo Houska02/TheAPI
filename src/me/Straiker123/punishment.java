@@ -157,8 +157,8 @@ public class punishment implements Listener {
 			ItemStack i = e.getCurrentItem();
 		if(i != null) {
 			if(e.getClickedInventory().getType()==InventoryType.PLAYER 
-					&& LoaderClass.data.getString("guis."+p.getName()+"."+a+".CAN_PUT_ITEM")!=null) {
-			e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+".CAN_PUT_ITEM"));
+					&& LoaderClass.data.getString("guis."+p.getName()+"."+a+".CANT_PUT_ITEM")!=null) {
+			e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+".CANT_PUT_ITEM"));
 			}
 			if(i.getType().equals(Material.WRITTEN_BOOK))i=createWrittenBook(i);
 
