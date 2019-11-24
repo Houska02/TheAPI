@@ -1,5 +1,6 @@
 package me.Straiker123;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
@@ -7,6 +8,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +28,73 @@ public class TheAPI {
 	public static ConfigAPI getConfig(String localization,  String name) {
 		return new ConfigAPI(name,localization);
 	}
+	public void sendBossBar(Player p, String text, double progress, int timeToExpire) {
+	try {
+		if(timeToExpire<0)timeToExpire=0;
+	BossBar a = Bukkit.createBossBar(TheAPI.colorize(text), BarColor.GREEN, BarStyle.SEGMENTED_20);
+	if(progress<0)progress=0;
+	if(progress>1)progress=1;
+	a.setProgress(progress);
+	a.addPlayer(p);
+	Bukkit.getScheduler().runTaskLater(LoaderClass.plugin, new Runnable() {
+
+		@Override
+		public void run() {
+			a.removeAll();
+		}
+		
+	},(long) (20*timeToExpire));
+	}catch(Exception e) {
+		Error.err("sending bossbar to "+p.getName(), "Text is null");
+	}}
+	
+	   public void sendActionBar(Player p, String text) {
+		   if(p == null) {
+		    	 Error.err("sending ActionBar", "Player is null");
+			   return;
+		   }
+		   if(TheAPI.getServerVersion().equals("glowstone")) {
+				try {
+					   ((GlowPlayer) p).sendActionBar(TheAPI.colorize(text));
+						return;
+					}catch (Exception e) {
+				    	 Error.err("sending ActionBar to "+p.getName(), "Text is null");}
+					}
+		     Class<?> PACKET_PLAYER_CHAT_CLASS = null, ICHATCOMP = null, CHATMESSAGE = null,
+	       CHAT_MESSAGE_TYPE_CLASS = null;
+	     Constructor<?> PACKET_PLAYER_CHAT_CONSTRUCTOR = null, CHATMESSAGE_CONSTRUCTOR = null;
+	     Object CHAT_MESSAGE_TYPE_ENUM_OBJECT = null;
+		   boolean useByte = false;
+		     try {
+		       PACKET_PLAYER_CHAT_CLASS = Packets.getNMSClass("PacketPlayOutChat");
+		       ICHATCOMP = Packets.getNMSClass("IChatBaseComponent");
+		       try {
+		         CHAT_MESSAGE_TYPE_CLASS = Packets.getNMSClass("ChatMessageType");
+		         CHAT_MESSAGE_TYPE_ENUM_OBJECT = CHAT_MESSAGE_TYPE_CLASS.getEnumConstants()[2];
+		 
+		         PACKET_PLAYER_CHAT_CONSTRUCTOR = PACKET_PLAYER_CHAT_CLASS.getConstructor(ICHATCOMP,
+		             CHAT_MESSAGE_TYPE_CLASS);
+		       } catch (NoSuchMethodException e) {
+		         PACKET_PLAYER_CHAT_CONSTRUCTOR = PACKET_PLAYER_CHAT_CLASS.getConstructor(ICHATCOMP, byte.class);
+		         useByte = true;
+		       }
+		       CHATMESSAGE = Packets.getNMSClass("ChatMessage");
+		       CHATMESSAGE_CONSTRUCTOR = CHATMESSAGE.getConstructor(String.class, Object[].class);
+		     } catch (Exception e) {
+		     }
+		   
+	     try {
+	       Object icb = CHATMESSAGE_CONSTRUCTOR.newInstance(TheAPI.colorize(text), new Object[0]);
+	       Object packet;
+	       if (useByte)
+	         packet = PACKET_PLAYER_CHAT_CONSTRUCTOR.newInstance(icb, (byte) 2);
+	       else
+	         packet = PACKET_PLAYER_CHAT_CONSTRUCTOR.newInstance(icb, CHAT_MESSAGE_TYPE_ENUM_OBJECT);
+	       Packets.sendPacket(p, packet);
+	     } catch (Exception e) {
+	    	 Error.err("sending ActionBar to "+p.getName(), "Text is null");
+		}
+	   }
 	
 	public static NumbersAPI getNumbersAPI(String string) {
 		return new NumbersAPI(string);
