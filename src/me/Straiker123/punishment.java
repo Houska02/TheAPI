@@ -109,6 +109,7 @@ public class punishment implements Listener {
 					&& LoaderClass.data.getString("guis."+p.getName()+"."+a+".CAN_PUT_ITEM")!=null) {
 			e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+".CAN_PUT_ITEM"));
 			}
+			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item")!=null)
 			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item").equals(e.getCurrentItem())) {
 				e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+"."+e.getSlot()+".CANT_BE_TAKEN"));
 				
