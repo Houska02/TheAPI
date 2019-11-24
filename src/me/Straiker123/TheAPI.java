@@ -48,7 +48,7 @@ public class TheAPI {
 		Error.err("sending bossbar to "+p.getName(), "Text is null");
 	}}
 	
-	   public void sendActionBar(Player p, String text) {
+	   public static void sendActionBar(Player p, String text) {
 		   if(p == null) {
 		    	 Error.err("sending ActionBar", "Player is null");
 			   return;
