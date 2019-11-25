@@ -15,11 +15,18 @@ import org.bukkit.entity.Player;
 
 public class WorldsManager {
 	/**
-	 * 
-	 * @param type
-	 * Set null for Empty world (Void)
+	 * Create new world, return boolean if world was created
+	 * @param name Name of world (Required)
+	 * @param generator World generator type (Required)
+	 * @param type set null to create Void world
+	 * @param generateStructures generate in world structures ?
+	 * @param seed set 0 to generate random
+	 * @return boolean if world was created
 	 */
 	public boolean create(String name, Environment generator, WorldType type, boolean generateStructures, long seed) {
+		if (name==null||generator==null)
+			return false;
+		
 		if(Bukkit.getWorld(name)==null) {
 		WorldCreator c = new WorldCreator(name);
 		c.generateStructures(generateStructures);
@@ -29,20 +36,24 @@ public class WorldsManager {
 		c.seed(seed);
 		if(type!=null)
 		c.type(type);
-		else 
+		else {
+			if(!TheAPI.getServerVersion().equals("v1_8_R3"))
 		c.generator(new voidGenerator());
+			else
+				c.generator(new voidGenerator_1_8());
+		}
 		c.createWorld();
 		if(type==null) {
 			int x = Bukkit.getWorld(name).getSpawnLocation().getBlock().getX();
 			int y = Bukkit.getWorld(name).getSpawnLocation().getBlock().getY();
 			int z = Bukkit.getWorld(name).getSpawnLocation().getBlock().getZ();
-			Location loc = new Location(Bukkit.getWorld(name), x, y-2, z);
+			Location loc = new Location(Bukkit.getWorld(name), x, y-1, z);
 			loc.getBlock().setType(Material.GLASS);
 		}
 		return true;
 	}return false;}
-	public static boolean deleteDirectory(File path) {
-		if( path.exists() ) {
+	private static boolean deleteDirectory(File path) {
+		if(path.exists()) {
 		File[] files = path.listFiles();
 		for(int i=0; i<files.length; i++) {
 		if(files[i].isDirectory()) {
@@ -53,6 +64,8 @@ public class WorldsManager {
 		return( path.delete() );
 	}
 	public boolean delete(World name, boolean safeUnloadWorld) {
+		if (name==null)
+			return false;
 		if(!safeUnloadWorld) {
 			List<World> w = Bukkit.getWorlds();
 			w.remove(name);
@@ -82,6 +95,8 @@ public class WorldsManager {
 	}
 }
 	public boolean unloadWorld(String name, boolean saveWorld) {
+		if (name==null)
+			return false;
 		if(Bukkit.getWorld(name)!=null) {
 		List<World> w = Bukkit.getWorlds();
 		w.remove(Bukkit.getWorld(name));
