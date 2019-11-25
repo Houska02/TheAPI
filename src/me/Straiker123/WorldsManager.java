@@ -44,10 +44,8 @@ public class WorldsManager {
 		}
 		c.createWorld();
 		if(type==null) {
-			int x = Bukkit.getWorld(name).getSpawnLocation().getBlock().getX();
-			int y = Bukkit.getWorld(name).getSpawnLocation().getBlock().getY();
-			int z = Bukkit.getWorld(name).getSpawnLocation().getBlock().getZ();
-			Location loc = new Location(Bukkit.getWorld(name), x, y-1, z);
+			Location loc = new Location(Bukkit.getWorld(name), 0, 60, 0);
+			Bukkit.getWorld(name).setSpawnLocation(0, 60, 0);
 			loc.getBlock().setType(Material.GLASS);
 		}
 		return true;
@@ -70,11 +68,6 @@ public class WorldsManager {
 			List<World> w = Bukkit.getWorlds();
 			w.remove(name);
 			if(w.isEmpty()==false) {
-			for(Player p : TheAPI.getCountingAPI().getOnlinePlayers())
-				if(p.getWorld().equals(name)) {
-					TheAPI.getPlayerAPI(p).setGodOnTime(30);
-					TheAPI.getPlayerAPI(p).teleport(new Location(w.get(0),0,160,0));
-				}
 			Bukkit.unloadWorld(name, false);
 			new File(Bukkit.getWorldContainer().getPath()+"/"+name).delete();
 			return true;
@@ -83,11 +76,6 @@ public class WorldsManager {
 			List<World> w = Bukkit.getWorlds();
 			w.remove(name);
 			if(w.isEmpty()==false) {
-			for(Player p : TheAPI.getCountingAPI().getOnlinePlayers())
-				if(p.getWorld().equals(name)) {
-					TheAPI.getPlayerAPI(p).setGodOnTime(30);
-					TheAPI.getPlayerAPI(p).teleport(new Location(w.get(0),0,160,0));
-				}
 			Bukkit.unloadWorld(name, true);
 			boolean delete = deleteDirectory(name.getWorldFolder());
 			 return delete;
@@ -104,7 +92,7 @@ public class WorldsManager {
 		for(Player p : TheAPI.getCountingAPI().getOnlinePlayers())
 			if(p.getWorld().getName().equals(name)) {
 				TheAPI.getPlayerAPI(p).setGodOnTime(30);
-				TheAPI.getPlayerAPI(p).teleport(new Location(w.get(0),0,200,0));
+				TheAPI.getPlayerAPI(p).teleport(w.get(0).getSpawnLocation());
 			}
 		Bukkit.unloadWorld(name, saveWorld);
 		return true;

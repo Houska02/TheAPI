@@ -21,7 +21,7 @@ public class LoaderClass extends JavaPlugin {
 	public ConfigAPI f;
 	
 	public static HashMap<String, Runnable> actions = new HashMap<String, Runnable>();
-	
+
 	public ConfigAPI a;
 	
 	public void onLoad() {
@@ -35,7 +35,6 @@ public class LoaderClass extends JavaPlugin {
 	public void onEnable() {
 		plugin=this;
 		createConfig();
-		
 		new TheAPI();
 		new TimeConventorAPI();
 		Bukkit.getPluginManager().registerEvents(new punishment(), this);
