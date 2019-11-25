@@ -204,7 +204,8 @@ public class punishment implements Listener {
 
 			if(i.getType().equals(m)||i.getType().equals(Material.matchMaterial("PLAYER_HEAD"))
 					||i.getType().equals(Material.matchMaterial("PLAYER_WALL_HEAD")))i=createHead(i);
-			
+
+			i.setData(null);
 			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item")!=null)
 				
 			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item").equals(i)) {

@@ -257,7 +257,7 @@ public class GUICreatorAPI {
 				
 			}
 		}
-		
+		item.setData(null);
 		Material m = Material.matchMaterial("LEGACY_SKULL_ITEM");
 		if(m==null)m=Material.matchMaterial("SKULL_ITEM");
 		if(item.getType().equals(Material.WRITTEN_BOOK))
@@ -311,6 +311,7 @@ public class GUICreatorAPI {
 		map.put(position,item);
 		else
 			map.replace(position,item);
+		item.setData(null);
 		Material m = Material.matchMaterial("LEGACY_SKULL_ITEM");
 		if(m==null)m=Material.matchMaterial("SKULL_ITEM");
 		if(item.getType().equals(Material.WRITTEN_BOOK))
