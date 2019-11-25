@@ -69,7 +69,7 @@ public class WorldsManager {
 			w.remove(name);
 			if(w.isEmpty()==false) {
 			Bukkit.unloadWorld(name, false);
-			new File(Bukkit.getWorldContainer().getPath()+"/"+name).delete();
+			new File(Bukkit.getWorldContainer().getPath()+"/"+name.getName()).delete();
 			return true;
 			}return false;
 		}else {
