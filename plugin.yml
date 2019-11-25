@@ -1,5 +1,6 @@
 author: Straiker123
 api-version: 1.14
+website: https://www.spigotmc.org/resources/theapi.72679/
 name: TheAPI
 version: 2.2.7
 main: me.Straiker123.LoaderClass
