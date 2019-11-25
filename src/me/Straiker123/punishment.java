@@ -24,22 +24,59 @@ import me.Straiker123.TheAPI.SudoType;
 public class punishment implements Listener {
 	
 	private ItemStack createWrittenBook(ItemStack a) {
-		 ItemStack w = new ItemStack(Material.WRITABLE_BOOK);
+		Material ms = Material.matchMaterial("WRITABLE_BOOK");
+		if(ms==null)ms=Material.matchMaterial("BOOK_AND_QUILL");
+		 ItemStack w = new ItemStack(ms);
 		 ItemMeta m = w.getItemMeta();
 		 m.setDisplayName(a.getItemMeta().getDisplayName());
 		 if(a.getItemMeta().hasLore())m.setLore(a.getItemMeta().getLore());
-			if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_11_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
+		if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
 		 m.setUnbreakable(a.getItemMeta().isUnbreakable());
 		 w.setItemMeta(m);
 		 return w;
 	}
 	
 	private ItemStack createHead(ItemStack a) {
-		 ItemStack w = new ItemStack(Material.PLAYER_HEAD);
+		Material ms = Material.matchMaterial("SKULL_ITEM");
+		if(ms==null)ms=Material.matchMaterial("LEGACY_SKULL_ITEM");
+		if(ms==null)ms=Material.matchMaterial("PLAYER_HEAD");
+		 ItemStack w = new ItemStack(ms);
 		 SkullMeta m = (SkullMeta)w.getItemMeta();
 		 m.setDisplayName(a.getItemMeta().getDisplayName());
 		 if(a.getItemMeta().hasLore())m.setLore(a.getItemMeta().getLore());
-			if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_11_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
+		if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
 		 m.setUnbreakable(a.getItemMeta().isUnbreakable());
 		 w.setItemMeta(m);
 		 return w;
@@ -165,8 +202,8 @@ public class punishment implements Listener {
 			Material m = Material.matchMaterial("LEGACY_SKULL_ITEM");
 			if(m==null)m=Material.matchMaterial("SKULL_ITEM");
 
-			if(i.getType().equals(m)||i.getType().equals(Material.PLAYER_HEAD)
-					||i.getType().equals(Material.PLAYER_WALL_HEAD))i=createHead(i);
+			if(i.getType().equals(m)||i.getType().equals(Material.matchMaterial("PLAYER_HEAD"))
+					||i.getType().equals(Material.matchMaterial("PLAYER_WALL_HEAD")))i=createHead(i);
 			
 			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item")!=null)
 				

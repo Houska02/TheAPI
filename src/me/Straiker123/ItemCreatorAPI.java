@@ -123,13 +123,30 @@ public class ItemCreatorAPI {
 					if(name!=null)
 					m.setDisplayName(name);
 					if(lore!=null && !lore.isEmpty())m.setLore(lore);
-					if(model != -1 && !TheAPI.getServerVersion().equals("glowstone"))
+					if(model != -1 && !TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
+							 &&!TheAPI.getServerVersion().equals("v1_9_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_9_R2")
+							 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+							 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_10_R2")
+							 &&!TheAPI.getServerVersion().equals("v1_11_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_13_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
 					m.setCustomModelData(model);
 					m.setUnbreakable(unb);
 					if(map != null && !map.isEmpty())
 					for(ItemFlag f: map)
 					m.addItemFlags(f);
-					if(w!=null && !w.isEmpty() && !TheAPI.getServerVersion().equals("glowstone"))
+					if(w!=null && !w.isEmpty() && !TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
+							 &&!TheAPI.getServerVersion().equals("v1_9_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_9_R2")
+							 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+							 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_10_R2")
+							 &&!TheAPI.getServerVersion().equals("v1_11_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
 					m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);	
 					if(owner!=null)
 					m.setOwner(owner);
@@ -139,13 +156,30 @@ public class ItemCreatorAPI {
 				if(name!=null)
 				m.setDisplayName(name);
 				if(lore!=null && !lore.isEmpty())m.setLore(lore);
-				if(model != -1 && !TheAPI.getServerVersion().equals("glowstone"))
+				if(model != -1 && !TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
+						 &&!TheAPI.getServerVersion().equals("v1_9_R1")
+						 &&!TheAPI.getServerVersion().equals("v1_9_R2")
+						 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+						 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+						 &&!TheAPI.getServerVersion().equals("v1_10_R2")
+						 &&!TheAPI.getServerVersion().equals("v1_11_R1")
+						 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+						 &&!TheAPI.getServerVersion().equals("v1_13_R1")
+						 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
 				m.setCustomModelData(model);
 				m.setUnbreakable(unb);
 				if(map != null && !map.isEmpty())
 				for(ItemFlag f: map)
 				m.addItemFlags(f);
-				if(w!=null && !w.isEmpty() && !TheAPI.getServerVersion().equals("glowstone"))
+				if(w!=null && !w.isEmpty() && !TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
+						 &&!TheAPI.getServerVersion().equals("v1_9_R1")
+						 &&!TheAPI.getServerVersion().equals("v1_9_R2")
+						 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+						 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+						 &&!TheAPI.getServerVersion().equals("v1_10_R2")
+						 &&!TheAPI.getServerVersion().equals("v1_11_R1")
+						 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+						 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
 				m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);
 				i.setItemMeta(m);
 

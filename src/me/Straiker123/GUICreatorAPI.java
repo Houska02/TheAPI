@@ -108,22 +108,60 @@ public class GUICreatorAPI {
 	
 	
 	private ItemStack createWrittenBook(ItemStack a) {
-		 ItemStack w = new ItemStack(Material.WRITABLE_BOOK);
+		Material ms = Material.matchMaterial("WRITABLE_BOOK");
+		if(ms==null)ms=Material.matchMaterial("BOOK_AND_QUILL");
+		 ItemStack w = new ItemStack(ms);
 		 ItemMeta m = w.getItemMeta();
 		 m.setDisplayName(a.getItemMeta().getDisplayName());
 		 if(a.getItemMeta().hasLore())m.setLore(a.getItemMeta().getLore());
+		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_11_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
 		if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
 		 m.setUnbreakable(a.getItemMeta().isUnbreakable());
+		 
 		 w.setItemMeta(m);
 		 return w;
 	}
 	
 	private ItemStack createHead(ItemStack a) {
-		 ItemStack w = new ItemStack(Material.PLAYER_HEAD);
+		Material ms = Material.matchMaterial("SKULL_ITEM");
+		if(ms==null)ms=Material.matchMaterial("LEGACY_SKULL_ITEM");
+		if(ms==null)ms=Material.matchMaterial("PLAYER_HEAD");
+		 ItemStack w = new ItemStack(ms);
 		 SkullMeta m = (SkullMeta)w.getItemMeta();
 		 m.setDisplayName(a.getItemMeta().getDisplayName());
 		 if(a.getItemMeta().hasLore())m.setLore(a.getItemMeta().getLore());
-			if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_11_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
+		if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
 		 m.setUnbreakable(a.getItemMeta().isUnbreakable());
 		 w.setItemMeta(m);
 		 return w;
@@ -225,8 +263,8 @@ public class GUICreatorAPI {
 		if(item.getType().equals(Material.WRITTEN_BOOK))
 			LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createWrittenBook(item));
 		else
-			if(item.getType().equals(m)||item.getType().equals(Material.PLAYER_HEAD)
-					||item.getType().equals(Material.PLAYER_WALL_HEAD))
+			if(item.getType().equals(m)||item.getType().equals(Material.matchMaterial("PLAYER_HEAD"))
+					||item.getType().equals(Material.matchMaterial("PLAYER_WALL_HEAD")))
 				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createHead(item));
 			else
 		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
@@ -278,8 +316,8 @@ public class GUICreatorAPI {
 		if(item.getType().equals(Material.WRITTEN_BOOK))
 			LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createWrittenBook(item));
 		else
-			if(item.getType().equals(m)||item.getType().equals(Material.PLAYER_HEAD)
-					||item.getType().equals(Material.PLAYER_WALL_HEAD))
+			if(item.getType().equals(m)||item.getType().equals(Material.matchMaterial("PLAYER_HEAD"))
+					||item.getType().equals(Material.matchMaterial("PLAYER_WALL_HEAD")))
 				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createHead(item));
 			else
 		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
