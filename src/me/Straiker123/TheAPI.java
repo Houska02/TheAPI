@@ -51,6 +51,10 @@ public class TheAPI {
 	}
 	
 	public static void sendBossBar(Player p, String text, double progress, int timeToExpire) {
+		if(getServerVersion().equals("v1_8_R3")) {
+			Error.err("sending bossbar to "+p.getName(), "Servers version 1.8.8 doesn't have this method");
+			return;
+		}
 	try {
 		if(timeToExpire<0)timeToExpire=0;
 	BossBar a = Bukkit.createBossBar(TheAPI.colorize(text), BarColor.GREEN, BarStyle.SEGMENTED_20);

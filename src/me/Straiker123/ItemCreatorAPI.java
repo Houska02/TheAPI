@@ -90,9 +90,27 @@ public class ItemCreatorAPI {
 	}
 	HashMap<Attribute, AttributeModifier> w = new HashMap<Attribute, AttributeModifier>();
 	public void addAttrubuteModifier(Attribute a, AttributeModifier s) {
+		if(!TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_11_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
 		w.put(a, s);
 	}
 	public void addAttrubuteModifiers(HashMap<Attribute, AttributeModifier> s) {
+		if(!TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
+							 &&!TheAPI.getServerVersion().equals("v1_9_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_9_R2")
+							 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+							 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_10_R2")
+							 &&!TheAPI.getServerVersion().equals("v1_11_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
 		w=s;
 	}
 	int dur;
@@ -122,6 +140,7 @@ public class ItemCreatorAPI {
 				SkullMeta m=(SkullMeta)i.getItemMeta();
 					if(name!=null)
 					m.setDisplayName(name);
+					
 					if(lore!=null && !lore.isEmpty())m.setLore(lore);
 					if(model != -1 && !TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
 							 &&!TheAPI.getServerVersion().equals("v1_9_R1")
