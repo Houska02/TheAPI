@@ -19,20 +19,20 @@ import com.google.common.collect.Multimap;
 
 @SuppressWarnings("deprecation")
 public class ItemCreatorAPI {
-	Material a;
-	public ItemCreatorAPI(Material icon) {
-		if(icon==null)a=Material.STONE;
+	ItemStack a;
+	public ItemCreatorAPI(ItemStack icon) {
+		if(icon==null)a=new ItemStack(Material.STONE);
 		else
 		a=icon;
 	}
 	
 	public Material getMaterial() {
-		return a;
+		return a.getType();
 	}
 	
 	public void setMaterial(String byName) {
-		if(Material.matchMaterial(byName)!=null)a=Material.matchMaterial(byName);
-		if(a==null)a=Material.STONE;
+		if(Material.matchMaterial(byName)!=null)a=new ItemStack(Material.matchMaterial(byName));
+		if(a==null)a=new ItemStack(Material.STONE);
 	}
 	String name;
 	public void setDisplayName(String newName) {
@@ -113,7 +113,7 @@ public class ItemCreatorAPI {
 							 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
 		w=s;
 	}
-	int dur;
+	int dur=-1;
 	public void setDurability(int amount) {
 		dur=amount;
 	}
@@ -128,9 +128,11 @@ public class ItemCreatorAPI {
 		
 		ItemStack i = null;
 		if(type!=null) {
-			i= new ItemStack(a,s,(short)type.ordinal());
+			i= a;
+			a.setDurability((short)type.ordinal());
 		}else {
-			i=new ItemStack(a,s);
+			i=a;
+			if(dur!=-1)
 			i.setDurability((short)dur);
 		}
 		if(data != null)

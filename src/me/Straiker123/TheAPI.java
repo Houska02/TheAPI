@@ -86,11 +86,16 @@ public class TheAPI {
 					}catch (Exception e) {
 				    	 Error.err("sending ActionBar to "+p.getName(), "Text is null");}
 					}
+		   
+		   if(getServerVersion().equals("v1_8_R3")) {
+			   sendActionBarOld(p,text);
+			   return;
+		   }
+		   
 		     Class<?> PACKET_PLAYER_CHAT_CLASS = null, ICHATCOMP = null, CHATMESSAGE = null,
 	       CHAT_MESSAGE_TYPE_CLASS = null;
 	     Constructor<?> PACKET_PLAYER_CHAT_CONSTRUCTOR = null, CHATMESSAGE_CONSTRUCTOR = null;
 	     Object CHAT_MESSAGE_TYPE_ENUM_OBJECT = null;
-		   boolean useByte = false;
 		     try {
 		       PACKET_PLAYER_CHAT_CLASS = Packets.getNMSClass("PacketPlayOutChat");
 		       ICHATCOMP = Packets.getNMSClass("IChatBaseComponent");
@@ -101,8 +106,6 @@ public class TheAPI {
 		         PACKET_PLAYER_CHAT_CONSTRUCTOR = PACKET_PLAYER_CHAT_CLASS.getConstructor(ICHATCOMP,
 		             CHAT_MESSAGE_TYPE_CLASS);
 		       } catch (NoSuchMethodException e) {
-		         PACKET_PLAYER_CHAT_CONSTRUCTOR = PACKET_PLAYER_CHAT_CLASS.getConstructor(ICHATCOMP, byte.class);
-		         useByte = true;
 		       }
 		       CHATMESSAGE = Packets.getNMSClass("ChatMessage");
 		       CHATMESSAGE_CONSTRUCTOR = CHATMESSAGE.getConstructor(String.class, Object[].class);
@@ -111,11 +114,7 @@ public class TheAPI {
 		   
 	     try {
 	       Object icb = CHATMESSAGE_CONSTRUCTOR.newInstance(TheAPI.colorize(text), new Object[0]);
-	       Object packet;
-	       if (useByte)
-	         packet = PACKET_PLAYER_CHAT_CONSTRUCTOR.newInstance(icb, (byte) 2);
-	       else
-	         packet = PACKET_PLAYER_CHAT_CONSTRUCTOR.newInstance(icb, CHAT_MESSAGE_TYPE_ENUM_OBJECT);
+	       Object packet = PACKET_PLAYER_CHAT_CONSTRUCTOR.newInstance(icb, CHAT_MESSAGE_TYPE_ENUM_OBJECT);
 	       Packets.sendPacket(p, packet);
 	     } catch (Exception e) {
 	    	 Error.err("sending ActionBar to "+p.getName(), "Text is null");
@@ -301,9 +300,12 @@ public class TheAPI {
 	public static GUICreatorAPI getGUICreatorAPI(Player p) {
 		return new GUICreatorAPI(p);
 	}
-	
+
 	public static ItemCreatorAPI getItemCreatorAPI(Material material) {
-		return new ItemCreatorAPI(material);
+		return new ItemCreatorAPI(new ItemStack(material));
+	}
+	public static ItemCreatorAPI getItemCreatorAPI(ItemStack itemstack) {
+		return new ItemCreatorAPI(itemstack);
 	}
 	
 	public static String getServerVersion() {
@@ -358,4 +360,23 @@ public class TheAPI {
 	        return -1;
 	    }
 	}
+	
+	
+	private static void sendActionBarOld(Player ps, String text) {
+	        try {
+	            Object ppoc;
+	            Class<?> c2, c3,
+	                    c4 = Class.forName("net.minecraft.server.v1_8_R3.PacketPlayOutChat");
+	            Object o;
+	                c2 = Class.forName("net.minecraft.server.v1_8_R3.ChatComponentText");
+	                c3 = Class.forName("net.minecraft.server.v1_8_R3.IChatBaseComponent");
+	                o = c2.getConstructor(new Class<?>[]{String.class}).newInstance(TheAPI.colorize(text));
+	           
+	            ppoc = c4.getConstructor(new Class<?>[]{c3, byte.class}).newInstance(o, (byte) 2);
+	            Packets.sendPacket(ps, ppoc);
+	        } catch (Exception ex) {
+		    	 Error.err("sending ActionBar to "+ps.getName(), "Text is null");
+	        }
+	    }
+	
 }
