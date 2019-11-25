@@ -1,8 +1,11 @@
 package me.Straiker123;
 
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,6 +31,25 @@ public class TheAPI {
 	public static ConfigAPI getConfig(String localization,  String name) {
 		return new ConfigAPI(name,localization);
 	}
+	public static long getServerStartTime() {
+		return ManagementFactory.getRuntimeMXBean().getStartTime();
+	}
+	
+	public static Object getRandomFromList(List<Object> list) {
+		Object target=null;
+		int size = list.size();
+		if(list.get(size)!=null) {
+			target=list.get(new Random().nextInt(size));
+		}else {
+			target=list.get(new Random().nextInt(size-1));
+		}
+		return target;
+	}
+	
+	public static long getServerUpTime() {
+		return ManagementFactory.getRuntimeMXBean().getUptime();
+	}
+	
 	public static void sendBossBar(Player p, String text, double progress, int timeToExpire) {
 	try {
 		if(timeToExpire<0)timeToExpire=0;
