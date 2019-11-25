@@ -7,8 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
 public class GUICreatorAPI {
 	Player p;
@@ -95,6 +93,62 @@ public class GUICreatorAPI {
 	}
 	
 	HashMap<Integer,ItemStack> map = new HashMap<Integer,ItemStack>();
+	
+	
+	
+	private ItemStack createWrittenBook(ItemStack a) {
+		Material ms = Material.matchMaterial("WRITABLE_BOOK");
+		if(ms==null)ms=Material.matchMaterial("BOOK_AND_QUILL");
+		ItemCreatorAPI s = TheAPI.getItemCreatorAPI(ms);
+		 if(a.getItemMeta().hasDisplayName())
+		 s.setDisplayName(a.getItemMeta().getDisplayName());
+		 if(a.getItemMeta().hasLore())s.setLore(a.getItemMeta().getLore());
+		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_11_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
+		if(a.getItemMeta().hasCustomModelData()) s.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
+		 s.setUnbreakable(a.getItemMeta().isUnbreakable());
+		 return s.create();
+	}
+	
+	private ItemStack createHead(ItemStack a) {
+		ItemCreatorAPI s = TheAPI.getItemCreatorAPI(Material.matchMaterial("SKULL_ITEM"));
+		 if(a.getItemMeta().hasDisplayName())
+		 s.setDisplayName(a.getItemMeta().getDisplayName());
+		 if(a.getItemMeta().hasLore())s.setLore(a.getItemMeta().getLore());
+		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2")
+				 &&!TheAPI.getServerVersion().equals("v1_11_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
+		if(a.getItemMeta().hasCustomModelData()) s.setCustomModelData(a.getItemMeta().getCustomModelData());
+		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
+				 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
+				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+				 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
+		 s.setUnbreakable(a.getItemMeta().isUnbreakable());
+		 return s.create();
+	}
 	/**
 	 * @param options
 	 * CANT_PUT_ITEM - Global, can player put to the gui item from his inventory (true/false)
@@ -104,69 +158,6 @@ public class GUICreatorAPI {
 	 * SENDMESSAGES - Ignoring click type, send list of messages to the player (List<String>)
 	 * SENDCOMMANDS - Ignoring click type, send list of commands as console (List<String>)
 	 */
-	
-	
-	
-	private ItemStack createWrittenBook(ItemStack a) {
-		Material ms = Material.matchMaterial("WRITABLE_BOOK");
-		if(ms==null)ms=Material.matchMaterial("BOOK_AND_QUILL");
-		 ItemStack w = new ItemStack(ms);
-		 ItemMeta m = w.getItemMeta();
-		 m.setDisplayName(a.getItemMeta().getDisplayName());
-		 if(a.getItemMeta().hasLore())m.setLore(a.getItemMeta().getLore());
-		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R2")
-				 &&!TheAPI.getServerVersion().equals("v1_11_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_13_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
-		if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
-		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
-				 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
-				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
-		 m.setUnbreakable(a.getItemMeta().isUnbreakable());
-		 
-		 w.setItemMeta(m);
-		 return w;
-	}
-	
-	private ItemStack createHead(ItemStack a) {
-		Material ms = Material.matchMaterial("SKULL_ITEM");
-		if(ms==null)ms=Material.matchMaterial("LEGACY_SKULL_ITEM");
-		if(ms==null)ms=Material.matchMaterial("PLAYER_HEAD");
-		 ItemStack w = new ItemStack(ms);
-		 SkullMeta m = (SkullMeta)w.getItemMeta();
-		 m.setDisplayName(a.getItemMeta().getDisplayName());
-		 if(a.getItemMeta().hasLore())m.setLore(a.getItemMeta().getLore());
-		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R2")
-				 &&!TheAPI.getServerVersion().equals("v1_11_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_13_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
-		if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
-		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
-				 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
-				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
-		 m.setUnbreakable(a.getItemMeta().isUnbreakable());
-		 w.setItemMeta(m);
-		 return w;
-	}
-	
 	public void setItem(int position, ItemStack item, HashMap<Options, Object> options) {
 		map.put(position,item);
 		for(Options a:options.keySet()) {
@@ -257,14 +248,12 @@ public class GUICreatorAPI {
 				
 			}
 		}
-		item.setData(null);
-		Material m = Material.matchMaterial("LEGACY_SKULL_ITEM");
-		if(m==null)m=Material.matchMaterial("SKULL_ITEM");
 		if(item.getType().equals(Material.WRITTEN_BOOK))
 			LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createWrittenBook(item));
 		else
-			if(item.getType().equals(m)||item.getType().equals(Material.matchMaterial("PLAYER_HEAD"))
-					||item.getType().equals(Material.matchMaterial("PLAYER_WALL_HEAD")))
+			if(item.getType().name().equals("LEGACY_SKULL_ITEM")||
+					item.getType().name().equals("SKULL_ITEM")
+					||item.getType().name().equals("PLAYER_HEAD"))
 				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createHead(item));
 			else
 		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
@@ -293,7 +282,7 @@ public class GUICreatorAPI {
 	}
 	/**
 	 * @param options
-	 * CAN_PUT_ITEM - Global, can player put to the gui item from his inventory (true/false)
+	 * CANT_PUT_ITEM - Global, can player put to the gui item from his inventory (true/false)
 	 * CANT_BE_TAKEN - Can player take item from gui (true/false)
 	 * 
 	 * RUNNABLE - Ignoring click type, run everything in runnable (Runnable)
@@ -311,14 +300,12 @@ public class GUICreatorAPI {
 		map.put(position,item);
 		else
 			map.replace(position,item);
-		item.setData(null);
-		Material m = Material.matchMaterial("LEGACY_SKULL_ITEM");
-		if(m==null)m=Material.matchMaterial("SKULL_ITEM");
 		if(item.getType().equals(Material.WRITTEN_BOOK))
 			LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createWrittenBook(item));
 		else
-			if(item.getType().equals(m)||item.getType().equals(Material.matchMaterial("PLAYER_HEAD"))
-					||item.getType().equals(Material.matchMaterial("PLAYER_WALL_HEAD")))
+			if(item.getType().name().equals("LEGACY_SKULL_ITEM")||
+					item.getType().name().equals("SKULL_ITEM")
+					||item.getType().name().equals("PLAYER_HEAD"))
 				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createHead(item));
 			else
 		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);

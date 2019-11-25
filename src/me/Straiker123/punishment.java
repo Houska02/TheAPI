@@ -15,8 +15,6 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import me.Straiker123.TheAPI.SudoType;
 
@@ -26,10 +24,10 @@ public class punishment implements Listener {
 	private ItemStack createWrittenBook(ItemStack a) {
 		Material ms = Material.matchMaterial("WRITABLE_BOOK");
 		if(ms==null)ms=Material.matchMaterial("BOOK_AND_QUILL");
-		 ItemStack w = new ItemStack(ms);
-		 ItemMeta m = w.getItemMeta();
-		 m.setDisplayName(a.getItemMeta().getDisplayName());
-		 if(a.getItemMeta().hasLore())m.setLore(a.getItemMeta().getLore());
+		ItemCreatorAPI s = TheAPI.getItemCreatorAPI(ms);
+		 if(a.getItemMeta().hasDisplayName())
+		 s.setDisplayName(a.getItemMeta().getDisplayName());
+		 if(a.getItemMeta().hasLore())s.setLore(a.getItemMeta().getLore());
 		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
 				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
 				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
@@ -40,26 +38,22 @@ public class punishment implements Listener {
 				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
 				 &&!TheAPI.getServerVersion().equals("v1_13_R1")
 				 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
-		if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		if(a.getItemMeta().hasCustomModelData()) s.setCustomModelData(a.getItemMeta().getCustomModelData());
 		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
 				 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
 				 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
 				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
 				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
 				 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
-		 m.setUnbreakable(a.getItemMeta().isUnbreakable());
-		 w.setItemMeta(m);
-		 return w;
+		 s.setUnbreakable(a.getItemMeta().isUnbreakable());
+		 return s.create();
 	}
 	
 	private ItemStack createHead(ItemStack a) {
-		Material ms = Material.matchMaterial("SKULL_ITEM");
-		if(ms==null)ms=Material.matchMaterial("LEGACY_SKULL_ITEM");
-		if(ms==null)ms=Material.matchMaterial("PLAYER_HEAD");
-		 ItemStack w = new ItemStack(ms);
-		 SkullMeta m = (SkullMeta)w.getItemMeta();
-		 m.setDisplayName(a.getItemMeta().getDisplayName());
-		 if(a.getItemMeta().hasLore())m.setLore(a.getItemMeta().getLore());
+		ItemCreatorAPI s = TheAPI.getItemCreatorAPI(Material.matchMaterial("SKULL_ITEM"));
+		 if(a.getItemMeta().hasDisplayName())
+		 s.setDisplayName(a.getItemMeta().getDisplayName());
+		 if(a.getItemMeta().hasLore())s.setLore(a.getItemMeta().getLore());
 		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
 				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
 				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
@@ -70,16 +64,15 @@ public class punishment implements Listener {
 				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
 				 &&!TheAPI.getServerVersion().equals("v1_13_R1")
 				 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
-		if(a.getItemMeta().hasCustomModelData()) m.setCustomModelData(a.getItemMeta().getCustomModelData());
+		if(a.getItemMeta().hasCustomModelData()) s.setCustomModelData(a.getItemMeta().getCustomModelData());
 		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
 				 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
 				 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
 				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
 				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
 				 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
-		 m.setUnbreakable(a.getItemMeta().isUnbreakable());
-		 w.setItemMeta(m);
-		 return w;
+		 s.setUnbreakable(a.getItemMeta().isUnbreakable());
+		 return s.create();
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -108,7 +101,7 @@ public class punishment implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLeave(PlayerQuitEvent e) {
-		if(Bukkit.getOnlinePlayers().size()-1 == 0) {
+		if(Bukkit.getOnlinePlayers().size()-1 <= 0) {
 			LoaderClass.data.set("guis", null);
 			LoaderClass.plugin.a.save();
 			LoaderClass.actions.clear();
@@ -181,6 +174,11 @@ public class punishment implements Listener {
 		    }
 		}
 	}
+	private boolean isSame(Player p, String a, int slot, ItemStack i) {
+		if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+slot+".item")!=null)
+		return LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+slot+".item").equals(i);
+		return false;
+	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onClick(InventoryClickEvent e) {
@@ -194,21 +192,17 @@ public class punishment implements Listener {
 			ItemStack i = e.getCurrentItem();
 		if(i != null) {
 			if(e.getClickedInventory().getType()==InventoryType.PLAYER 
-					&& LoaderClass.data.getString("guis."+p.getName()+"."+a+".CANT_PUT_ITEM")!=null) {
+					&& LoaderClass.data.getString("guis."+p.getName()+"."+a+".CANT_PUT_ITEM")!=null)
 			e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+".CANT_PUT_ITEM"));
-			}
-			if(i.getType().equals(Material.WRITTEN_BOOK))i=createWrittenBook(i);
+			
+			if(i.getType().name().equals("WRITTEN_BOOK"))i=createWrittenBook(i);
 
-			Material m = Material.matchMaterial("LEGACY_SKULL_ITEM");
-			if(m==null)m=Material.matchMaterial("SKULL_ITEM");
-
-			if(i.getType().equals(m)||i.getType().equals(Material.matchMaterial("PLAYER_HEAD"))
-					||i.getType().equals(Material.matchMaterial("PLAYER_WALL_HEAD")))i=createHead(i);
-
-			i.setData(null);
-			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item")!=null)
-				
-			if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+e.getSlot()+".item").equals(i)) {
+			if(i.getType().name().equals("LEGACY_SKULL_ITEM")||
+					i.getType().name().equals("SKULL_ITEM")
+					||i.getType().name().equals("PLAYER_HEAD"))
+				i=createHead(i);
+			
+			if(isSame(p,a,e.getSlot(),i)) {
 				e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+"."+e.getSlot()+".CANT_BE_TAKEN"));
 				
 				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES")!=null)
@@ -291,6 +285,4 @@ public class punishment implements Listener {
 				if(e.getClick().isRightClick()&& e.getClick().isShiftClick())
 				if(LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_SHIFT_WITH_RIGHT_CLICK")!=null)
 					LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE_SHIFT_WITH_RIGHT_CLICK").run();
-		}}}}
-	}
-}
+		}}}}}}

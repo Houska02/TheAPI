@@ -153,6 +153,12 @@ public class ItemCreatorAPI {
 							 &&!TheAPI.getServerVersion().equals("v1_13_R1")
 							 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
 					m.setCustomModelData(model);
+					 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+							 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
+							 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
+							 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+							 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+							 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
 					m.setUnbreakable(unb);
 					if(map != null && !map.isEmpty())
 					for(ItemFlag f: map)
@@ -186,6 +192,12 @@ public class ItemCreatorAPI {
 						 &&!TheAPI.getServerVersion().equals("v1_13_R1")
 						 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
 				m.setCustomModelData(model);
+				 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+						 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
+						 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
+						 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+						 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+						 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
 				m.setUnbreakable(unb);
 				if(map != null && !map.isEmpty())
 				for(ItemFlag f: map)
