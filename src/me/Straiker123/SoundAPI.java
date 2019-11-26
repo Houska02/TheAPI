@@ -50,9 +50,9 @@ public class SoundAPI {
 		String c = null;
 		for(Sound s:values()) {
 				if(a!=null)break;
-				if(s.name().toLowerCase().equals(sound))a=s.name();
+				if(s.name().toLowerCase().equals(sound.toLowerCase()))a=s.name();
 				else
-				if(s.name().toLowerCase().contains(sound))c=s.name();
+				if(s.name().toLowerCase().contains(sound.toLowerCase()))c=s.name();
 			}
 		if(a==null && c!=null)a=c;
 		if(Sound.valueOf(a) != null)
