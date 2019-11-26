@@ -20,7 +20,7 @@ public class NumbersAPI {
 		return 0;
 	}
 	public double getDouble() {
-		String a =fromString.replaceAll("[a-zA-Z]+", "").replace(",", ".");
+		String a =fromString.replace("[a-zA-Z]+", "").replace(",", ".");
 		if (isDouble()) {
 		return Double.parseDouble(a);
 		}
@@ -30,7 +30,7 @@ public class NumbersAPI {
 	
 	
 	private double getDouble(String s) {
-		s =s.replaceAll("[a-zA-Z]+", "").replace(",", ".");
+		s =s.replace("[a-zA-Z]+", "").replace(",", ".");
 		if (isDouble(s)) {
 			return Double.parseDouble(s);
 			}
@@ -39,7 +39,7 @@ public class NumbersAPI {
 		}
 	}
 	private boolean isDouble(String a) {
-		 a =a.replaceAll("[a-zA-Z]+", "").replace(",", ".");
+		 a =a.replace("[a-zA-Z]+", "").replace(",", ".");
 		try {
 			Double.parseDouble(a);
 		} catch (NumberFormatException e) {
@@ -49,7 +49,7 @@ public class NumbersAPI {
 	}
 	
 	public boolean isDouble() {
-		String a =fromString.replaceAll("[a-zA-Z]+", "").replace(",", ".");
+		String a =fromString.replace("[a-zA-Z]+", "").replace(",", ".");
 		try {
 			Double.parseDouble(a);
 		} catch (NumberFormatException e) {
@@ -58,7 +58,7 @@ public class NumbersAPI {
 		return true;
 	}
 	public long getLong() {
-		String a =fromString.replaceAll("[a-zA-Z]+", "");
+		String a =fromString.replace("[a-zA-Z]+", "");
 		if (isLong()) {
 		return Long.parseLong(a);
 		}
@@ -66,7 +66,7 @@ public class NumbersAPI {
 		return 0;
 	}}
 	public boolean isLong() {
-		String a =fromString.replaceAll("[a-zA-Z]+", "");
+		String a =fromString.replace("[a-zA-Z]+", "");
 		try {
 		Long.parseLong(a);
 		} catch (NumberFormatException e) {
@@ -75,7 +75,7 @@ public class NumbersAPI {
 		return true;
 	}
 	public int getInt() {
-		String a =fromString.replaceAll("[a-zA-Z]+", "");
+		String a =fromString.replace("[a-zA-Z]+", "");
 		if (isInt()) {
 		return Integer.parseInt(a);
 		}
@@ -83,7 +83,7 @@ public class NumbersAPI {
 		return 0;
 	}}
 	public boolean isInt() {
-		String a =fromString.replaceAll("[a-zA-Z]+", "");
+		String a =fromString.replace("[a-zA-Z]+", "");
 		try {
 		Integer.parseInt(a);
 		} catch (NumberFormatException e) {

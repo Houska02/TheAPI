@@ -68,8 +68,9 @@ public class ConfigAPI {
 	
 	public void save() {
 		try {
-		if(check())
+		if(check()) {
 		a.save(f);
+		}
 	} catch (Exception e) {
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when saving "+name+"."+end+" config:"));
 		e.printStackTrace();
@@ -77,14 +78,20 @@ public class ConfigAPI {
 	}
 	}
 	
+	public void reload() {
+		a=YamlConfiguration.loadConfiguration(f);
+		save();
+	}
+	
 	public void create() {
 		try {
 			f=new File("plugins/"+loc+"/"+name+"."+end);
 		a = YamlConfiguration.loadConfiguration(f);
-		a.options().copyDefaults(true).copyHeader(true);
 		if(h!=null)a.options().header(h);
-		if(c!=null && !c.isEmpty())
+		if(c!=null && !c.isEmpty()) {
 		a.addDefaults(c);
+		}
+		a.options().copyDefaults(true).copyHeader(true);
 		save();
 		if(!LoaderClass.list.contains(this))
 		LoaderClass.list.add(this);
@@ -93,7 +100,9 @@ public class ConfigAPI {
 			e.printStackTrace();
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
 		}
-		c.clear();
+	}
+	public Map<String, Object> getDefaults(){
+		return c;
 	}
 	
 	public void delete() {
@@ -102,6 +111,7 @@ public class ConfigAPI {
 		c.clear();
 		if(LoaderClass.list.contains(this))
 		LoaderClass.list.remove(this);
+		
 		}
 	}
 	

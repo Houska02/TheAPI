@@ -11,9 +11,9 @@ public class MemoryAPI {
 	
 	public double getFreeMemory(boolean inPercentage) {
 		if(!inPercentage)
-			return TheAPI.getNumbersAPI(String.format("%2.02f", (getRawUsedMemory(false) - getMaxMemory())*-1).replaceAll(",", ".")).getDouble();
+			return TheAPI.getNumbersAPI(String.format("%2.02f", (getRawUsedMemory(false) - getMaxMemory())*-1)).getDouble();
 			else
-			return TheAPI.getNumbersAPI(String.format("%2.02f", (((getRawUsedMemory(false) - getMaxMemory())*-1)/getMaxMemory())*100).replaceAll(",", ".")).getDouble();
+			return TheAPI.getNumbersAPI(String.format("%2.02f", (((getRawUsedMemory(false) - getMaxMemory())*-1)/getMaxMemory())*100)).getDouble();
 	}
 	
 	public double getMaxMemory() {
@@ -22,9 +22,9 @@ public class MemoryAPI {
 	
 	public double getUsedMemory(boolean inPercentage) {
 		if(!inPercentage)
-			return TheAPI.getNumbersAPI(String.format("%2.02f", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) /mb).replaceAll(",", ".")).getDouble();
+			return TheAPI.getNumbersAPI(String.format("%2.02f", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) /mb)).getDouble();
 			else
-			return TheAPI.getNumbersAPI(String.format("%2.02f", (getRawUsedMemory(false)/ getMaxMemory())*100).replaceAll(",", ".")).getDouble();
+			return TheAPI.getNumbersAPI(String.format("%2.02f", (getRawUsedMemory(false)/ getMaxMemory())*100)).getDouble();
 	}
 	
 	public double getRawUsedMemory(boolean inPercentage) {

@@ -326,7 +326,7 @@ public class TheAPI {
 	        
 	        double tps = ((double[]) recentTps.get(minecraftServer))[0];
 	        if(tps>20)tps=20;
-			return getNumbersAPI(String.format("%2.02f", tps).replaceAll(",", ".")).getDouble();
+			return getNumbersAPI(String.format("%2.02f", tps)).getDouble();
 	    	}catch(Throwable e) {
 	    		return 20.0;
 	    	}
