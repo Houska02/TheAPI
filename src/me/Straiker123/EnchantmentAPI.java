@@ -8,33 +8,21 @@ public class EnchantmentAPI {
 	}
 	
 	private String replace(String s) {
-		return s.replaceAll("%SHARPNESS%", "DAMAGE_ALL").replaceAll("%FIRE%", "ARROW_FIRE")
-				.replaceAll("%INFINITY%", "ARROW_INFINITE").replaceAll("%FIREASPECT%", "FIRE_ASPECT")
-				.replaceAll("%RESPIRATION%", "OXYGEN").replaceAll("%LOOTING%", "LOOT_BONUS_MOBS")
-				.replaceAll("%FORTUNE%", "LOOT_BONUS_BLOCKS").replaceAll("%UNBREAKING%", "DURABILITY")
-				.replaceAll("%AQUA_AFFINITY%", "WATER_WORKER").replaceAll("%PROTECTION%", "PROTECTION_ENVIRONMENTAL")
-				.replaceAll("%BLAST_PROTECTION%", "PROTECTION_EXPLOSIONS").replaceAll("%FEATHER_FALLING%", "PROTECTION_FALL")
-				.replaceAll("%FIRE_PROTECTION%", "PROTECTION_FIRE").replaceAll("%PROJECTILE_PROTECTION%", "PROTECTION_PROJECTILE")
-				.replaceAll("%CURSE_OF_VANISHING%", "VANISHING_CURSE").replaceAll("%CURSE_OF_BINDING%", "BINDING_CURSE")
-				.replaceAll("%SMITE", "DAMAGE_UNDEAD%").replaceAll("%POWER%", "ARROW_DAMAGE").replaceAll("ALLDAMAGE", "DAMAGE_ALL").replaceAll("DAMAGEALL", "DAMAGE_ALL")
-				.replaceAll("%BANE_OF_ARTHROPODS%", "DAMAGE_ARTHROPODS").replaceAll("%EFFICIENCY%", "DIG_SPEED").replaceAll("%ALL_DAMAGE%", "DAMAGE_ALL")
-				.replaceAll("%PUNCH%", "ARROW_KNOCKBACK").replaceAll("%LOOTMOBS%", "LOOT_BONUS_MOBS").replaceAll("%LOOTBLOCKS%", "LOOT_BONUS_BLOCKS");
+		return s.replace("%SHARPNESS%", "DAMAGE_ALL").replace("%FIRE%", "ARROW_FIRE")
+				.replace("%INFINITY%", "ARROW_INFINITE").replace("%FIREASPECT%", "FIRE_ASPECT")
+				.replace("%RESPIRATION%", "OXYGEN").replace("%LOOTING%", "LOOT_BONUS_MOBS")
+				.replace("%FORTUNE%", "LOOT_BONUS_BLOCKS").replace("%UNBREAKING%", "DURABILITY")
+				.replace("%AQUA_AFFINITY%", "WATER_WORKER").replace("%PROTECTION%", "PROTECTION_ENVIRONMENTAL")
+				.replace("%BLAST_PROTECTION%", "PROTECTION_EXPLOSIONS").replace("%FEATHER_FALLING%", "PROTECTION_FALL")
+				.replace("%FIRE_PROTECTION%", "PROTECTION_FIRE").replace("%PROJECTILE_PROTECTION%", "PROTECTION_PROJECTILE")
+				.replace("%CURSE_OF_VANISHING%", "VANISHING_CURSE").replace("%CURSE_OF_BINDING%", "BINDING_CURSE")
+				.replace("%SMITE%", "DAMAGE_UNDEAD").replace("%POWER%", "ARROW_DAMAGE").replace("%ALLDAMAGE%", "DAMAGE_ALL").replace("%DAMAGEALL%", "DAMAGE_ALL")
+				.replace("%BANE_OF_ARTHROPODS%", "DAMAGE_ARTHROPODS").replace("%EFFICIENCY%", "DIG_SPEED").replace("%ALL_DAMAGE%", "DAMAGE_ALL")
+				.replace("%PUNCH%", "ARROW_KNOCKBACK").replace("%LOOTMOBS%", "LOOT_BONUS_MOBS").replace("%LOOTBLOCKS%", "LOOT_BONUS_BLOCKS");
 	}
 	
 	public boolean isEnchantment(String string) {
 		return getByName(string) != null;
-	}
-	
-	/**
-	 * 
-	 * @return String
-	 * Real name of enchantment (For example: SHARPNESS -> DAMAGE_ALL)
-	 */
-	@SuppressWarnings("deprecation")
-	public String getBukkitName(String enchant) {
-		if(isEnchantment(enchant))
-		return getByName(enchant).getName();
-		return null;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -51,6 +39,7 @@ public class EnchantmentAPI {
 	}
 	
 	public void registerEnchantment(Enchantment e) {
+		if(e!=null)
 		Enchantment.registerEnchantment(e);
 	}
 }
