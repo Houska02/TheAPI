@@ -1,6 +1,8 @@
-package me.Straiker123;
+package me.Straiker123.Utils;
 
 import org.bukkit.entity.Player;
+
+import me.Straiker123.TheAPI;
 
 public class Packets {
 	public static Object getNMSPlayer(Player p) throws Exception {

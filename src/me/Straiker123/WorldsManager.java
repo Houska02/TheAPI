@@ -13,6 +13,9 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
 
+import me.Straiker123.Utils.voidGenerator;
+import me.Straiker123.Utils.voidGenerator_1_8;
+
 public class WorldsManager {
 	/**
 	 * Create new world, return boolean if world was created

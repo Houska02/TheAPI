@@ -1,4 +1,4 @@
-package me.Straiker123;
+package me.Straiker123.Utils;
 
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package me.Straiker123;
+package me.Straiker123.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,6 +16,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.inventory.ItemStack;
 
+import me.Straiker123.ItemCreatorAPI;
+import me.Straiker123.LoaderClass;
+import me.Straiker123.TheAPI;
 import me.Straiker123.TheAPI.SudoType;
 
 @SuppressWarnings("deprecation")

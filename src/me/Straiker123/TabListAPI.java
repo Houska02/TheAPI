@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 
 import org.bukkit.entity.Player;
 
+import me.Straiker123.Utils.Error;
+import me.Straiker123.Utils.Packets;
 import net.glowstone.entity.GlowPlayer;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 

@@ -11,6 +11,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.Straiker123.TimeConventorAPI.EndWords;
+import me.Straiker123.Utils.TheAPICommand;
+import me.Straiker123.Utils.punishment;
 import net.milkbowl.vault.economy.Economy;
 
 public class LoaderClass extends JavaPlugin {

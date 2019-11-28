@@ -9,6 +9,8 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 
+import me.Straiker123.Utils.Error;
+
 public class PlayerAPI {
 	Player s;
 	public PlayerAPI(Player a) {

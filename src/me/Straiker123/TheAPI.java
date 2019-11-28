@@ -19,6 +19,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 
+import me.Straiker123.Utils.Error;
+import me.Straiker123.Utils.Packets;
 import net.glowstone.entity.GlowPlayer;
 
 public class TheAPI {

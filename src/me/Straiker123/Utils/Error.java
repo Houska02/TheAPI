@@ -1,4 +1,6 @@
-package me.Straiker123;
+package me.Straiker123.Utils;
+
+import me.Straiker123.TheAPI;
 
 public class Error {
 	public static void err(String message, String reason) {

@@ -1,10 +1,12 @@
-package me.Straiker123;
+package me.Straiker123.Utils;
 
 import java.util.Random;
 
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.ChunkGenerator;
+
+import me.Straiker123.TheAPI;
 
 public class voidGenerator extends ChunkGenerator {
 	 String the_void;

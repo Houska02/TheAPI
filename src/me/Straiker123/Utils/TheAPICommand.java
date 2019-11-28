@@ -1,9 +1,13 @@
-package me.Straiker123;
+package me.Straiker123.Utils;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
+
+import me.Straiker123.ConfigAPI;
+import me.Straiker123.LoaderClass;
+import me.Straiker123.TheAPI;
 
 public class TheAPICommand implements CommandExecutor {
 
