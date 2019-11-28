@@ -4,6 +4,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -49,11 +50,29 @@ public class TheAPI {
 		return list.get(new Random().nextInt(r));
 	}
 	
+	public static int generateRandomInt(int maxInt) {
+		if(maxInt<=0)maxInt=1;
+		int i = new Random().nextInt(maxInt);
+		if(i<=0)i=1;
+		return i;
+	}
+
+	public static double generateRandomDouble(double maxDouble) {
+		if(maxDouble<=0)maxDouble=1.0;
+		double i = new Random().nextInt((int)maxDouble)+new Random().nextDouble();
+		if(i<=0)i=1;
+		if(i>maxDouble)i=maxDouble;
+		return i;
+	}
 	public static long getServerUpTime() {
 		return ManagementFactory.getRuntimeMXBean().getUptime();
 	}
-	
+	private static HashMap<Player, BossBar> boss = new HashMap<Player, BossBar>();
 	public static void sendBossBar(Player p, String text, double progress, int timeToExpire) {
+		 if(p == null) {
+	    	 Error.err("sending ActionBar", "Player is null");
+		   return;
+	   }
 		if(getServerVersion().equals("v1_8_R3")) {
 			Error.err("sending bossbar to "+p.getName(), "Servers version 1.8.8 doesn't have this method");
 			return;
@@ -65,11 +84,14 @@ public class TheAPI {
 	if(progress>1)progress=1;
 	a.setProgress(progress);
 	a.addPlayer(p);
+	removeBossBar(p);
+	boss.put(p,a);
+	if(timeToExpire!=0)
 	Bukkit.getScheduler().runTaskLater(LoaderClass.plugin, new Runnable() {
 
 		@Override
 		public void run() {
-			a.removeAll();
+			removeBossBar(p);
 		}
 		
 	},(long) (20*timeToExpire));
@@ -77,7 +99,36 @@ public class TheAPI {
 		Error.err("sending bossbar to "+p.getName(), "Text is null");
 	}}
 	
-	   public static void sendActionBar(Player p, String text) {
+	public static void removeBossBar(Player p) {
+		 if(p == null) {
+	    	 Error.err("sending ActionBar", "Player is null");
+		   return;
+	   }
+		if(getServerVersion().equals("v1_8_R3")) {
+			Error.err("sending bossbar to "+p.getName(), "Servers version 1.8.8 doesn't have this method");
+			return;
+		}
+		if(getBossBar(p)!=null) {
+			getBossBar(p).removeAll();
+			boss.remove(p);
+		}
+	}
+	
+	public static BossBar getBossBar(Player p) {
+		 if(p == null) {
+	    	 Error.err("sending ActionBar", "Player is null");
+		   return null;
+	   }
+		if(getServerVersion().equals("v1_8_R3")) {
+			Error.err("sending bossbar to "+p.getName(), "Servers version 1.8.8 doesn't have this method");
+			return null;
+		}
+		if(boss.isEmpty()==false && boss.containsKey(p)) {
+			return boss.get(p);
+		}
+		return null;
+	}
+	public static void sendActionBar(Player p, String text) {
 		   if(p == null) {
 		    	 Error.err("sending ActionBar", "Player is null");
 			   return;
