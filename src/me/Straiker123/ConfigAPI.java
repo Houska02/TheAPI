@@ -66,24 +66,40 @@ public class ConfigAPI {
 		return true;
 	}
 	
-	public void save() {
+	public boolean save() {
 		try {
 		if(check()) {
 		a.save(f);
+		return true;
 		}
+		return false;
 	} catch (Exception e) {
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when saving "+name+"."+end+" config:"));
 		e.printStackTrace();
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
+		return false;
 	}
 	}
 	
-	public void reload() {
-		a=YamlConfiguration.loadConfiguration(f);
+	public boolean reload() {
+		try {
+		f=new File("plugins/"+loc+"/"+name+"."+end);
+		a = YamlConfiguration.loadConfiguration(f);
+		if(h!=null)a.options().header(h);
+		if(c!=null && !c.isEmpty()) {
+		a.addDefaults(c);
+		}
+		a.options().copyDefaults(true).copyHeader(true);
 		save();
+		if(!LoaderClass.list.contains(this))
+		LoaderClass.list.add(this);
+		return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
-	public void create() {
+	public boolean create() {
 		try {
 			f=new File("plugins/"+loc+"/"+name+"."+end);
 		a = YamlConfiguration.loadConfiguration(f);
@@ -95,24 +111,27 @@ public class ConfigAPI {
 		save();
 		if(!LoaderClass.list.contains(this))
 		LoaderClass.list.add(this);
+		return true;
 		} catch (Exception e) {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when creating "+name+"."+end+" config:"));
 			e.printStackTrace();
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
+			return false;
 		}
 	}
 	public Map<String, Object> getDefaults(){
 		return c;
 	}
 	
-	public void delete() {
+	public boolean delete() {
 		if(new File("plugins/"+loc+"/"+name+"."+end).exists()) {
 		new File("plugins/"+loc+"/"+name+"."+end).delete();
 		c.clear();
 		if(LoaderClass.list.contains(this))
 		LoaderClass.list.remove(this);
-		
+		return true;
 		}
+		return false;
 	}
 	
 }

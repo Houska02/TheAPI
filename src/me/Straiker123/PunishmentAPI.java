@@ -28,7 +28,7 @@ public class PunishmentAPI {
 			}else {
 			TheAPI.broadcast(LoaderClass.config.getString("Format.Broadcast-Ban")
 					.replace("%player%", player)
-					.replace("%reason%", reason),LoaderClass.config.getString("Format.Broadcast-Ban-Permission")); //perm :D hm i hate my mouse Czech republic
+					.replace("%reason%", reason),LoaderClass.config.getString("Format.Broadcast-Ban-Permission"));
 			}
 		}
 	public static boolean silent;
@@ -101,7 +101,7 @@ public class PunishmentAPI {
 					.replace("%player%", player)
 					.replace("%reason%", reason));
 		}else {
-			TheAPI.broadcast(LoaderClass.config.getString("Format.Broadcast-BanIP-IPAddress")
+			TheAPI.broadcast(LoaderClass.config.getString("Format.Broadcast-BanIP-Player")
 					.replace("%player%", player)
 					.replace("%reason%", reason),LoaderClass.config.getString("Format.Broadcast-BanIP-Player-Permission"));
 		}

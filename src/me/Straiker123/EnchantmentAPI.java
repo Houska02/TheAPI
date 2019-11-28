@@ -28,7 +28,9 @@ public class EnchantmentAPI {
 	@SuppressWarnings("deprecation")
 	public Enchantment getByName(String enchant) {
 	try {
-		return Enchantment.getByName(replace("%"+enchant.toUpperCase()+"%"));
+		if(Enchantment.getByName(enchant.toUpperCase())==null)
+			return Enchantment.getByName(replace("%"+enchant.toUpperCase()+"%"));
+		return Enchantment.getByName(enchant.toUpperCase());
 	}catch(Exception e) {
 	return null;
 	}

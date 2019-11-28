@@ -36,7 +36,15 @@ public class TheAPI {
 	}
 	
 	public static Object getRandomFromList(List<Object> list) {
-		return list.get(new Random().nextInt(list.size()-1));
+		int r = list.size()-1;
+		if(r<=0) {
+			if(list.isEmpty())return null;
+			if(list.get(0)!=null) {
+				return list.get(0);
+			}
+			return null;
+		}else
+		return list.get(new Random().nextInt(r));
 	}
 	
 	public static long getServerUpTime() {
