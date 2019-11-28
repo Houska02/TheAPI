@@ -9,6 +9,7 @@ Current version of TheAPI on this GitHub is 2.2.8
 * SCR_PerWorldInventory (https://dev.bukkit.org/projects/scr-per-world-inventory)
 * The Lucky Blocks (https://www.spigotmc.org/resources/the-lucky-blocks.72979/)
 * Vanisher (https://www.spigotmc.org/resources/vanisher.72995/)
+* Amazing Fishing (https://www.spigotmc.org/resources/amazing-fishing.71148/)
 
 #### Do you want to add your plugin to this list ?
 #### Open request on https://github.com/Straiker123/TheAPI/issues/new/choose !
