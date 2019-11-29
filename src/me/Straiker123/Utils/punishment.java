@@ -89,10 +89,11 @@ public class punishment implements Listener {
 					.replace("%reason%", TheAPI.getPunishmentAPI().getBanReason(s))));
 		}
 		if(TheAPI.getPunishmentAPI().hasTempBan(s)) {
-			if((TheAPI.getPunishmentAPI().getTempBanStart(s) - System.currentTimeMillis() + TheAPI.getPunishmentAPI().getTempBanTime(s)) < 0)
-				
+			int time = (int) (TheAPI.getPunishmentAPI().getTempBanStart(s) - System.currentTimeMillis() + TheAPI.getPunishmentAPI().getTempBanTime(s));
+			if(time < 0)
 				e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getString("Format.TempBan")
 						.replace("%player%", s)
+						.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time))
 						.replace("%reason%", TheAPI.getPunishmentAPI().getTempBanReason(s))));
 		}
 		if(TheAPI.getPunishmentAPI().hasBanIP_Player(s)) {
