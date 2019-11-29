@@ -53,7 +53,7 @@ public class punishment implements Listener {
 	}
 	
 	private ItemStack createHead(ItemStack a) {
-		ItemCreatorAPI s = TheAPI.getItemCreatorAPI(Material.matchMaterial("SKULL_ITEM"));
+		ItemCreatorAPI s = TheAPI.getItemCreatorAPI(Material.matchMaterial("PLAYER_HEAD"));
 		 if(a.getItemMeta().hasDisplayName())
 		 s.setDisplayName(a.getItemMeta().getDisplayName());
 		 if(a.getItemMeta().hasLore())s.setLore(a.getItemMeta().getLore());
@@ -196,10 +196,11 @@ public class punishment implements Listener {
 			ItemStack i = e.getCurrentItem();
 		if(i != null) {
 			if(e.getClickedInventory().getType()==InventoryType.PLAYER 
-					&& LoaderClass.data.getString("guis."+p.getName()+"."+a+".CANT_PUT_ITEM")!=null)
+					&& LoaderClass.data.getString("guis."+p.getName()+"."+a+".CANT_PUT_ITEM")!=null) {
 			e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+".CANT_PUT_ITEM"));
-			
-			if(i.getType().name().equals("WRITTEN_BOOK"))i=createWrittenBook(i);
+			return;
+			}
+			if(i.getType().name().equals("WRITTEN_BOOK")||i.getType().name().equals("BOOK_AND_QUILL"))i=createWrittenBook(i);
 
 			if(i.getType().name().equals("LEGACY_SKULL_ITEM")||
 					i.getType().name().equals("SKULL_ITEM")

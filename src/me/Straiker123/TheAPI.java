@@ -39,15 +39,15 @@ public class TheAPI {
 	}
 	
 	public static Object getRandomFromList(List<Object> list) {
-		int r = list.size()-1;
+		if(list.isEmpty()||list==null)return null;
+		int r = new Random().nextInt(list.size());
 		if(r<=0) {
-			if(list.isEmpty())return null;
 			if(list.get(0)!=null) {
 				return list.get(0);
 			}
 			return null;
 		}else
-		return list.get(new Random().nextInt(r));
+		return list.get(r);
 	}
 	
 	public static int generateRandomInt(int maxInt) {

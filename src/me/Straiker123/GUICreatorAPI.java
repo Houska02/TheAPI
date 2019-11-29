@@ -125,7 +125,7 @@ public class GUICreatorAPI {
 	}
 	
 	private ItemStack createHead(ItemStack a) {
-		ItemCreatorAPI s = TheAPI.getItemCreatorAPI(Material.matchMaterial("SKULL_ITEM"));
+		ItemCreatorAPI s = TheAPI.getItemCreatorAPI(Material.matchMaterial("PLAYER_HEAD"));
 		 if(a.getItemMeta().hasDisplayName())
 		 s.setDisplayName(a.getItemMeta().getDisplayName());
 		 if(a.getItemMeta().hasLore())s.setLore(a.getItemMeta().getLore());
@@ -163,7 +163,7 @@ public class GUICreatorAPI {
 		for(Options a:options.keySet()) {
 			switch(a) {
 			case CANT_PUT_ITEM:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+".CAN_PUT_ITEM", options.get(a));
+				LoaderClass.data.set("guis."+p.getName()+"."+getID()+".CANT_PUT_ITEM", options.get(a));
 				break;
 			case CANT_BE_TAKEN:
 				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".CANT_BE_TAKEN", options.get(a));
@@ -248,7 +248,7 @@ public class GUICreatorAPI {
 				
 			}
 		}
-		if(item.getType().equals(Material.WRITTEN_BOOK))
+		if(item.getType().name().equals("WRITTEN_BOOK")||item.getType().name().equals("BOOK_AND_QUILL"))
 			LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createWrittenBook(item));
 		else
 			if(item.getType().name().equals("LEGACY_SKULL_ITEM")||
@@ -300,7 +300,7 @@ public class GUICreatorAPI {
 		map.put(position,item);
 		else
 			map.replace(position,item);
-		if(item.getType().equals(Material.WRITTEN_BOOK))
+		if(item.getType().name().equals("WRITTEN_BOOK")||item.getType().name().equals("BOOK_AND_QUILL"))
 			LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createWrittenBook(item));
 		else
 			if(item.getType().name().equals("LEGACY_SKULL_ITEM")||
