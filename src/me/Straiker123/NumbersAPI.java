@@ -7,6 +7,7 @@ import javax.script.ScriptException;
 public class NumbersAPI {
 	String fromString;
 	public NumbersAPI(String string) {
+		if(string!=null)
 		fromString = string;
 	}
 	
@@ -20,21 +21,16 @@ public class NumbersAPI {
 		return 0;
 	}
 	public double getDouble() {
-		String a ="0.0";
-		if(fromString!=null)
-			a=fromString.replace(",", ".").replace("[a-zA-Z]+", "");
-		if (isDouble()) {
+		String a=fromString.replaceAll("[a-zA-Z]+", "").replace(",", ".");
+		if (isDouble(a)) {
 		return Double.parseDouble(a);
-		}
-		else {
+		}else {
 		return 0.0;
 	}}
 	
 	
 	private double getDouble(String s) {
-		 String aa ="0.0";
-		if(s!=null)
-			aa=s.replace(",", ".").replace("[a-zA-Z]+", "");
+		 String aa =s.replaceAll("[a-zA-Z]+", "").replace(",", ".");
 		if (isDouble(aa)) {
 			return Double.parseDouble(aa);
 			}
@@ -43,9 +39,7 @@ public class NumbersAPI {
 		}
 	}
 	private boolean isDouble(String a) {
-		 String aa ="0.0";
-		if(a!=null)
-			aa=a.replace(",", ".").replace("[a-zA-Z]+", "");
+		 String aa =a.replaceAll("[a-zA-Z]+", "").replace(",", ".");
 		try {
 			Double.parseDouble(aa);
 		} catch (NumberFormatException e) {
@@ -55,9 +49,7 @@ public class NumbersAPI {
 	}
 	
 	public boolean isDouble() {
-		String a ="0.0";
-		if(fromString!=null)
-			a=fromString.replace(",", ".").replace("[a-zA-Z]+", "");
+		String a =fromString.replaceAll("[a-zA-Z]+", "").replace(",", ".");
 		try {
 			Double.parseDouble(a);
 		} catch (NumberFormatException e) {
@@ -66,9 +58,7 @@ public class NumbersAPI {
 		return true;
 	}
 	public long getLong() {
-		String a ="0";
-		if(fromString!=null)
-			a=fromString.replace("[a-zA-Z]+", "");
+		String a=fromString.replaceAll("[a-zA-Z]+", "");
 		if (isLong()) {
 		return Long.parseLong(a);
 		}
@@ -76,9 +66,7 @@ public class NumbersAPI {
 		return 0;
 	}}
 	public boolean isLong() {
-		String a ="0";
-		if(fromString!=null)
-			a=fromString.replace("[a-zA-Z]+", "");
+		String a =fromString.replaceAll("[a-zA-Z]+", "");
 		try {
 		Long.parseLong(a);
 		} catch (NumberFormatException e) {
@@ -87,9 +75,7 @@ public class NumbersAPI {
 		return true;
 	}
 	public int getInt() {
-		String a ="0";
-		if(fromString!=null)
-			a=fromString.replace("[a-zA-Z]+", "");
+		String a=fromString.replaceAll("[a-zA-Z]+", "");
 		if (isInt()) {
 		return Integer.parseInt(a);
 		}
@@ -97,9 +83,7 @@ public class NumbersAPI {
 		return 0;
 	}}
 	public boolean isInt() {
-		String a ="0";
-		if(fromString!=null)
-			a=fromString.replace("[a-zA-Z]+", "");
+		String a =fromString.replaceAll("[a-zA-Z]+", "");
 		try {
 		Integer.parseInt(a);
 		} catch (NumberFormatException e) {
