@@ -12,8 +12,8 @@ public class GUICreatorAPI {
 	Player p;
 	public GUICreatorAPI(Player s) {
 		p=s;
-		if(LoaderClass.data.getString("guis."+s.getName())!=null)
-			id=LoaderClass.data.getConfigurationSection("guis."+s.getName()).getKeys(false).size()+"";
+		if(LoaderClass.data.getConfig().getString("guis."+s.getName())!=null)
+			id=LoaderClass.data.getConfig().getConfigurationSection("guis."+s.getName()).getKeys(false).size()+"";
 	}
 	String t = "TheAPI - Missing name of GUI";
 	public void setTitle(String title) {
@@ -163,20 +163,20 @@ public class GUICreatorAPI {
 		for(Options a:options.keySet()) {
 			switch(a) {
 			case CANT_PUT_ITEM:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+".CANT_PUT_ITEM", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+".CANT_PUT_ITEM", options.get(a));
 				break;
 			case CANT_BE_TAKEN:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".CANT_BE_TAKEN", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".CANT_BE_TAKEN", options.get(a));
 				break;
 			case RUNNABLE:
 				if(LoaderClass.actions.get(p.getName()+"."+getID()+"."+position+".RUNNABLE")==null)
 				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+".RUNNABLE",(Runnable) options.get(a));
 				break;
 			case SENDMESSAGES:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES", options.get(a));
 				break;
 			case SENDCOMMANDS:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS", options.get(a));
 				break;
 				
 
@@ -185,10 +185,10 @@ public class GUICreatorAPI {
 				LoaderClass.actions.put(p.getName()+"."+getID()+".RUNNABLE_ON_INV_CLOSE",(Runnable) options.get(a));
 				break;
 			case SENDMESSAGES_ON_INV_CLOSE:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+".SENDMESSAGES_ON_INV_CLOSE", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+".SENDMESSAGES_ON_INV_CLOSE", options.get(a));
 				break;
 			case SENDCOMMANDS_ON_INV_CLOSE:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+".SENDCOMMANDS_ON_INV_CLOSE", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+".SENDCOMMANDS_ON_INV_CLOSE", options.get(a));
 				break;
 
 			case RUNNABLE_LEFT_CLICK:
@@ -196,10 +196,10 @@ public class GUICreatorAPI {
 				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+".RUNNABLE_LEFT_CLICK",(Runnable) options.get(a));
 				break;
 			case SENDMESSAGES_LEFT_CLICK:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_LEFT_CLICK", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_LEFT_CLICK", options.get(a));
 				break;
 			case SENDCOMMANDS_LEFT_CLICK:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_LEFT_CLICK", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_LEFT_CLICK", options.get(a));
 				break;
 
 			case RUNNABLE_RIGHT_CLICK:
@@ -207,10 +207,10 @@ public class GUICreatorAPI {
 				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+".RUNNABLE_RIGHT_CLICK",(Runnable) options.get(a));
 				break;
 			case SENDMESSAGES_RIGHT_CLICK:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_RIGHT_CLICK", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_RIGHT_CLICK", options.get(a));
 				break;
 			case SENDCOMMANDS_RIGHT_CLICK:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_RIGHT_CLICK", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_RIGHT_CLICK", options.get(a));
 				break;
 
 			case RUNNABLE_MIDDLE_CLICK:
@@ -218,10 +218,10 @@ public class GUICreatorAPI {
 				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+".RUNNABLE_MIDDLE_CLICK",(Runnable) options.get(a));
 				break;
 			case SENDMESSAGES_MIDDLE_CLICK:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_MIDDLE_CLICK", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_MIDDLE_CLICK", options.get(a));
 				break;
 			case SENDCOMMANDS_MIDDLE_CLICK:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_MIDDLE_CLICK", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_MIDDLE_CLICK", options.get(a));
 				break;
 
 			case RUNNABLE_SHIFT_WITH_LEFT_CLICK:
@@ -229,10 +229,10 @@ public class GUICreatorAPI {
 				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+".RUNNABLE_SHIFT_WITH_LEFT_CLICK",(Runnable) options.get(a));
 				break;
 			case SENDMESSAGES_SHIFT_WITH_LEFT_CLICK:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_SHIFT_WITH_LEFT_CLICK", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_SHIFT_WITH_LEFT_CLICK", options.get(a));
 				break;
 			case SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK", options.get(a));
 				break;
 
 			case RUNNABLE_SHIFT_WITH_RIGHT_CLICK:
@@ -240,23 +240,23 @@ public class GUICreatorAPI {
 				LoaderClass.actions.put(p.getName()+"."+getID()+"."+position+".RUNNABLE_SHIFT_WITH_RIGHT_CLICK",(Runnable) options.get(a));
 				break;
 			case SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK", options.get(a));
 				break;
 			case SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK:
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK", options.get(a));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK", options.get(a));
 				break;
 				
 			}
 		}
 		if(item.getType().name().equals("WRITTEN_BOOK")||item.getType().name().equals("BOOK_AND_QUILL"))
-			LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createWrittenBook(item));
+			LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".item", createWrittenBook(item));
 		else
 			if(item.getType().name().equals("LEGACY_SKULL_ITEM")||
 					item.getType().name().equals("SKULL_ITEM")
 					||item.getType().name().equals("PLAYER_HEAD"))
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createHead(item));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".item", createHead(item));
 			else
-		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
+		LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
 	}
 
 	public void addItem(ItemStack item) {
@@ -301,14 +301,14 @@ public class GUICreatorAPI {
 		else
 			map.replace(position,item);
 		if(item.getType().name().equals("WRITTEN_BOOK")||item.getType().name().equals("BOOK_AND_QUILL"))
-			LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createWrittenBook(item));
+			LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".item", createWrittenBook(item));
 		else
 			if(item.getType().name().equals("LEGACY_SKULL_ITEM")||
 					item.getType().name().equals("SKULL_ITEM")
 					||item.getType().name().equals("PLAYER_HEAD"))
-				LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", createHead(item));
+				LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".item", createHead(item));
 			else
-		LoaderClass.data.set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
+		LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
 	}
 	
 	public void open() {
@@ -316,8 +316,8 @@ public class GUICreatorAPI {
 		for(Integer a : map.keySet()) {
 			i.setItem(a, map.get(a));
 		}
-		LoaderClass.data.set("guis."+p.getName()+"."+getID()+".title", t);
-		LoaderClass.plugin.a.save();
+		LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+".title", t);
+		LoaderClass.data.save();
 		p.openInventory(i);
 		inv=i;
 	}

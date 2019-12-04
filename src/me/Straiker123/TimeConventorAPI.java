@@ -13,15 +13,15 @@ public class TimeConventorAPI {
 		Minute,
 		Second
 	}
-	String sec =LoaderClass.config.getString("Words.Second");
-	String min =LoaderClass.config.getString("Words.Minute");
-	String h =LoaderClass.config.getString("Words.Hour");
-	String d =LoaderClass.config.getString("Words.Day");
-	String w =LoaderClass.config.getString("Words.Week");
-	String mon = LoaderClass.config.getString("Words.Month");
-	String y =LoaderClass.config.getString("Words.Year");
-	String c = LoaderClass.config.getString("Words.Century");
-	String mil =LoaderClass.config.getString("Words.Millenium");
+	String sec =LoaderClass.config.getConfig().getString("Words.Second");
+	String min =LoaderClass.config.getConfig().getString("Words.Minute");
+	String h =LoaderClass.config.getConfig().getString("Words.Hour");
+	String d =LoaderClass.config.getConfig().getString("Words.Day");
+	String w =LoaderClass.config.getConfig().getString("Words.Week");
+	String mon = LoaderClass.config.getConfig().getString("Words.Month");
+	String y =LoaderClass.config.getConfig().getString("Words.Year");
+	String c = LoaderClass.config.getConfig().getString("Words.Century");
+	String mil =LoaderClass.config.getConfig().getString("Words.Millenium");
 
 	public String getEndWord(EndWords a) {
 		if(a != null) {

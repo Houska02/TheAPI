@@ -64,6 +64,9 @@ public class TheAPI {
 		if(i>maxDouble)i=maxDouble;
 		return i;
 	}
+	public static GameAPI getGameAPI(String MiniGameName) {
+		return new GameAPI(MiniGameName);
+	}
 	public static long getServerUpTime() {
 		return ManagementFactory.getRuntimeMXBean().getUptime();
 	}
@@ -308,11 +311,11 @@ public class TheAPI {
 	}
 	
 	public static void sendHelpOp(CommandSender s, String message) {
-		broadcast(LoaderClass.config.getString("Format.HelpOp")
-					.replace("%message%", message).replace("%sender%", s.getName()),LoaderClass.config.getString("Format.HelpOp-Permission"));
+		broadcast(LoaderClass.config.getConfig().getString("Format.HelpOp")
+					.replace("%message%", message).replace("%sender%", s.getName()),LoaderClass.config.getConfig().getString("Format.HelpOp-Permission"));
 		
-		if(!s.hasPermission(LoaderClass.config.getString("Format.HelpOp-Permission")))
-			s.sendMessage(colorize(LoaderClass.config.getString("Format.HelpOp")
+		if(!s.hasPermission(LoaderClass.config.getConfig().getString("Format.HelpOp-Permission")))
+			s.sendMessage(colorize(LoaderClass.config.getConfig().getString("Format.HelpOp")
 				.replace("%message%", message).replace("%sender%", s.getName())));
 	}
 

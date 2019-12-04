@@ -115,19 +115,19 @@ public class PlayerAPI {
 
 	public void setFly(boolean allowFlying, boolean enableFlying) {
 		if(allowFlying) {
-			LoaderClass.data.set("data."+s.getName()+".fly",true);
-			LoaderClass.plugin.a.save();
+			LoaderClass.data.getConfig().set("data."+s.getName()+".fly",true);
+			LoaderClass.data.save();
 		s.setAllowFlight(true);
 		s.setFlying(enableFlying);
 		}else {
-			LoaderClass.data.set("data."+s.getName()+".fly",false);
-			LoaderClass.plugin.a.save();
+			LoaderClass.data.getConfig().set("data."+s.getName()+".fly",false);
+			LoaderClass.data.save();
 			s.setFlying(enableFlying);
 			s.setAllowFlight(false);
 		}
 	}
 	public boolean allowedFly() {
-		return LoaderClass.data.getBoolean("data."+s.getName()+".fly");
+		return LoaderClass.data.getConfig().getBoolean("data."+s.getName()+".fly");
 	}
 
 	public void takeExp(int exp) {
@@ -231,12 +231,12 @@ public class PlayerAPI {
 	}
 	
 	public void setGod(boolean enable) {
-			LoaderClass.data.set("data."+s.getName()+".god",enable);
-			LoaderClass.plugin.a.save();
+			LoaderClass.data.getConfig().set("data."+s.getName()+".god",enable);
+			LoaderClass.data.save();
 			s.setInvulnerable(enable);
 	}
 	public boolean allowedGod() {
-		return LoaderClass.data.getBoolean("data."+s.getName()+".god");
+		return LoaderClass.data.getConfig().getBoolean("data."+s.getName()+".god");
 	}
 	
 }

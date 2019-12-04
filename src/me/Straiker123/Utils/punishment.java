@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.Straiker123.ItemCreatorAPI;
 import me.Straiker123.LoaderClass;
+import me.Straiker123.PunishmentAPI;
 import me.Straiker123.TheAPI;
 import me.Straiker123.TheAPI.SudoType;
 
@@ -81,33 +82,42 @@ public class punishment implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLogin(PlayerLoginEvent e) {
 		String s = e.getPlayer().getName();
-		LoaderClass.data.set("data."+s+".ip", e.getRealAddress().toString().replace(".", "_"));
-		LoaderClass.plugin.a.save();
-		if(TheAPI.getPunishmentAPI().hasBan(s)) {
-			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getString("Format.Ban")
+		LoaderClass.data.getConfig().set("data."+s+".ip", e.getRealAddress().toString().replace(".", "_"));
+		LoaderClass.data.save();
+		PunishmentAPI a = TheAPI.getPunishmentAPI();
+		if(a.hasBan(s)) {
+			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.Ban")
 					.replace("%player%", s)
-					.replace("%reason%", TheAPI.getPunishmentAPI().getBanReason(s))));
+					.replace("%reason%", a.getBanReason(s))));
+			return;
 		}
-		if(TheAPI.getPunishmentAPI().hasTempBan(s)) {
-			int time = (int) (TheAPI.getPunishmentAPI().getTempBanStart(s) - System.currentTimeMillis() + TheAPI.getPunishmentAPI().getTempBanTime(s));
-			if(time < 0)
-				e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getString("Format.TempBan")
+		if(a.hasTempBan(s)) {
+				e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.TempBan")
 						.replace("%player%", s)
-						.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time))
-						.replace("%reason%", TheAPI.getPunishmentAPI().getTempBanReason(s))));
+						.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(a.getTempBan_ExpireTime(s)))
+						.replace("%reason%", a.getTempBanReason(s))));
+				return;
 		}
-		if(TheAPI.getPunishmentAPI().hasBanIP_Player(s)) {
-			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getString("Format.BanIP-Player")
+		if(a.hasBanIP(s)) {
+			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.BanIP")
 					.replace("%player%", s)
-					.replace("%reason%", TheAPI.getPunishmentAPI().getBanReason(s))));
+					.replace("%reason%",a.getBanReason(s))));
+			return;
+		}
+		if(a.hasTempBanIP(s)) {
+			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.TempBanIP")
+					.replace("%player%", s)
+					.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(a.getTempBanIP_ExpireTime(s)))
+					.replace("%reason%", a.getTempBanIPReason(s))));
+			return;
 		}
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLeave(PlayerQuitEvent e) {
 		if(Bukkit.getOnlinePlayers().size()-1 <= 0) {
-			LoaderClass.data.set("guis", null);
-			LoaderClass.plugin.a.save();
+			LoaderClass.data.getConfig().set("guis", null);
+			LoaderClass.data.save();
 			LoaderClass.actions.clear();
 		}
 	}
@@ -137,22 +147,22 @@ public class punishment implements Listener {
 			int time = (int)(TheAPI.getPunishmentAPI().getTempBanStart(s) - System.currentTimeMillis() + TheAPI.getPunishmentAPI().getTempBanTime(s));
 			if(time < 0)
 				e.setCancelled(true);
-				e.getPlayer().sendMessage(TheAPI.colorize(LoaderClass.config.getString("Format.TempMute")
+				e.getPlayer().sendMessage(TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.TempMute")
 								.replace("%player%", s)
 								.replace("%reason%", TheAPI.getPunishmentAPI().getTempMuteReason(s))
 						.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time))));
 		}
 		if(TheAPI.getPunishmentAPI().hasMute(s)) {
 			e.setCancelled(true);
-			e.getPlayer().sendMessage(TheAPI.colorize(LoaderClass.config.getString("Format.Mute")
+			e.getPlayer().sendMessage(TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.Mute")
 					.replace("%player%", s)
 					.replace("%reason%", TheAPI.getPunishmentAPI().getTempMuteReason(s))));
 		}
 	}
 	private String findGUI(String title, Player p) {
 		String w=null;
-		for(String a:LoaderClass.data.getConfigurationSection("guis."+p.getName()).getKeys(false)) {
-		if(title.equals(TheAPI.colorize(LoaderClass.data.getString("guis."+p.getName()+"."+a+".title"))))w= a;
+		for(String a:LoaderClass.data.getConfig().getConfigurationSection("guis."+p.getName()).getKeys(false)) {
+		if(title.equals(TheAPI.colorize(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+".title"))))w= a;
 		}
 	return w;
 	}
@@ -160,17 +170,17 @@ public class punishment implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onClose(InventoryCloseEvent e) {
 		Player p = (Player)e.getPlayer();
-		if(LoaderClass.data.getString("guis."+p.getName())==null) {
+		if(LoaderClass.data.getConfig().getString("guis."+p.getName())==null) {
 			return;
 		}
 		String title = e.getView().getTitle();
 		String a = findGUI(title,p);
 		if(a!=null) {
-			if(LoaderClass.data.getString("guis."+p.getName()+"."+a+".SENDMESSAGES_ON_INV_CLOSE")!=null)
-				for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+".SENDMESSAGES_ON_INV_CLOSE"))
+			if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+".SENDMESSAGES_ON_INV_CLOSE")!=null)
+				for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+".SENDMESSAGES_ON_INV_CLOSE"))
 					TheAPI.broadcastMessage(s);
-			if(LoaderClass.data.getString("guis."+p.getName()+"."+a+".SENDCOMMANDS_ON_INV_CLOSE")!=null)
-				for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+".SENDCOMMANDS_ON_INV_CLOSE"))
+			if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+".SENDCOMMANDS_ON_INV_CLOSE")!=null)
+				for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+".SENDCOMMANDS_ON_INV_CLOSE"))
 					TheAPI.sudoConsole(SudoType.COMMAND, s);
 		    if(LoaderClass.actions.isEmpty()==false) {
 			if(LoaderClass.actions.get(p.getName()+"."+a+".RUNNABLE_ON_INV_CLOSE")!=null)
@@ -179,15 +189,15 @@ public class punishment implements Listener {
 		}
 	}
 	private boolean isSame(Player p, String a, int slot, ItemStack i) {
-		if(LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+slot+".item")!=null)
-		return LoaderClass.data.getItemStack("guis."+p.getName()+"."+a+"."+slot+".item").equals(i);
+		if(LoaderClass.data.getConfig().getItemStack("guis."+p.getName()+"."+a+"."+slot+".item")!=null)
+		return LoaderClass.data.getConfig().getItemStack("guis."+p.getName()+"."+a+"."+slot+".item").equals(i);
 		return false;
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onClick(InventoryClickEvent e) {
 		Player p = (Player)e.getWhoClicked();
-		if(LoaderClass.data.getString("guis."+p.getName())==null) {
+		if(LoaderClass.data.getConfig().getString("guis."+p.getName())==null) {
 			return;
 		}
 		String title = e.getView().getTitle();
@@ -196,8 +206,8 @@ public class punishment implements Listener {
 			ItemStack i = e.getCurrentItem();
 		if(i != null) {
 			if(e.getClickedInventory().getType()==InventoryType.PLAYER 
-					&& LoaderClass.data.getString("guis."+p.getName()+"."+a+".CANT_PUT_ITEM")!=null) {
-			e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+".CANT_PUT_ITEM"));
+					&& LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+".CANT_PUT_ITEM")!=null) {
+			e.setCancelled(LoaderClass.data.getConfig().getBoolean("guis."+p.getName()+"."+a+".CANT_PUT_ITEM"));
 			return;
 			}
 			if(i.getType().name().equals("WRITTEN_BOOK")||i.getType().name().equals("BOOK_AND_QUILL"))i=createWrittenBook(i);
@@ -208,64 +218,64 @@ public class punishment implements Listener {
 				i=createHead(i);
 			
 			if(isSame(p,a,e.getSlot(),i)) {
-				e.setCancelled(LoaderClass.data.getBoolean("guis."+p.getName()+"."+a+"."+e.getSlot()+".CANT_BE_TAKEN"));
+				e.setCancelled(LoaderClass.data.getConfig().getBoolean("guis."+p.getName()+"."+a+"."+e.getSlot()+".CANT_BE_TAKEN"));
 				
-				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES")!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES"))
+				if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES")!=null)
+					for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES"))
 						TheAPI.broadcastMessage(s);
 				
 					if(e.getClick().isLeftClick()&& !e.getClick().isShiftClick())
-						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_LEFT_CLICK")!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_LEFT_CLICK"))
+						if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_LEFT_CLICK")!=null)
+					for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_LEFT_CLICK"))
 						TheAPI.broadcastMessage(s);
 					
 					if(e.getClick().isRightClick()&& !e.getClick().isShiftClick())
-						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_RIGHT_CLICK")!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_RIGHT_CLICK"))
+						if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_RIGHT_CLICK")!=null)
+					for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_RIGHT_CLICK"))
 						TheAPI.broadcastMessage(s);
 					
 					if(e.getClick().isCreativeAction())
-						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_MIDDLE_CLICK")!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_MIDDLE_CLICK"))
+						if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_MIDDLE_CLICK")!=null)
+					for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_MIDDLE_CLICK"))
 						TheAPI.broadcastMessage(s);
 					
 					if(e.getClick().isLeftClick() && e.getClick().isShiftClick())
-						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_LEFT_CLICK")!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_LEFT_CLICK"))
+						if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_LEFT_CLICK")!=null)
+					for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_LEFT_CLICK"))
 						TheAPI.broadcastMessage(s);
 					
 					if(e.getClick().isRightClick() && e.getClick().isShiftClick())
-						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK")!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK"))
+						if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK")!=null)
+					for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDMESSAGES_SHIFT_WITH_RIGHT_CLICK"))
 						TheAPI.broadcastMessage(s);
 				
-				if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS")!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS"))
+				if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS")!=null)
+					for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS"))
 						TheAPI.sudoConsole(SudoType.COMMAND, s);
 				
 					if(e.getClick().isLeftClick()&& !e.getClick().isShiftClick())
-						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_LEFT_CLICK")!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_LEFT_CLICK"))
+						if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_LEFT_CLICK")!=null)
+					for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_LEFT_CLICK"))
 						TheAPI.sudoConsole(SudoType.COMMAND, s);
 					
 					if(e.getClick().isRightClick()&& !e.getClick().isShiftClick())
-						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_RIGHT_CLICK")!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_RIGHT_CLICK"))
+						if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_RIGHT_CLICK")!=null)
+					for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_RIGHT_CLICK"))
 						TheAPI.sudoConsole(SudoType.COMMAND, s);
 					
 					if(e.getClick().isLeftClick() && e.getClick().isShiftClick())
-						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK")!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK"))
+						if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK")!=null)
+					for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_LEFT_CLICK"))
 						TheAPI.sudoConsole(SudoType.COMMAND, s);
 					
 					if(e.getClick().isRightClick() && e.getClick().isShiftClick())
-						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK")!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK"))
+						if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK")!=null)
+					for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_SHIFT_WITH_RIGHT_CLICK"))
 						TheAPI.sudoConsole(SudoType.COMMAND, s);
 					
 					if(e.getClick().isCreativeAction())
-						if(LoaderClass.data.getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_MIDDLE_CLICK")!=null)
-					for(String s: LoaderClass.data.getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_MIDDLE_CLICK"))
+						if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_MIDDLE_CLICK")!=null)
+					for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+"."+e.getSlot()+".SENDCOMMANDS_MIDDLE_CLICK"))
 						TheAPI.sudoConsole(SudoType.COMMAND, s);
 			    if(LoaderClass.actions.isEmpty()==false) {
 				if(LoaderClass.actions.get(p.getName()+"."+a+"."+e.getSlot()+".RUNNABLE")!=null)
