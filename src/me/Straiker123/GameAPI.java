@@ -9,10 +9,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class GameAPI {
-	private FileConfiguration w = LoaderClass.gameapi.getConfig();
+	private FileConfiguration w;
 	String s;
 	public GameAPI(String name) {
 		s= name;
+		w=LoaderClass.gameapi.getConfig();
 	}
 	public void createArena(String arena, String arenaName) {
 		w.set(s+".Arenas."+arena+".Name", arenaName);
@@ -45,25 +46,23 @@ public class GameAPI {
 		runnable_on_end
 	}
 
-	public void arenaSetting(String arena, Setting s, Object value) {
-		if(s==Setting.runnable_on_end) {
+	public void arenaSetting(String arena, Setting ss, Object value) {
+		if(ss==Setting.runnable_on_end) {
 			LoaderClass.win_rewards.put(s+":"+arena, (Runnable)value);
 			w.set(s+".Arenas."+arena+".Setting.win_rewards", true);
 			return;
 		}
-		w.set(s+".Arenas."+arena+".Setting."+s.toString(), value);
+		w.set(s+".Arenas."+arena+".Setting."+ss.toString(), value);
 		LoaderClass.gameapi.save();
 	}
 	
 	public List<Player> getPlayersInGame(String arena) {
 		 List<Player>i=new ArrayList<Player>();
-		for(String s:w.getConfigurationSection(s+".Arenas."+arena+".Teams").getKeys(false)) {
-			for(String d : w.getStringList(s+".Arenas."+arena+".Teams."+s)) {
-				if(Bukkit.getPlayer(d)==null) {
-					removePlayer(arena, d, s);
-					continue;
-				}else
-					i.add(Bukkit.getPlayer(d));
+		 if(getTeamsInGame(arena).isEmpty()==false)
+		for(String s:getTeamsInGame(arena)) {
+			for(Player d : getPlayersInTeam(arena, s)) {
+				if(d==null)continue;
+					i.add(d);
 			}
 		}
 		return i;
@@ -77,13 +76,15 @@ public class GameAPI {
 	
 	public List<Player> getPlayersInTeam(String arena, String team){
 		List<Player> i= new ArrayList<Player>();
-		for(String s :w.getConfigurationSection(s+".Arenas."+arena+".Teams."+team).getKeys(false)) {
+		if(w.getString(s+".Arenas."+arena+".Teams."+team)!=null) {
+		for(String s :w.getStringList(s+".Arenas."+arena+".Teams."+team)) {
 			if(Bukkit.getPlayer(s)==null) {
 				removePlayer(arena, team, s);
 				continue;
 			}else
 				i.add(Bukkit.getPlayer(s));
 		}
+	}
 		return i;
 	}
 
@@ -100,7 +101,7 @@ public class GameAPI {
 	
 	public List<String> getArenas(){
 		List<String> l = new ArrayList<String>();
-		if(w.getString("Arenas")!=null)
+		if(w.getString(s+".Arenas")!=null)
 		for(String s : w.getConfigurationSection(s+".Arenas").getKeys(false))
 			l.add(s);
 		return l;
@@ -124,10 +125,11 @@ public class GameAPI {
 	}
 	public List<Location> getLocationsArena(String arena, String team) {
 		List<Location> l = new ArrayList<Location>();
-		for(String s : w.getConfigurationSection(s+".Arenas."+arena+".Teams-Locations."+team).getKeys(false)) {
-			if(((Location)w.get(s+".Arenas."+arena+".Teams-Locations."+team+"."+s))!=null
-					&& ((Location)w.get(s+".Arenas."+arena+".Teams-Locations."+team+"."+s)).getWorld()!=null) {
-				l.add((Location)w.get(s+".Arenas."+arena+".Teams-Locations."+team+"."+s));
+		if(w.getString(s+".Arenas."+arena+".Teams-Locations."+team)!=null)
+		for(String ss : w.getConfigurationSection(s+".Arenas."+arena+".Teams-Locations."+team).getKeys(false)) {
+			if(((Location)w.get(s+".Arenas."+arena+".Teams-Locations."+team+"."+ss))!=null
+					&& ((Location)w.get(s+".Arenas."+arena+".Teams-Locations."+team+"."+ss)).getWorld()!=null) {
+				l.add((Location)w.get(s+".Arenas."+arena+".Teams-Locations."+team+"."+ss));
 			}
 		}
 		return l;
@@ -148,19 +150,22 @@ public class GameAPI {
 	}
 	
 	public void startArena(String arena) {
-		int mis = getPlayersInGame(arena).size()-1-w.getInt(s+".Arenas."+arena+".Setting.min_players");
+		if(w.getString(s+".Arenas."+arena+".Setting.min_players")!=null) {
+		int mis = getPlayersInGame(arena).size()-w.getInt(s+".Arenas."+arena+".Setting.min_players");
 		if(mis<0) {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&2TheGameAPI &b> &6In arena "+arena+" missing "+mis+" players"));
 			return;
-		}
+		}}
+		if(w.getString(s+".Arenas."+arena+".Setting.max_players")!=null) {
 		if(getPlayersInGame(arena).size()-1>w.getInt(s+".Arenas."+arena+".Setting.max_players")) {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&2TheGameAPI &b> &6In arena "+arena+" is too much players"));
 			return;
-		}
-		if(getTeamsInGame(arena).size()-1>w.getInt(s+".Arenas."+arena+".Setting.min_teams")) {
+		}}
+		if(w.getString(s+".Arenas."+arena+".Setting.min_teams")!=null) {
+		if(getTeamsInGame(arena).size()>w.getInt(s+".Arenas."+arena+".Setting.min_teams")) {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&2TheGameAPI &b> &6Arena "+arena+" required minimal "+w.getInt(s+".Arenas."+arena+".Setting.min_teams")+" teams"));
 			return;
-		}
+		}}
 		LoaderClass.gameapi_timer.put(arena,Bukkit.getScheduler().scheduleSyncRepeatingTask(LoaderClass.plugin, new Runnable() {
 			int time = 0;
 			@Override
@@ -215,6 +220,7 @@ public class GameAPI {
 			}
 		}
 		w.set(s+".Arenas."+arena+".Players", null);
+		w.set(s+".Arenas."+arena+".Teams", null);
 		LoaderClass.gameapi.save();
 		
 	}

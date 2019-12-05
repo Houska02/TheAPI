@@ -173,12 +173,16 @@ public class PunishmentAPI {
 		return LoaderClass.data.getConfig().getString("bans."+getIP(playerOrIP)+".banip") != null;
 	}
 	public boolean hasTempBanIP(String playerOrIP) {
+		try {
 		if(isIP(playerOrIP)) {
 		int time = (int) (getTempBanIPStart(playerOrIP) - System.currentTimeMillis() + getTempBanIPTime(playerOrIP));
 		return time < 0;
 		}else {
 			int time = (int) (getTempBanIPStart(getIP(playerOrIP)) - System.currentTimeMillis() + getTempBanIPTime(getIP(playerOrIP)));
 			return time < 0;
+		}
+		}catch(Exception e) {
+			return false;
 		}
 	}
 	

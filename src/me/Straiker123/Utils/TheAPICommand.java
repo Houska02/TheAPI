@@ -22,7 +22,10 @@ public class TheAPICommand implements CommandExecutor {
 		if(s.hasPermission("TheAPI.Reload")) {
 			s.sendMessage(TheAPI.colorize("&7-----------------"));
 			s.sendMessage(TheAPI.colorize("&6Reloading configs.."));
-			for(ConfigAPI a : LoaderClass.list)a.save();
+			for(ConfigAPI a : LoaderClass.list) {
+				a.save();
+				a.reload();
+			}
 			s.sendMessage(TheAPI.colorize("&6Version: &cv"+LoaderClass.plugin.getDescription().getVersion()));
 			if(TheAPI.getCountingAPI().getPluginsUsingTheAPI().size()!=0) {
 			s.sendMessage(TheAPI.colorize("&6Plugins using TheAPI:"));

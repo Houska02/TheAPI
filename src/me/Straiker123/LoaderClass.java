@@ -30,6 +30,7 @@ public class LoaderClass extends JavaPlugin {
 	public static ConfigAPI gameapi;
 	
 	public void onLoad() {
+		createConfig();
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &6Loading plugin.."));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
@@ -91,6 +92,9 @@ public class LoaderClass extends JavaPlugin {
 	
 	public static HashMap<Player, String> chatformat = new HashMap<Player, String>();
 	private void createConfig() {
+		gameapi=TheAPI.getConfig("TheAPI", "GameAPI");
+		gameapi.setCustomEnd("dat");
+		gameapi.create();
 		config = TheAPI.getConfig("TheAPI", "Config");
 		config.addDefault("Words.Second", "s");
 		config.addDefault("Words.Minute", "min");
@@ -128,10 +132,6 @@ public class LoaderClass extends JavaPlugin {
 		data = TheAPI.getConfig("TheAPI", "Data");
 		data.setCustomEnd("dat");
 		data.create();
-		
-		gameapi=TheAPI.getConfig("TheAPI", "GameAPI");
-		gameapi.setCustomEnd("dat");
-		gameapi.create();
 	}
 	
 	
