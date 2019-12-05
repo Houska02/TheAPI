@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 public class GameAPI {
 	private FileConfiguration w = LoaderClass.gameapi.getConfig();
@@ -20,16 +22,23 @@ public class GameAPI {
 		w.set(s+".Arenas."+arena,null);
 		LoaderClass.gameapi.save();
 	}
-	
+
 	public void addPlayer(String arena, String team, String player) {
 		List<String> list = w.getStringList(s+".Arenas."+arena+".Teams."+team);
 		list.add(player);
 		w.set(s+".Arenas."+arena+".Teams."+team, list);
 		LoaderClass.gameapi.save();
 	}
+	public void removePlayer(String arena, String team, String player) {
+		List<String> list = w.getStringList(s+".Arenas."+arena+".Teams."+team);
+		list.remove(player);
+		w.set(s+".Arenas."+arena+".Teams."+team, list);
+		LoaderClass.gameapi.save();
+	}
 	
 	public static enum Setting {
 		arena_time,
+		start_time,
 		max_players,
 		min_players,
 		min_teams,
@@ -46,40 +55,128 @@ public class GameAPI {
 		LoaderClass.gameapi.save();
 	}
 	
-	public int getPlayersInGame(String arena) {
-		int i = 0;
-		for(String s:w.getConfigurationSection(s+".Arenas."+arena+".Teams").getKeys(false))
-			i=i+w.getStringList(s+".Arenas."+arena+".Teams."+s).size()-1;
+	public List<Player> getPlayersInGame(String arena) {
+		 List<Player>i=new ArrayList<Player>();
+		for(String s:w.getConfigurationSection(s+".Arenas."+arena+".Teams").getKeys(false)) {
+			for(String d : w.getStringList(s+".Arenas."+arena+".Teams."+s)) {
+				if(Bukkit.getPlayer(d)==null) {
+					removePlayer(arena, d, s);
+					continue;
+				}else
+					i.add(Bukkit.getPlayer(d));
+			}
+		}
 		return i;
 	}
 	
-	public int getTeamsInGame(String arena) {
-		int i = w.getConfigurationSection(s+".Arenas."+arena+".Teams").getKeys(false).size()-1;
+	public List<String> getTeamsInGame(String arena) {
+		List<String> i= new ArrayList<String>();
+		for(String s :w.getConfigurationSection(s+".Arenas."+arena+".Teams").getKeys(false))i.add(s);
 		return i;
+	}
+	
+	public List<Player> getPlayersInTeam(String arena, String team){
+		List<Player> i= new ArrayList<Player>();
+		for(String s :w.getConfigurationSection(s+".Arenas."+arena+".Teams."+team).getKeys(false)) {
+			if(Bukkit.getPlayer(s)==null) {
+				removePlayer(arena, team, s);
+				continue;
+			}else
+				i.add(Bukkit.getPlayer(s));
+		}
+		return i;
+	}
+
+	public String getPlayerTeam(String arena, Player player) {
+		for(String team: getTeamsInGame(arena))
+		if(getPlayersInTeam(arena,team).contains(player))return team;
+		return null;
+	}
+	public String getPlayerArena(Player player) {
+		for(String arena: getArenas())
+			if(getPlayerTeam(arena,player)!=null)return arena;
+		return null;
 	}
 	
 	public List<String> getArenas(){
 		List<String> l = new ArrayList<String>();
 		if(w.getString("Arenas")!=null)
-		for(String s : w.getConfigurationSection("Arenas").getKeys(false))
+		for(String s : w.getConfigurationSection(s+".Arenas").getKeys(false))
 			l.add(s);
 		return l;
 	}
+	private String createName(String arena, String team) {
+		String s = "0";
+		if(w.getString(s+".Arenas."+arena+".Teams-Locations."+team)!=null) {
+			for(int i = 0; i>-1; ++i) {
+				if(w.getString(s+".Arenas."+arena+".Teams-Locations."+team+"."+i)==null) {
+					s=i+"";
+					break;
+				}
+			}
+		}
+		return s;
+	}
+	
+	public void addLocationArena(String arena, String team, Location location) {
+		w.set(s+".Arenas."+arena+".Teams-Locations."+team+"."+createName(arena,team),location);
+		LoaderClass.gameapi.save();
+	}
+	public List<Location> getLocationsArena(String arena, String team) {
+		List<Location> l = new ArrayList<Location>();
+		for(String s : w.getConfigurationSection(s+".Arenas."+arena+".Teams-Locations."+team).getKeys(false)) {
+			if(((Location)w.get(s+".Arenas."+arena+".Teams-Locations."+team+"."+s))!=null
+					&& ((Location)w.get(s+".Arenas."+arena+".Teams-Locations."+team+"."+s)).getWorld()!=null) {
+				l.add((Location)w.get(s+".Arenas."+arena+".Teams-Locations."+team+"."+s));
+			}
+		}
+		return l;
+	}
+	public void removeLocationArena(String arena, String team, String id) {
+		w.set(s+".Arenas."+arena+".Teams-Locations."+team+"."+id,null);
+		LoaderClass.gameapi.save();
+	}
+	public void removeAllLocationsArena(String arena, String team, boolean confirm) {
+		if(confirm) {
+		w.set(s+".Arenas."+arena+".Teams-Locations."+team,null);
+		LoaderClass.gameapi.save();
+		}
+	}
+	
+	public boolean inGame(String arena) {
+		return w.getBoolean(s+".Arenas."+arena+".InGame");
+	}
 	
 	public void startArena(String arena) {
-		int mis = getPlayersInGame(arena)-w.getInt(s+".Arenas."+arena+".Setting.min_players");
+		int mis = getPlayersInGame(arena).size()-1-w.getInt(s+".Arenas."+arena+".Setting.min_players");
 		if(mis<0) {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&2TheGameAPI &b> &6In arena "+arena+" missing "+mis+" players"));
 			return;
 		}
-		if(getPlayersInGame(arena)>w.getInt(s+".Arenas."+arena+".Setting.max_players")) {
+		if(getPlayersInGame(arena).size()-1>w.getInt(s+".Arenas."+arena+".Setting.max_players")) {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&2TheGameAPI &b> &6In arena "+arena+" is too much players"));
 			return;
 		}
-		if(getTeamsInGame(arena)>w.getInt(s+".Arenas."+arena+".Setting.min_teams")) {
+		if(getTeamsInGame(arena).size()-1>w.getInt(s+".Arenas."+arena+".Setting.min_teams")) {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&2TheGameAPI &b> &6Arena "+arena+" required minimal "+w.getInt(s+".Arenas."+arena+".Setting.min_teams")+" teams"));
 			return;
 		}
+		LoaderClass.gameapi_timer.put(arena,Bukkit.getScheduler().scheduleSyncRepeatingTask(LoaderClass.plugin, new Runnable() {
+			int time = 0;
+			@Override
+			public void run() {
+				++time;
+				if(time>=w.getInt(s+".Arenas."+arena+".Setting.start_time")) {
+					Bukkit.getScheduler().cancelTask(LoaderClass.gameapi_timer.get(arena));
+					for(Player s : getPlayersInGame(arena)) {
+						List<Object> l = new ArrayList<Object>();
+						for(Location a : getLocationsArena(arena, getPlayerTeam(arena,s)))l.add(a);
+						if(!l.isEmpty())
+						s.teleport((Location)TheAPI.getRandomFromList(l));
+					}
+					return;
+				}
+			}}, 20,20));
 		
 		w.set(s+".Arenas."+arena+".InGame", true);
 		LoaderClass.gameapi.save();
@@ -109,7 +206,6 @@ public class GameAPI {
 	
 	public void stopArena(String arena, boolean runnable_on_end) {
 		w.set(s+".Arenas."+arena+".InGame", false);
-		LoaderClass.gameapi.save();
 		Bukkit.getScheduler().cancelTask(LoaderClass.GameAPI_Arenas.get(arena));
 		if(runnable_on_end) {
 			try {
@@ -118,6 +214,9 @@ public class GameAPI {
 				
 			}
 		}
+		w.set(s+".Arenas."+arena+".Players", null);
+		LoaderClass.gameapi.save();
+		
 	}
 	
 }

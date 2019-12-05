@@ -22,6 +22,7 @@ public class LoaderClass extends JavaPlugin {
 	
 	//arena, int - runnable
 	public static HashMap<String, Integer> GameAPI_Arenas = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> gameapi_timer = new HashMap<String, Integer>();
 	public static HashMap<String, Runnable> win_rewards = new HashMap<String, Runnable>();
 
 	public static ConfigAPI data;
