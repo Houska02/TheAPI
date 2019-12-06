@@ -13,6 +13,11 @@ public class PunishmentAPI {
 	public List<String> getAccounts(String player){
 		return findPlayerByIP(getIP(player));
 	}
+	
+	public boolean existPlayerOrIP(String string) {
+		return LoaderClass.data.getConfig().getString("bans."+string)!=null;
+	}
+	
 	public void setBan(String player, String reason) {
 		if(reason==null)reason="Uknown";
 		LoaderClass.data.getConfig().set("bans."+player+".ban", reason);

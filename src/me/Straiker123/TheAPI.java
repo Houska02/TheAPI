@@ -4,7 +4,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -39,6 +39,19 @@ public class TheAPI {
 		return ManagementFactory.getRuntimeMXBean().getStartTime();
 	}
 	
+	public static String buildString(String[] args) {
+		if(args.length<0) {
+		String msg = "";
+		for (String string : args) {
+			msg=msg+" "+string;
+		}
+		msg = msg.replaceFirst(" ",	"");
+		msg = msg.substring(0, msg.length()-1);
+		return msg;
+	}
+	return null;
+	}
+	
 	public static Object getRandomFromList(List<Object> list) {
 		if(list.isEmpty()||list==null)return null;
 		int r = new Random().nextInt(list.size());
@@ -56,17 +69,32 @@ public class TheAPI {
 	}
 	
 	public static int generateRandomInt(int maxInt) {
-		if(maxInt<=0)maxInt=1;
+		boolean inMinus = false;
+		if(maxInt<0) {
+			maxInt=-1*maxInt;
+			inMinus=true;
+		}
+		if(maxInt==0){
+			return 0;
+		}
 		int i = new Random().nextInt(maxInt);
-		if(i<=0)i=1;
+		if(inMinus)maxInt=-1*maxInt;
 		return i;
 	}
 
 	public static double generateRandomDouble(double maxDouble) {
-		if(maxDouble<=0)maxDouble=1.0;
+		boolean inMinus = false;
+		if(maxDouble<0) {
+			maxDouble=-1*maxDouble;
+			inMinus=true;
+		}
+		if(maxDouble==0.0){
+			return 0.0;
+		}
 		double i = new Random().nextInt((int)maxDouble)+new Random().nextDouble();
 		if(i<=0)i=1;
 		if(i>maxDouble)i=maxDouble;
+		if(inMinus)maxDouble=-1*maxDouble;
 		return i;
 	}
 	public static GameAPI getGameAPI(String MiniGameName) {
@@ -75,7 +103,6 @@ public class TheAPI {
 	public static long getServerUpTime() {
 		return ManagementFactory.getRuntimeMXBean().getUptime();
 	}
-	private static HashMap<Player, BossBar> boss = new HashMap<Player, BossBar>();
 	public static void sendBossBar(Player p, String text, double progress, int timeToExpire) {
 		 if(p == null) {
 	    	 Error.err("sending ActionBar", "Player is null");
@@ -93,7 +120,6 @@ public class TheAPI {
 	a.setProgress(progress);
 	a.addPlayer(p);
 	removeBossBar(p);
-	boss.put(p,a);
 	if(timeToExpire!=0)
 	Bukkit.getScheduler().runTaskLater(LoaderClass.plugin, new Runnable() {
 
@@ -116,13 +142,14 @@ public class TheAPI {
 			Error.err("sending bossbar to "+p.getName(), "Servers version 1.8.8 doesn't have this method");
 			return;
 		}
-		if(getBossBar(p)!=null) {
-			getBossBar(p).removeAll();
-			boss.remove(p);
+		Bukkit.getBossBars().forEachRemaining(KeyedBossBar -> {
+		if(KeyedBossBar.getPlayers().contains(p)){
+			KeyedBossBar.removePlayer(p);
 		}
+		});
 	}
 	
-	public static BossBar getBossBar(Player p) {
+	public static List<BossBar> getBossBar(Player p) {
 		 if(p == null) {
 	    	 Error.err("sending ActionBar", "Player is null");
 		   return null;
@@ -131,10 +158,14 @@ public class TheAPI {
 			Error.err("sending bossbar to "+p.getName(), "Servers version 1.8.8 doesn't have this method");
 			return null;
 		}
-		if(boss.isEmpty()==false && boss.containsKey(p)) {
-			return boss.get(p);
+		List<BossBar> bossBars = new ArrayList<BossBar>();
+		Bukkit.getBossBars().forEachRemaining(KeyedBossBar -> {
+		if(KeyedBossBar.getPlayers().contains(p)){
+			bossBars.add(KeyedBossBar);
 		}
-		return null;
+		});
+			return bossBars;
+		
 	}
 	public static void sendActionBar(Player p, String text) {
 		   if(p == null) {
