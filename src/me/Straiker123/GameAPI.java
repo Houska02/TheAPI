@@ -23,6 +23,15 @@ public class GameAPI {
 		w.set(s+".Arenas."+arena,null);
 		LoaderClass.gameapi.save();
 	}
+	
+	public boolean existArena(String arena) {
+		return w.getString(s+".Arenas."+arena) != null;
+	}
+	
+	public void setArenaInGame(String arena, boolean set) {
+		w.set(s+".Arenas."+arena+".InGame", set);
+		LoaderClass.gameapi.save();
+	}
 
 	public void addPlayer(String arena, String team, String player) {
 		List<String> list = w.getStringList(s+".Arenas."+arena+".Teams."+team);
@@ -34,6 +43,11 @@ public class GameAPI {
 		List<String> list = w.getStringList(s+".Arenas."+arena+".Teams."+team);
 		list.remove(player);
 		w.set(s+".Arenas."+arena+".Teams."+team, list);
+		LoaderClass.gameapi.save();
+	}
+	
+	public void kickAllPlayers(String arena) {
+		w.set(s+".Arenas."+arena+".Teams", null);
 		LoaderClass.gameapi.save();
 	}
 	

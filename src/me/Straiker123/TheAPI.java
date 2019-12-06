@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -48,6 +49,10 @@ public class TheAPI {
 			return null;
 		}else
 		return list.get(r);
+	}
+	
+	public static WorldBorderAPI getWorldBorder(World world) {
+		return new WorldBorderAPI(world);
 	}
 	
 	public static int generateRandomInt(int maxInt) {
@@ -376,7 +381,6 @@ public class TheAPI {
 	}
 	
 	public static double getServerTPS() {
-		
 		try {
 	    	Object minecraftServer = null;
 	    	Field recentTps = null;

@@ -12,8 +12,10 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.Straiker123.ItemCreatorAPI;
@@ -21,6 +23,7 @@ import me.Straiker123.LoaderClass;
 import me.Straiker123.PunishmentAPI;
 import me.Straiker123.TheAPI;
 import me.Straiker123.TheAPI.SudoType;
+import me.Straiker123.WorldBorderAPI.WarningMessageType;
 
 @SuppressWarnings("deprecation")
 public class punishment implements Listener {
@@ -78,6 +81,45 @@ public class punishment implements Listener {
 		 s.setUnbreakable(a.getItemMeta().isUnbreakable());
 		 return s.create();
 	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onMove(PlayerMoveEvent e) {
+		if(TheAPI.getWorldBorder(e.getTo().getWorld()).isOutside(e.getTo())) {
+			if(LoaderClass.data.getConfig().getString("WorldBorder."+e.getTo().getWorld().getName()+".Type")!=null) {
+			WarningMessageType t = WarningMessageType.valueOf(
+					LoaderClass.data.getConfig().getString("WorldBorder."+e.getTo().getWorld().getName()+".Type"));
+			String msg = LoaderClass.data.getConfig().getString("WorldBorder."+e.getTo().getWorld().getName()+".Message");
+			if(msg==null)return;
+			switch(t) {
+			case ACTIONBAR:
+				TheAPI.sendActionBar(e.getPlayer(), msg);
+				break;
+			case BOSSBAR:
+				TheAPI.sendBossBar(e.getPlayer(), msg, 1, 5);
+				break;
+			case CHAT:
+				TheAPI.getPlayerAPI(e.getPlayer()).msg(msg);
+				break;
+			case NONE:
+				break;
+			case SUBTITLE:
+				TheAPI.getPlayerAPI(e.getPlayer()).sendTitle("", msg);
+				break;
+			case TITLE:
+				TheAPI.getPlayerAPI(e.getPlayer()).sendTitle(msg, "");
+				break;
+			}
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onChunkLoad(ChunkLoadEvent e) {
+		if(TheAPI.getWorldBorder(e.getWorld()).isOutside(e.getChunk().getBlock(e.getChunk().getX(), 100, e.getChunk().getZ()).getLocation())) {
+			e.getChunk().unload(true);
+		}
+	}
+	
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLogin(PlayerLoginEvent e) {
