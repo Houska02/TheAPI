@@ -85,23 +85,20 @@ public class WorldBorderAPI {
 	 * 
 	 * @return is location outside world border
 	 */
-	public boolean isOutside(Location loc) {
-	    double size = getSize();
-	    double x = loc.getX() - getCenter().getX();
-	    double z = loc.getZ() - getCenter().getZ();
-	 
-	    return Math.abs(x) < size && Math.abs(z) < size;
-	}
+	
+    public boolean isOutside(Location loc) {
+        double size = getSize()/2;
+        double x = loc.getX() - getCenter().getX();
+        double z = loc.getZ() - getCenter().getZ();
+        return Math.abs(x) > size && Math.abs(z) > size;
+    }
+	
 	/**
 	 * 
 	 * @return is location outside world border
 	 */
 	public boolean isOutside(double X, double Z) {
-	    double size = getSize();
-	    double x = X - getCenter().getX();
-	    double z = Z - getCenter().getZ();
-	 
-	    return Math.abs(x) < size && Math.abs(z) < size;
+	    return isOutside(new Location(w,X,100,Z));
 	}
 	
 	public void setWarningMessageType(WarningMessageType type) {

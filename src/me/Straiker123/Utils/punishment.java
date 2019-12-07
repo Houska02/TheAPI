@@ -115,10 +115,11 @@ public class punishment implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onChunkLoad(ChunkLoadEvent e) {
-		if(TheAPI.getWorldBorder(e.getWorld()).isOutside(e.getChunk().getBlock(e.getChunk().getX(), 100, e.getChunk().getZ()).getLocation())) {
+			if (TheAPI.getWorldBorder(e.getWorld()).isOutside(e.getChunk().getBlock(15, 0, 15).getLocation()) || 
+					TheAPI.getWorldBorder(e.getWorld()).isOutside(e.getChunk().getBlock(0, 0, 0).getLocation()))
+				 
 			e.getChunk().unload(true);
 		}
-	}
 	
 	
 	@EventHandler(priority = EventPriority.LOWEST)
