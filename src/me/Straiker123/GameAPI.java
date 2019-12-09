@@ -185,20 +185,23 @@ public class GameAPI {
 			@Override
 			public void run() {
 				++time;
+				String timer = -1*(w.getInt(s+".Arenas."+arena+".Setting.start_time")-time)+"";
+				for(Player s : getPlayersInGame(arena)) {
+				TheAPI.sendActionBar(s,LoaderClass.config.getConfig().getString("GameAPI.StartingIn").replace("%time%", timer).replace("%arena%", arena));
 				if(time>=w.getInt(s+".Arenas."+arena+".Setting.start_time")) {
 					Bukkit.getScheduler().cancelTask(LoaderClass.gameapi_timer.get(arena));
-					for(Player s : getPlayersInGame(arena)) {
+					TheAPI.sendActionBar(s,LoaderClass.config.getConfig().getString("GameAPI.Start").replace("%arena%", arena));
+					
 						List<Object> l = new ArrayList<Object>();
 						for(Location a : getLocationsArena(arena, getPlayerTeam(arena,s)))l.add(a);
 						if(!l.isEmpty())
 						s.teleport((Location)TheAPI.getRandomFromList(l));
+						return;
 					}
-					return;
 				}
 			}}, 20,20));
 		
-		w.set(s+".Arenas."+arena+".InGame", true);
-		LoaderClass.gameapi.save();
+		setArenaInGame(arena, true);
 		
 		LoaderClass.GameAPI_Arenas.put(arena, Bukkit.getScheduler().scheduleSyncRepeatingTask(LoaderClass.plugin, new Runnable() {
 			int time = 0;
@@ -215,7 +218,7 @@ public class GameAPI {
 							LoaderClass.gameapi.save();
 						}
 					}
-				
+				if(getPlayersInGame(arena).size()<=1)time=w.getInt(s+".Arenas."+arena+".Setting.arena_time");
 				if(time>=w.getInt(s+".Arenas."+arena+".Setting.arena_time")) {
 					stopArena(arena,true);
 					return;
