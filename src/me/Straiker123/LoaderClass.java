@@ -127,6 +127,8 @@ public class LoaderClass extends JavaPlugin {
 		config.addDefault("Format.HelpOp-Permission", "TheAPI.HelpOp");
 		config.addDefault("Format.Report", "&0[&4Report&0] &c%sender% &6reported &c%reported% &6for &c%message%");
 		config.addDefault("Format.Report-Permission", "TheAPI.Report");
+		config.addDefault("GameAPI.StartingIn", "&aStarting in %time%s");
+		config.addDefault("GameAPI.Start", "&aStart");
 		config.create();
 
 		data = TheAPI.getConfig("TheAPI", "Data");

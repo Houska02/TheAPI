@@ -24,6 +24,15 @@ public class GameAPI {
 		LoaderClass.gameapi.save();
 	}
 	
+	public boolean inGamePlayer(Player player) {
+		for(String arena:w.getConfigurationSection(s+".Arenas").getKeys(false)) {
+			if(inGame(arena)) {
+				return getPlayersInGame(arena).contains(player);
+			}
+		}
+		return false;
+	}
+	
 	public boolean existArena(String arena) {
 		return w.getString(s+".Arenas."+arena) != null;
 	}
