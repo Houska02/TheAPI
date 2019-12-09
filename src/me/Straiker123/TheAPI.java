@@ -17,6 +17,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
@@ -40,7 +41,7 @@ public class TheAPI {
 	}
 	
 	public static String buildString(String[] args) {
-		if(args.length<0) {
+		if(args.length>0) {
 		String msg = "";
 		for (String string : args) {
 			msg=msg+" "+string;
@@ -50,6 +51,10 @@ public class TheAPI {
 		return msg;
 	}
 	return null;
+	}
+	
+	public static EntityCreatorAPI getEntityCreatorAPI(EntityType type) {
+		return new EntityCreatorAPI(type);
 	}
 	
 	public static Object getRandomFromList(List<Object> list) {

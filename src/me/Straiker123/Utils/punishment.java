@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -172,6 +173,34 @@ public class punishment implements Listener {
 		e.setMaxPlayers(LoaderClass.plugin.max);
 	}
 
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onDamage(EntityDamageByEntityEvent e) {
+		if(e.getDamager().getScoreboardTags().isEmpty()==false) {
+			double set = 0;
+			double min = 0;
+			double max = 0;
+			for(String t : e.getDamager().getScoreboardTags()) {
+				if(t.startsWith("damage:set:")) {
+					t.replaceFirst("damage:set:", "");
+					set=TheAPI.getNumbersAPI(t).getDouble();
+				}
+				if(t.startsWith("damage:min:"))
+					t.replaceFirst("damage:min:", "");
+				min=TheAPI.getNumbersAPI(t).getDouble();
+			}
+			if(set==0) {
+				if(max!=0 && max>min) {
+			double damage = TheAPI.generateRandomDouble(max);
+			if(damage<min)damage=min;
+			if(max>damage)damage=0;
+			e.setDamage(e.getDamage()+damage);
+				}}else {
+				e.setDamage(set);
+				}
+		}
+	}
+	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onChat(PlayerChatEvent e) {
 		if(LoaderClass.chatformat.get(e.getPlayer()) != null)
