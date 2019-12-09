@@ -96,6 +96,7 @@ public class LoaderClass extends JavaPlugin {
 		gameapi.setCustomEnd("dat");
 		gameapi.create();
 		config = TheAPI.getConfig("TheAPI", "Config");
+		config.addDefault("Options.HideErrors", false);
 		config.addDefault("Words.Second", "s");
 		config.addDefault("Words.Minute", "min");
 		config.addDefault("Words.Hour", "h");

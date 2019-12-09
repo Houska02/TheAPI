@@ -5,6 +5,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
+import me.Straiker123.Utils.Error;
+
 public class EntityCreatorAPI {
 	EntityType t;
 	public EntityCreatorAPI(EntityType type) {
@@ -91,6 +93,7 @@ public class EntityCreatorAPI {
 	
 	@SuppressWarnings("deprecation")
 	public void summonEntity(Location l) {
+		try {
 		LivingEntity e = (LivingEntity) l.getWorld().spawnEntity(l, t);
 		if(hp>0) {
 		e.setMaxHealth(hp);
@@ -118,5 +121,13 @@ public class EntityCreatorAPI {
 		if(entity!=null)
 		e.setPassenger(entity);
 		e.setSilent(silent);
+		}catch(Exception es) {
+			if(!LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
+				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when spawning entity using EnttiyCreatorAPI:"));
+				es.printStackTrace();
+				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
+				}else
+					Error.sendRequest("&bTheAPI&7: &cError when spawning entity using EnttiyCreatorAPI");
+		}
 	}
 }

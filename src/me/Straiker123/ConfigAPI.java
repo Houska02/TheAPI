@@ -7,6 +7,8 @@ import java.util.Map;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import me.Straiker123.Utils.Error;
+
 public class ConfigAPI {
 	String name;
 	String h;
@@ -26,7 +28,10 @@ public class ConfigAPI {
 	}
 	
 	public void addDefault(String path, Object value) {
+		if(!c.containsKey(path))
 		c.put(path, value);
+		else
+			c.replace(path, value);
 	}
 	
 	public void addDefaults(Map<String, Object> defaults){
@@ -74,9 +79,12 @@ public class ConfigAPI {
 		}
 		return false;
 	} catch (Exception e) {
+		if(!LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when saving "+name+"."+end+" config:"));
 		e.printStackTrace();
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
+		}else
+			Error.sendRequest("&bTheAPI&7: &cError when saving "+name+"."+end+" config");
 		return false;
 	}
 	}
@@ -95,6 +103,12 @@ public class ConfigAPI {
 		LoaderClass.list.add(this);
 		return true;
 		} catch (Exception e) {
+			if(!LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
+			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when reloading "+name+"."+end+" config:"));
+			e.printStackTrace();
+			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
+			}else
+				Error.sendRequest("&bTheAPI&7: &cError when reloading "+name+"."+end+" config");
 			return false;
 		}
 	}
@@ -113,9 +127,12 @@ public class ConfigAPI {
 		LoaderClass.list.add(this);
 		return true;
 		} catch (Exception e) {
+			if(!LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when creating "+name+"."+end+" config:"));
 			e.printStackTrace();
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
+			}else
+				Error.sendRequest("&bTheAPI&7: &cError when creating "+name+"."+end+" config");
 			return false;
 		}
 	}
