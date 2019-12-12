@@ -17,6 +17,22 @@ import me.Straiker123.Utils.voidGenerator;
 import me.Straiker123.Utils.voidGenerator_1_8;
 
 public class WorldsManager {
+	
+	
+	public boolean load(String world, Environment generator, WorldType type) {
+		if(Bukkit.getWorld(world)!=null)return false;
+		return TheAPI.getWorldsManager().create(world, generator, type, true, 0);
+		}
+	/**
+	 * Create new world, return boolean if world was created
+	 * @param name Name of world (Required)
+	 * @param generator World generator type (Required)
+	 * @param type set null to create Void world
+	 * @return boolean if world was created
+	 */
+	public boolean create(String name, Environment generator, WorldType type) {
+		return create(name,generator,type,true,0);
+	}
 	/**
 	 * Create new world, return boolean if world was created
 	 * @param name Name of world (Required)

@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import me.Straiker123.Events.GUIOpenEvent;
+
 public class GUICreatorAPI {
 	Player p;
 	public GUICreatorAPI(Player s) {
@@ -47,13 +49,6 @@ public class GUICreatorAPI {
 	public void setSize(int size) {
 		f = size(size);
 	}
-	/**
-	 * 
-	 * @param position
-	 * Position in gui
-	 * @param item
-	 * Item in gui, you can use instance geItemCreatorAPI to create item
-	 */
 	String id = "0";
 	public String getID() {
 		return id;
@@ -150,6 +145,7 @@ public class GUICreatorAPI {
 		 return s.create();
 	}
 	/**
+	 * Set item on position to the gui with options
 	 * @param options
 	 * CANT_PUT_ITEM - Global, can player put to the gui item from his inventory (true/false)
 	 * CANT_BE_TAKEN - Can player take item from gui (true/false)
@@ -259,16 +255,38 @@ public class GUICreatorAPI {
 		LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
 	}
 
+	/**
+	 * Add item to the first empty slot in gui
+	 * @param item
+	 * Item in gui, you can use instance geItemCreatorAPI to create item
+	 */
 	public void addItem(ItemStack item) {
-		setItem(find(), item);
+		if(getFirstEmpty()!=-1)
+		setItem(getFirstEmpty(), item);
 	}
 		
 	Inventory inv;
+	/**
+	 *
+	 * @return opened gui
+	 */
 	public Inventory getGUI() {
 		return inv;
 	}
+
+	/**
+	 *
+	 * @return boolean is gui full
+	 */
+	public boolean isFull() {
+		return getFirstEmpty()!=-1;
+	}
 	
-	private int find() {
+	/**
+	 * return -1 mean in menu isn't empty slot
+	 * @return int where is empty slot (if available)
+	 */
+	public int getFirstEmpty() {
 		int i = -1;
 		boolean find=false;
 		for(int a=0; a<f; ++a) {
@@ -281,6 +299,7 @@ public class GUICreatorAPI {
 		return i;
 	}
 	/**
+	 * Add item to the first empty slot in gui with options
 	 * @param options
 	 * CANT_PUT_ITEM - Global, can player put to the gui item from his inventory (true/false)
 	 * CANT_BE_TAKEN - Can player take item from gui (true/false)
@@ -290,11 +309,18 @@ public class GUICreatorAPI {
 	 * SENDCOMMANDS - Ignoring click type, send list of commands as console (List<String>)
 	 */
 	public void addItem(ItemStack item, HashMap<Options, Object> options) {
-		if(find()!=-1)
-		setItem(find(), item, options);
+		if(getFirstEmpty()!=-1)
+		setItem(getFirstEmpty(), item, options);
 	}
 	
-	
+
+	/**
+	 * Set item on position to the gui
+	 * @param position
+	 * Position in gui
+	 * @param item
+	 * Item in gui, you can use instance ItemCreatorAPI to create item
+	 */
 	public void setItem(int position, ItemStack item) {
 		if(map.get(position)==null)
 		map.put(position,item);
@@ -310,7 +336,11 @@ public class GUICreatorAPI {
 			else
 		LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+"."+position+".item", item);
 	}
-	
+
+	/**
+	 * Open gui
+	 * 
+	 */
 	public void open() {
 		Inventory i = Bukkit.createInventory(p, f,TheAPI.colorize(t));
 		for(Integer a : map.keySet()) {
@@ -318,6 +348,9 @@ public class GUICreatorAPI {
 		}
 		LoaderClass.data.getConfig().set("guis."+p.getName()+"."+getID()+".title", t);
 		LoaderClass.data.save();
+		GUIOpenEvent e = new GUIOpenEvent(p,i,TheAPI.colorize(t));
+		Bukkit.getPluginManager().callEvent(e);
+		if(!e.isCancelled())
 		p.openInventory(i);
 		inv=i;
 	}

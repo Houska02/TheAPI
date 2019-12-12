@@ -1,17 +1,20 @@
 package me.Straiker123;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.WorldType;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.Straiker123.TimeConventorAPI.EndWords;
 import me.Straiker123.Utils.TheAPICommand;
-import me.Straiker123.Utils.punishment;
+import me.Straiker123.Utils.EventsRegister;
 import net.milkbowl.vault.economy.Economy;
 
 public class LoaderClass extends JavaPlugin {
@@ -43,7 +46,7 @@ public class LoaderClass extends JavaPlugin {
 		createConfig();
 		new TheAPI();
 		new TimeConventorAPI();
-		Bukkit.getPluginManager().registerEvents(new punishment(), this);
+		Bukkit.getPluginManager().registerEvents(new EventsRegister(), this);
 		Bukkit.getPluginCommand("TheAPI").setExecutor(new TheAPICommand());
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &aEnabling plugin, creating config and registering economy.."));
@@ -64,20 +67,13 @@ public class LoaderClass extends JavaPlugin {
 
 			@Override
 			public void run() {
-				if(TheAPI.getCountingAPI().getPluginsUsingTheAPI().size() != 0)
-				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &aTheAPI using "+TheAPI.getCountingAPI().getPluginsUsingTheAPI().size()+" plugin(s)"));
-				else {
-					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6TheAPI isn't used in any plugin, disabling plugin.."));
-					stop();
-				}
+				if(TheAPI.getCountingAPI().getPluginsUsingTheAPI().size()==0)return;
+				String end = "";
+				if(TheAPI.getCountingAPI().getPluginsUsingTheAPI().size() !=1)end="s";
+				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &aTheAPI using "+TheAPI.getCountingAPI().getPluginsUsingTheAPI().size()+" plugin"+end));
 			}
 			
 		}, 200);
-		
-	}
-	
-	private void stop() {					
-		Bukkit.getPluginManager().disablePlugin(this);
 	}
 	
 	public static Economy economy;
@@ -137,6 +133,50 @@ public class LoaderClass extends JavaPlugin {
 		data.create();
 	}
 	
+	public void loadWorlds() {
+		if(config.getConfig().getString("Worlds")!=null) {
+			if(config.getConfig().getStringList("Worlds").isEmpty()==false) {
+		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
+		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &6Loading worlds.."));
+		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
+				for(String s:config.getConfig().getStringList("Worlds")){
+					String type="Default";
+					for(String w:Arrays.asList("Default","Normal","Nether","The_End"
+							,"End","The_Void","Void","Empty","Flat")) {
+						if(config.getConfig().getString("WorldsSetting."+s)!=null) {
+					if(config.getConfig().getString("WorldsSetting."+s+".Generator").equalsIgnoreCase(w)) {
+						if(w.equals("Flat"))type="Flat";
+						if(w.equals("Nether"))type="Nether";
+						if(w.equals("The_End")||w.equals("End"))type="The_End";
+						if(w.equals("The_Void")||w.equals("Void")||w.equals("Empty"))type="The_Void";
+						break;
+					}}else
+					break;
+					}
+					Environment env = Environment.NORMAL;
+					WorldType wt= WorldType.NORMAL;
+					if(type.equals("Flat"))wt=WorldType.FLAT;
+					if(type.equals("The_Void"))env=null;
+					if(type.equals("The_End")) {
+						try {
+						env=Environment.valueOf("THE_END");
+						}catch(Exception e) {
+							env=Environment.valueOf("END");
+						}
+					}
+					if(type.equals("Nether"))env=Environment.NETHER;
+					boolean f=true;
+					if(config.getConfig().getString("WorldsSetting."+s+".GenerateStructures")!=null)
+						f=config.getConfig().getBoolean("WorldsSetting."+s+".GenerateStructures");
+
+					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Loading world with name '"+s+"'.."));
+					TheAPI.getWorldsManager().create(s, env, wt,f,0);
+					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6World with name '"+s+"' loaded."));
+				}
+				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6All worlds loaded."));
+			}
+		}
+	}
 	
 	public void onDisable() {
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));

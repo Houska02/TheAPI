@@ -25,9 +25,11 @@ import me.Straiker123.PunishmentAPI;
 import me.Straiker123.TheAPI;
 import me.Straiker123.TheAPI.SudoType;
 import me.Straiker123.WorldBorderAPI.WarningMessageType;
+import me.Straiker123.Events.GUIClickEvent;
+import me.Straiker123.Events.GUICloseEvent;
 
 @SuppressWarnings("deprecation")
-public class punishment implements Listener {
+public class EventsRegister implements Listener {
 	
 	private ItemStack createWrittenBook(ItemStack a) {
 		Material ms = Material.matchMaterial("WRITABLE_BOOK");
@@ -122,7 +124,6 @@ public class punishment implements Listener {
 			e.getChunk().unload(true);
 		}
 	
-	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLogin(PlayerLoginEvent e) {
 		String s = e.getPlayer().getName();
@@ -165,6 +166,7 @@ public class punishment implements Listener {
 			LoaderClass.actions.clear();
 		}
 	}
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onMotd(ServerListPingEvent e) {
 		if(LoaderClass.plugin.motd!=null)
@@ -172,7 +174,6 @@ public class punishment implements Listener {
 		if(LoaderClass.plugin.max>0)
 		e.setMaxPlayers(LoaderClass.plugin.max);
 	}
-
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onDamage(EntityDamageByEntityEvent e) {
@@ -231,7 +232,7 @@ public class punishment implements Listener {
 					.replace("%reason%", TheAPI.getPunishmentAPI().getTempMuteReason(s))));
 		}
 	}
-	private String findGUI(String title, Player p) {
+	public static String findGUI(String title, Player p) {
 		String w=null;
 		for(String a:LoaderClass.data.getConfig().getConfigurationSection("guis."+p.getName()).getKeys(false)) {
 		if(title.equals(TheAPI.colorize(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+".title"))))w= a;
@@ -248,7 +249,9 @@ public class punishment implements Listener {
 		String title = e.getView().getTitle();
 		String a = findGUI(title,p);
 		if(a!=null) {
-			if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+".SENDMESSAGES_ON_INV_CLOSE")!=null)
+			GUICloseEvent event = new GUICloseEvent(p,e.getInventory(),title);
+			Bukkit.getPluginManager().callEvent(event);
+					if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+".SENDMESSAGES_ON_INV_CLOSE")!=null)
 				for(String s: LoaderClass.data.getConfig().getStringList("guis."+p.getName()+"."+a+".SENDMESSAGES_ON_INV_CLOSE"))
 					TheAPI.broadcastMessage(s);
 			if(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+".SENDCOMMANDS_ON_INV_CLOSE")!=null)
@@ -276,6 +279,11 @@ public class punishment implements Listener {
 		String a = findGUI(title,p);
 		if(a!=null) {
 			ItemStack i = e.getCurrentItem();
+			GUIClickEvent event = new GUIClickEvent(p, e.getClickedInventory(), title, e.getSlot(), i);
+			Bukkit.getPluginManager().callEvent(event);
+			if(event.isCancelled())
+			e.setCancelled(true);
+			
 		if(i != null) {
 			if(e.getClickedInventory().getType()==InventoryType.PLAYER 
 					&& LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+".CANT_PUT_ITEM")!=null) {
