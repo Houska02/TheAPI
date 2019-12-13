@@ -10,7 +10,10 @@ public class NumbersAPI {
 		if(string!=null)
 		fromString = string;
 	}
-	
+	/**
+	 * Calculate string
+	 * @return double
+	 */
 	public double calculate() {
 		ScriptEngineManager mgr = new ScriptEngineManager();
         ScriptEngine engine = mgr.getEngineByName("JavaScript");
@@ -20,6 +23,10 @@ public class NumbersAPI {
 		}
 		return 0;
 	}
+	/**
+	 * Get double from string
+	 * @return double
+	 */
 	public double getDouble() {
 		String a=fromString.replaceAll("[a-zA-Z]+", "").replace(",", ".");
 		if (isDouble(a)) {
@@ -27,8 +34,7 @@ public class NumbersAPI {
 		}else {
 		return 0.0;
 	}}
-	
-	
+
 	private double getDouble(String s) {
 		 String aa =s.replaceAll("[a-zA-Z]+", "").replace(",", ".");
 		if (isDouble(aa)) {
@@ -39,17 +45,6 @@ public class NumbersAPI {
 		}
 	}
 	private boolean isDouble(String a) {
-		 String aa =a.replaceAll("[a-zA-Z]+", "").replace(",", ".");
-		try {
-			Double.parseDouble(aa);
-		} catch (NumberFormatException e) {
-		return false;
-		}
-		return true;
-	}
-	
-	public boolean isDouble() {
-		String a =fromString.replaceAll("[a-zA-Z]+", "").replace(",", ".");
 		try {
 			Double.parseDouble(a);
 		} catch (NumberFormatException e) {
@@ -57,16 +52,43 @@ public class NumbersAPI {
 		}
 		return true;
 	}
+	/**
+	 * Is string, double
+	 * @return boolean
+	 */
+	public boolean isDouble() {
+		try {
+			Double.parseDouble(fromString);
+		} catch (NumberFormatException e) {
+		return false;
+		}
+		return true;
+	}
+	/**
+	 * Get long from string
+	 * @return long
+	 */
 	public long getLong() {
 		String a=fromString.replaceAll("[a-zA-Z]+", "");
-		if (isLong()) {
+		if (isLong(a)) {
 		return Long.parseLong(a);
 		}
 		else {
 		return 0;
 	}}
+	/**
+	 * Is string, long
+	 * @return
+	 */
 	public boolean isLong() {
-		String a =fromString.replaceAll("[a-zA-Z]+", "");
+		try {
+		Long.parseLong(fromString);
+		} catch (NumberFormatException e) {
+		return false;
+		}
+		return true;
+	}
+	private boolean isLong(String a) {
 		try {
 		Long.parseLong(a);
 		} catch (NumberFormatException e) {
@@ -74,18 +96,33 @@ public class NumbersAPI {
 		}
 		return true;
 	}
+	/**
+	 * Get int from string
+	 * @return int
+	 */
 	public int getInt() {
 		String a=fromString.replaceAll("[a-zA-Z]+", "");
-		if (isInt()) {
+		if (isInt(a)) {
 		return Integer.parseInt(a);
 		}
 		else {
 		return 0;
 	}}
-	public boolean isInt() {
-		String a =fromString.replaceAll("[a-zA-Z]+", "");
+	/**
+	 * Is string, int
+	 * @return boolean
+	 */
+	private boolean isInt(String a) {
 		try {
 		Integer.parseInt(a);
+		} catch (NumberFormatException e) {
+		return false;
+		}
+		return true;
+	}
+	public boolean isInt() {
+		try {
+		Integer.parseInt(fromString);
 		} catch (NumberFormatException e) {
 		return false;
 		}

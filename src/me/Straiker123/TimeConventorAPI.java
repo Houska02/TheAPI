@@ -22,7 +22,11 @@ public class TimeConventorAPI {
 	String y =LoaderClass.config.getConfig().getString("Words.Year");
 	String c = LoaderClass.config.getConfig().getString("Words.Century");
 	String mil =LoaderClass.config.getConfig().getString("Words.Millenium");
-
+	/**
+	 * Return current end word
+	 * @param a
+	 * @return String
+	 */
 	public String getEndWord(EndWords a) {
 		if(a != null) {
 			switch(a) {
@@ -48,6 +52,11 @@ public class TimeConventorAPI {
 		}
 		return null;
 	}
+	/**
+	 * Set end word
+	 * @param a
+	 * @param string
+	 */
 	public void setEndWord(EndWords a, String string) {
 		if(a != null) {
 			switch(a) {
@@ -81,8 +90,11 @@ public class TimeConventorAPI {
 			}
 		}
 	}
-	
-	
+	/**
+	 * Get long from string
+	 * @param s
+	 * @return long
+	 */
 	public long getTimeFromString(String s) {
 		int a = TheAPI.getNumbersAPI(s).getInt();
 		if(s.endsWith(min))a=a*60;
@@ -95,7 +107,11 @@ public class TimeConventorAPI {
 		if(s.endsWith(mil))a=((((((a*3600)*24)*7)*4)*12)*100)*1000;
 		return a;
 	}
-	
+	/**
+	 * Set long to string
+	 * @param l
+	 * @return String
+	 */
 	public String setTimeToString(long l) {
 		long seconds = l%60;
 		long minutes = l/60;

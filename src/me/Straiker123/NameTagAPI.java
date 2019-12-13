@@ -15,7 +15,7 @@ public class NameTagAPI {
 		this.suffix=suffix;
 	}
 	/**
-	 * 
+	 * Set player name tag
 	 * @param teamName
 	 * By teamName you can sort players in tablist -> create sorted tablist
 	 */
@@ -30,12 +30,27 @@ public class NameTagAPI {
 
 		if(prefix != null) {
 		t.setPrefix(TheAPI.colorize(prefix));
-		if (TheAPI.getServerVersion().contains("1_14") ||TheAPI.getServerVersion().contains("1_13"))
+		if (isNew())
 			t.setColor(fromPrefix(prefix));
 		}
 		t.addPlayer(p);
 	}
-
+	
+	private boolean isNew() {
+		return !TheAPI.getServerVersion().contains("1_8")
+				&& !TheAPI.getServerVersion().contains("1_9")
+				&& !TheAPI.getServerVersion().contains("1_10")
+				&& !TheAPI.getServerVersion().contains("1_11")
+				&& !TheAPI.getServerVersion().contains("1_12");
+	}
+	/**
+	 * Reset player name tag to default
+	 */
+	public void resetNameTag() {
+		for(Team t : p.getScoreboard().getTeams())t.unregister();
+		p.setScoreboard(p.getServer().getScoreboardManager().getNewScoreboard());
+	}
+	
 	private ChatColor fromPrefix(String prefix) {
 		char colour = '\u0000';
 		char[] chars = prefix.toCharArray();

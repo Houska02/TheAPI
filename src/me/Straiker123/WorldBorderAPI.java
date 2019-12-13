@@ -82,8 +82,8 @@ public class WorldBorderAPI {
 	}
 	
 	/**
-	 * 
-	 * @return is location outside world border
+	 * Is location outside world border
+	 * @return boolean
 	 */
 	
     public boolean isOutside(Location loc) {
@@ -95,7 +95,8 @@ public class WorldBorderAPI {
 	
 	/**
 	 * 
-	 * @return is location outside world border
+	 * Is location outside world border
+	 * @return boolean
 	 */
 	public boolean isOutside(double X, double Z) {
 	    return isOutside(new Location(w,X,100,Z));
