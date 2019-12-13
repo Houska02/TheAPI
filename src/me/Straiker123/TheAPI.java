@@ -172,6 +172,14 @@ public class TheAPI {
 			return bossBars;
 		
 	}
+	public static void removeActionBar(Player p) {
+		 if(p == null) {
+	    	 Error.err("sending ActionBar", "Player is null");
+		   return;
+	   }
+		 sendActionBar(p,"");
+	}
+	
 	public static void sendActionBar(Player p, String text) {
 		   if(p == null) {
 		    	 Error.err("sending ActionBar", "Player is null");
@@ -311,8 +319,8 @@ public class TheAPI {
 		LoaderClass.plugin.motd=colorize(motd);
 	}
 	
-	public static ReportSystem ReportSystem() {
-		return ReportSystem();
+	public static ReportSystem getReportSystem() {
+		return new ReportSystem();
 	}
 	
 	public static void setMaxPlayers(int max) {
