@@ -6,11 +6,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -120,7 +124,7 @@ public class EventsRegister implements Listener {
 	public void onChunkLoad(ChunkLoadEvent e) {
 			if (TheAPI.getWorldBorder(e.getWorld()).isOutside(e.getChunk().getBlock(15, 0, 15).getLocation()) || 
 					TheAPI.getWorldBorder(e.getWorld()).isOutside(e.getChunk().getBlock(0, 0, 0).getLocation()))
-				 
+			if(!TheAPI.getWorldBorder(e.getWorld()).getLoadChunksOutside())
 			e.getChunk().unload(true);
 		}
 	
@@ -160,11 +164,12 @@ public class EventsRegister implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLeave(PlayerQuitEvent e) {
+		LoaderClass.data.getConfig().set("guis."+e.getPlayer().getName(), null);
 		if(Bukkit.getOnlinePlayers().size()-1 <= 0) {
 			LoaderClass.data.getConfig().set("guis", null);
-			LoaderClass.data.save();
 			LoaderClass.actions.clear();
 		}
+		LoaderClass.data.save();
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -174,7 +179,42 @@ public class EventsRegister implements Listener {
 		if(LoaderClass.plugin.max>0)
 		e.setMaxPlayers(LoaderClass.plugin.max);
 	}
-
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onJoin(PlayerJoinEvent e) {
+		if(TheAPI.getPunishmentAPI().getJailAPI().isJailed(e.getPlayer().getName())) {
+			TheAPI.getPlayerAPI(e.getPlayer()).teleport(TheAPI.getPunishmentAPI().getJailAPI().getJailLocation(TheAPI.getPunishmentAPI().getJailAPI().getJailOfPlayer(e.getPlayer().getName())));
+		}
+	}
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onBreak(BlockBreakEvent e) {
+		if(TheAPI.getPunishmentAPI().getJailAPI().isJailed(e.getPlayer().getName())) {
+		e.setCancelled(true);
+		}
+	}
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlace(BlockPlaceEvent e) {
+		if(TheAPI.getPunishmentAPI().getJailAPI().isJailed(e.getPlayer().getName())) {
+		e.setCancelled(true);
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onDamage(EntityDamageEvent e) {
+		if(e.getEntity()instanceof Player) {
+		if(TheAPI.getPunishmentAPI().getJailAPI().isJailed(e.getEntity().getName())||LoaderClass.data.getConfig().getBoolean("data."+e.getEntity().getName()+".god")) {
+		e.setCancelled(true);
+		}
+		}
+	}
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void on(EntityDamageEvent e) {
+		if(e.getEntity()instanceof Player)
+		if(TheAPI.getPunishmentAPI().getJailAPI().isJailed(e.getEntity().getName())) {
+		e.setCancelled(true);
+		}
+	}
+	
+	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onDamage(EntityDamageByEntityEvent e) {
 		if(e.getDamager().getScoreboardTags().isEmpty()==false) {

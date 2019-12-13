@@ -42,6 +42,10 @@ public class PunishmentAPI {
 	public void setSilent(boolean silent) {
 		PunishmentAPI.silent=silent;
 	}
+	
+	public Jail getJailAPI() {
+		return new Jail();
+	}
 
 	public void setTempBan(String player, String reason, long time) {
 		if(reason==null)reason="Uknown";

@@ -96,7 +96,7 @@ public class PlayerAPI {
 	@SuppressWarnings("deprecation")
 	public void setHealth(double health) {
 		try {
-		if(s.getMaxHealth()<health) {
+		if(0<health) {
 			s.setMaxHealth(health);
 		}
 		s.setHealth(health);
@@ -233,7 +233,6 @@ public class PlayerAPI {
 	public void setGod(boolean enable) {
 			LoaderClass.data.getConfig().set("data."+s.getName()+".god",enable);
 			LoaderClass.data.save();
-			s.setInvulnerable(enable);
 	}
 	public boolean allowedGod() {
 		return LoaderClass.data.getConfig().getBoolean("data."+s.getName()+".god");
