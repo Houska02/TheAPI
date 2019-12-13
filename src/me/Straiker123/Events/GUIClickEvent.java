@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.Straiker123.Utils.EventsRegister;
+import me.Straiker123.Utils.TheAPIEventsRegister;
 
 public class GUIClickEvent extends Event implements Cancellable {
 	
@@ -84,7 +84,7 @@ public class GUIClickEvent extends Event implements Cancellable {
 	 * @return ID of GUI
 	 */
 	public String getID() {
-		return EventsRegister.findGUI(title,player);
+		return TheAPIEventsRegister.findGUI(title,player);
 	}
 	
 	public boolean isPlayerInventory() {

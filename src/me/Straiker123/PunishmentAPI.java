@@ -174,8 +174,10 @@ public class PunishmentAPI {
 		return LoaderClass.data.getConfig().getString("bans."+player+".ban") != null;
 	}
 	public boolean hasTempMute(String player) {
-		return LoaderClass.data.getConfig().getString("bans."+player+".tempmute.start") != null;
-	}
+		if(getTempMuteStart(player)==0)return false;
+		int time = (int) (getTempMuteStart(player) - System.currentTimeMillis() + getTempMuteTime(player));
+		return time <= 0;
+		}
 	public boolean hasBanIP(String playerOrIP) {
 		if(isIP(playerOrIP))
 			return LoaderClass.data.getConfig().getString("bans."+playerOrIP+".banip") != null;
@@ -185,10 +187,10 @@ public class PunishmentAPI {
 		try {
 		if(isIP(playerOrIP)) {
 		int time = (int) (getTempBanIPStart(playerOrIP) - System.currentTimeMillis() + getTempBanIPTime(playerOrIP));
-		return time < 0;
+		return time <= 0;
 		}else {
 			int time = (int) (getTempBanIPStart(getIP(playerOrIP)) - System.currentTimeMillis() + getTempBanIPTime(getIP(playerOrIP)));
-			return time < 0;
+			return time <= 0;
 		}
 		}catch(Exception e) {
 			return false;
@@ -208,9 +210,10 @@ public class PunishmentAPI {
 		return LoaderClass.data.getConfig().getString("bans."+player+".mute") != null;
 	}
 	public boolean hasTempBan(String player) {
+		if(getTempBanStart(player)==0)return false;
 		int time = (int) (getTempBanStart(player) - System.currentTimeMillis() + getTempBanTime(player));
-		return time < 0;
-	}
+		return time <= 0;
+		}
 	public int getTempBan_ExpireTime(String player) {
 		int time = (int) (getTempBanStart(player) - System.currentTimeMillis() + getTempBanTime(player));
 		return time;

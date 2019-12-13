@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.Straiker123.TimeConventorAPI.EndWords;
 import me.Straiker123.Utils.TheAPICommand;
-import me.Straiker123.Utils.EventsRegister;
+import me.Straiker123.Utils.TheAPIEventsRegister;
 import net.milkbowl.vault.economy.Economy;
 
 public class LoaderClass extends JavaPlugin {
@@ -46,7 +46,7 @@ public class LoaderClass extends JavaPlugin {
 		createConfig();
 		new TheAPI();
 		new TimeConventorAPI();
-		Bukkit.getPluginManager().registerEvents(new EventsRegister(), this);
+		Bukkit.getPluginManager().registerEvents(new TheAPIEventsRegister(), this);
 		Bukkit.getPluginCommand("TheAPI").setExecutor(new TheAPICommand());
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &aEnabling plugin, creating config and registering economy.."));

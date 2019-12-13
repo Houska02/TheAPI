@@ -75,7 +75,7 @@ public class TheAPICommand implements CommandExecutor, TabCompleter {
 					if( p.getOpenInventory()!=null) {
 					Inventory w = p.getOpenInventory().getTopInventory();
 					if(w!=null) {
-						if(EventsRegister.findGUI(p.getOpenInventory().getTitle(),p) != null) {
+						if(TheAPIEventsRegister.findGUI(p.getOpenInventory().getTitle(),p) != null) {
 							p.getOpenInventory().close();
 							LoaderClass.data.getConfig().set("guis."+p.getName(), null);
 						}
@@ -397,6 +397,7 @@ public class TheAPICommand implements CommandExecutor, TabCompleter {
 	}
 	@Override
 	public List<String> onTabComplete(CommandSender s, Command arg1, String arg2, String[] args) {
+		this.args=args; 
 		List<String> c = new ArrayList<>();
 		if(args.length==1) {
 			if(s.hasPermission("TheAPI.Command.Info"))
@@ -408,7 +409,7 @@ public class TheAPICommand implements CommandExecutor, TabCompleter {
 			if(s.hasPermission("TheAPI.Command.WorldsManager"))
 		    	c.addAll(StringUtil.copyPartialMatches(args[0], Arrays.asList("WorldsManager"), new ArrayList<>()));
 		}
-		if(eq(0,"worldsmanager")||eq(0,"world")||eq(0,"worlds")||eq(0,"wm")||eq(0,"worldmanager")) {
+		if(eq(0,"worldsmanager")) {
 			if(args.length==2) {
 		    	c.addAll(StringUtil.copyPartialMatches(args[1], Arrays.asList("Create","Delete","Load","Unload","Save","SaveAll"), new ArrayList<>()));
 			}

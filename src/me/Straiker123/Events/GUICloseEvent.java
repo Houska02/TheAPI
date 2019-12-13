@@ -5,7 +5,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 
-import me.Straiker123.Utils.EventsRegister;
+import me.Straiker123.Utils.TheAPIEventsRegister;
 
 public class GUICloseEvent extends Event {
 	public GUICloseEvent(Player player, Inventory gui, String title) {
@@ -56,7 +56,7 @@ public class GUICloseEvent extends Event {
 	 * @return ID of GUI
 	 */
 	public String getID() {
-		return EventsRegister.findGUI(t,s);
+		return TheAPIEventsRegister.findGUI(t,s);
 	}
 
 }

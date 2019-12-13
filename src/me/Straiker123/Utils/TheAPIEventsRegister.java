@@ -33,7 +33,7 @@ import me.Straiker123.Events.GUIClickEvent;
 import me.Straiker123.Events.GUICloseEvent;
 
 @SuppressWarnings("deprecation")
-public class EventsRegister implements Listener {
+public class TheAPIEventsRegister implements Listener {
 	
 	private ItemStack createWrittenBook(ItemStack a) {
 		Material ms = Material.matchMaterial("WRITABLE_BOOK");
@@ -135,12 +135,14 @@ public class EventsRegister implements Listener {
 		LoaderClass.data.save();
 		PunishmentAPI a = TheAPI.getPunishmentAPI();
 		if(a.hasBan(s)) {
+			TheAPI.broadcastMessage("0");
 			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.Ban")
 					.replace("%player%", s)
 					.replace("%reason%", a.getBanReason(s))));
 			return;
 		}
 		if(a.hasTempBan(s)) {
+			TheAPI.broadcastMessage("1");
 				e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.TempBan")
 						.replace("%player%", s)
 						.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(a.getTempBan_ExpireTime(s)))
@@ -148,12 +150,14 @@ public class EventsRegister implements Listener {
 				return;
 		}
 		if(a.hasBanIP(s)) {
+			TheAPI.broadcastMessage("2");
 			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.BanIP")
 					.replace("%player%", s)
 					.replace("%reason%",a.getBanReason(s))));
 			return;
 		}
 		if(a.hasTempBanIP(s)) {
+			TheAPI.broadcastMessage("3");
 			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.TempBanIP")
 					.replace("%player%", s)
 					.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(a.getTempBanIP_ExpireTime(s)))
@@ -206,14 +210,6 @@ public class EventsRegister implements Listener {
 		}
 		}
 	}
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void on(EntityDamageEvent e) {
-		if(e.getEntity()instanceof Player)
-		if(TheAPI.getPunishmentAPI().getJailAPI().isJailed(e.getEntity().getName())) {
-		e.setCancelled(true);
-		}
-	}
-	
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onDamage(EntityDamageByEntityEvent e) {
@@ -254,10 +250,10 @@ public class EventsRegister implements Listener {
 				.replace("%%world%%", e.getPlayer().getWorld().getName()+"")
 				.replace("%%x%%", e.getPlayer().getLocation().getBlockX()+"")
 				.replace("%%y%%", e.getPlayer().getLocation().getBlockY()+"")
-				.replace("%%z%%", e.getPlayer().getLocation().getBlockZ()+"").replace("%message%", e.getMessage().replace("%", "%%")));
+				.replace("%%z%%", e.getPlayer().getLocation().getBlockZ()+"").replace("%%message%%", e.getMessage().replace("%", "%%")));
 		String s = e.getPlayer().getName();
-		if(TheAPI.getPunishmentAPI().hasTempBan(s)) {
-			int time = (int)(TheAPI.getPunishmentAPI().getTempBanStart(s) - System.currentTimeMillis() + TheAPI.getPunishmentAPI().getTempBanTime(s));
+		if(TheAPI.getPunishmentAPI().hasTempMute(s)) {
+			int time = (int)(TheAPI.getPunishmentAPI().getTempMuteStart(s) - System.currentTimeMillis() + TheAPI.getPunishmentAPI().getTempMuteTime(s));
 			if(time < 0)
 				e.setCancelled(true);
 				e.getPlayer().sendMessage(TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.TempMute")
@@ -269,7 +265,7 @@ public class EventsRegister implements Listener {
 			e.setCancelled(true);
 			e.getPlayer().sendMessage(TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.Mute")
 					.replace("%player%", s)
-					.replace("%reason%", TheAPI.getPunishmentAPI().getTempMuteReason(s))));
+					.replace("%reason%", TheAPI.getPunishmentAPI().getMuteReason(s))));
 		}
 	}
 	public static String findGUI(String title, Player p) {
