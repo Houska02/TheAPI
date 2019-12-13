@@ -31,9 +31,6 @@ public class ScoreboardAPI {
 	
 	@SuppressWarnings("deprecation")
 	public void create() {
-		TheAPI.broadcastMessage("&6Clearing memory..");
-		String cleared = TheAPI.getMemoryAPI().clearMemory();
-		TheAPI.broadcastMessage("&aCleared "+cleared+"MB of memory!");
 		Objective d = s.getObjective("a");
 		 if(d!=null)
 			 d.unregister();
