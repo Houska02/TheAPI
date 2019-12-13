@@ -234,6 +234,7 @@ public class EventsRegister implements Listener {
 	}
 	public static String findGUI(String title, Player p) {
 		String w=null;
+		if(LoaderClass.data.getConfig().getString("guis."+p.getName())!=null)
 		for(String a:LoaderClass.data.getConfig().getConfigurationSection("guis."+p.getName()).getKeys(false)) {
 		if(title.equals(TheAPI.colorize(LoaderClass.data.getConfig().getString("guis."+p.getName()+"."+a+".title"))))w= a;
 		}
