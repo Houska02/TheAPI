@@ -263,14 +263,21 @@ public class TheAPI {
 	}
 	
 	private static void giveItems(Player p, ItemStack item) {
+		 if(p == null) {
+	    	 Error.err("giving Item", "Player is null");
+		   return;
+	   }
+		try {
 		if(item==null)return;
 		 if (p.getInventory().firstEmpty() == -1) {
-	            if(item != null)
 	            p.getWorld().dropItem(p.getLocation(), item);
       } else {
-	            if(item != null)
 	            p.getInventory().addItem(item);
       }
+		}catch(Exception e) {
+	    	 Error.err("giving Item to player "+p.getName(), "Item is null");
+		   return;
+		}
 	}
 
 	public static void giveItem(Player p, ItemStack... item) {
@@ -287,6 +294,15 @@ public class TheAPI {
 	public void setCustomName(Player p, String name) {
 		p.setCustomName(TheAPI.colorize(name));
 	}
+	
+	public void sendTitle(Player p, String firstLine, String nextLine) {
+		 if(p == null) {
+	    	 Error.err("sending Title", "Player is null");
+		   return;
+	   }
+		getPlayerAPI(p).sendTitle(firstLine, nextLine);
+	}
+	
 	/**
 	 * Set to null to reset chat format
 	 * @param format
