@@ -46,6 +46,7 @@ public class TheAPI {
 		return new ConfigAPI(name,localization);
 	}
 	/**
+	 * @apiNote
 	 * Return time in which server start
 	 * @return long
 	 */
@@ -56,6 +57,7 @@ public class TheAPI {
 	 * Build string from String[]
 	 * @param args
 	 * @return String
+	 * 
 	 */
 	public static String buildString(String[] args) {
 		if(args.length>0) {
@@ -397,6 +399,7 @@ public class TheAPI {
 	}
 	
 	/**
+	 * @apiNote
 	 * Set player chat format
 	 * @param format
 	 * Set to null to reset chat format

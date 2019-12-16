@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
@@ -29,8 +30,11 @@ import me.Straiker123.PunishmentAPI;
 import me.Straiker123.TheAPI;
 import me.Straiker123.TheAPI.SudoType;
 import me.Straiker123.WorldBorderAPI.WarningMessageType;
+import me.Straiker123.Events.DamageGodPlayerByEntityEvent;
+import me.Straiker123.Events.DamageGodPlayerEvent;
 import me.Straiker123.Events.GUIClickEvent;
 import me.Straiker123.Events.GUICloseEvent;
+import me.Straiker123.Events.PlayerJumpEvent;
 
 @SuppressWarnings("deprecation")
 public class TheAPIEventsRegister implements Listener {
@@ -88,11 +92,32 @@ public class TheAPIEventsRegister implements Listener {
 		 s.setUnbreakable(a.getItemMeta().isUnbreakable());
 		 return s.create();
 	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onItemDestroy(PlayerItemBreakEvent e) {
+		me.Straiker123.Events.PlayerItemBreakEvent event = new me.Straiker123.Events.PlayerItemBreakEvent(e.getPlayer(),e.getBrokenItem());
+		Bukkit.getPluginManager().callEvent(event);
+		if(event.isCancelled()) {
+		ItemStack a = e.getBrokenItem();
+		a.setDurability((short) 0);
+		TheAPI.giveItem(e.getPlayer(), a);
+		}
+	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onMove(PlayerMoveEvent e) {
+		int jump = (int) (e.getFrom().getY()-e.getTo().getY());
+		if(jump>0) {
+			PlayerJumpEvent event = new PlayerJumpEvent(e.getPlayer(),e.getFrom(),e.getTo(),jump);
+			Bukkit.getPluginManager().callEvent(event);
+			if(event.isCancelled())
+				e.setCancelled(true);
+		}
 		if(TheAPI.getWorldBorder(e.getTo().getWorld()).isOutside(e.getTo())) {
-			if(LoaderClass.data.getConfig().getString("WorldBorder."+e.getTo().getWorld().getName()+".Type")!=null) {
+			if(LoaderClass.data.getConfig().getString("WorldBorder."+e.getTo().getWorld().getName()+".CancelMoveOutside")!=null) {
+				e.setCancelled(TheAPI.getWorldBorder(e.getTo().getWorld()).isCancellledMoveOutside());
+			}
+				if(LoaderClass.data.getConfig().getString("WorldBorder."+e.getTo().getWorld().getName()+".Type")!=null) {
 			WarningMessageType t = WarningMessageType.valueOf(
 					LoaderClass.data.getConfig().getString("WorldBorder."+e.getTo().getWorld().getName()+".Type"));
 			String msg = LoaderClass.data.getConfig().getString("WorldBorder."+e.getTo().getWorld().getName()+".Message");
@@ -135,14 +160,12 @@ public class TheAPIEventsRegister implements Listener {
 		LoaderClass.data.save();
 		PunishmentAPI a = TheAPI.getPunishmentAPI();
 		if(a.hasBan(s)) {
-			TheAPI.broadcastMessage("0");
 			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.Ban")
 					.replace("%player%", s)
 					.replace("%reason%", a.getBanReason(s))));
 			return;
 		}
 		if(a.hasTempBan(s)) {
-			TheAPI.broadcastMessage("1");
 				e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.TempBan")
 						.replace("%player%", s)
 						.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(a.getTempBan_ExpireTime(s)))
@@ -150,14 +173,12 @@ public class TheAPIEventsRegister implements Listener {
 				return;
 		}
 		if(a.hasBanIP(s)) {
-			TheAPI.broadcastMessage("2");
 			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.BanIP")
 					.replace("%player%", s)
 					.replace("%reason%",a.getBanReason(s))));
 			return;
 		}
 		if(a.hasTempBanIP(s)) {
-			TheAPI.broadcastMessage("3");
 			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.TempBanIP")
 					.replace("%player%", s)
 					.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(a.getTempBanIP_ExpireTime(s)))
@@ -183,8 +204,43 @@ public class TheAPIEventsRegister implements Listener {
 		if(LoaderClass.plugin.max>0)
 		e.setMaxPlayers(LoaderClass.plugin.max);
 	}
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onJoin(PlayerJoinEvent e) {
+		String s = e.getPlayer().getName();
+		PunishmentAPI a = TheAPI.getPunishmentAPI();
+		if(a.hasBan(s)) {
+			e.setJoinMessage(null);
+			Bukkit.getScheduler().runTaskLater(LoaderClass.plugin, new Runnable() { @Override public void run() {
+			e.getPlayer().kickPlayer(TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.Ban")
+					.replace("%player%", s)
+					.replace("%reason%", a.getBanReason(s))));
+			return;
+		}},40);}
+		if(a.hasTempBan(s)) {
+			e.setJoinMessage(null);
+			Bukkit.getScheduler().runTaskLater(LoaderClass.plugin, new Runnable() { @Override public void run() {
+					e.getPlayer().kickPlayer(TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.TempBan")
+							.replace("%player%", s)
+							.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(a.getTempBan_ExpireTime(s)))
+							.replace("%reason%", a.getTempBanReason(s))));
+				return;
+		}},40);}
+		if(a.hasBanIP(s)) {
+			e.setJoinMessage(null);
+			Bukkit.getScheduler().runTaskLater(LoaderClass.plugin, new Runnable() { @Override public void run() {
+			e.getPlayer().kickPlayer(TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.BanIP")
+					.replace("%player%", s)
+					.replace("%reason%",a.getBanReason(s))));
+			return;
+		}},40);}
+		if(a.hasTempBanIP(s)) {
+			e.setJoinMessage(null);
+			Bukkit.getScheduler().runTaskLater(LoaderClass.plugin, new Runnable() { @Override public void run() {
+		
+			e.getPlayer().kickPlayer(TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.TempBanIP")
+					.replace("%player%", s)
+					.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(a.getTempBanIP_ExpireTime(s)))));
+		}},40);}
 		if(TheAPI.getPunishmentAPI().getJailAPI().isJailed(e.getPlayer().getName())) {
 			TheAPI.getPlayerAPI(e.getPlayer()).teleport(TheAPI.getPunishmentAPI().getJailAPI().getJailLocation(TheAPI.getPunishmentAPI().getJailAPI().getJailOfPlayer(e.getPlayer().getName())));
 		}
@@ -205,14 +261,34 @@ public class TheAPIEventsRegister implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onDamage(EntityDamageEvent e) {
 		if(e.getEntity()instanceof Player) {
-		if(TheAPI.getPunishmentAPI().getJailAPI().isJailed(e.getEntity().getName())||LoaderClass.data.getConfig().getBoolean("data."+e.getEntity().getName()+".god")) {
+		if(TheAPI.getPunishmentAPI().getJailAPI().isJailed(e.getEntity().getName())) {
 		e.setCancelled(true);
 		}
-		}
+		if(LoaderClass.data.getConfig().getBoolean("data."+e.getEntity().getName()+".god")) {
+			DamageGodPlayerEvent event = new DamageGodPlayerEvent((Player)e.getEntity(),e.getDamage(),e.getCause());
+			Bukkit.getPluginManager().callEvent(event);
+			if(event.isCancelled())
+				e.setCancelled(true);
+			else
+				e.setDamage(event.getDamage());
+			return;
+		}}
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onDamage(EntityDamageByEntityEvent e) {
+		if(e.getEntity() instanceof Player) {
+			if(LoaderClass.data.getConfig().getBoolean("data."+e.getEntity().getName()+".god")) {
+				DamageGodPlayerByEntityEvent event = new DamageGodPlayerByEntityEvent((Player)e.getEntity(),e.getDamager(),e.getDamage(),e.getCause());
+				Bukkit.getPluginManager().callEvent(event);
+				if(event.isCancelled())
+					e.setCancelled(true);
+				else
+					e.setDamage(event.getDamage());
+				return;
+			}
+		}
+			
 		if(e.getDamager().getScoreboardTags().isEmpty()==false) {
 			double set = 0;
 			double min = 0;

@@ -19,6 +19,7 @@ public class WorldBorderAPI {
 	public void add(double size, long time) {
 		w.getWorldBorder().setSize(w.getWorldBorder().getSize()+size, time);
 	}
+	
 	public void remove(double size, long time) {
 		double remove = w.getWorldBorder().getSize()-size;
 		if(remove >0)
@@ -91,6 +92,14 @@ public class WorldBorderAPI {
         double x = loc.getX() - getCenter().getX();
         double z = loc.getZ() - getCenter().getZ();
         return Math.abs(x) > size && Math.abs(z) > size;
+    }
+
+    public void cancelMoveOutside(boolean cancel) {
+	LoaderClass.data.getConfig().set("WorldBorder."+w.getName()+".CancelMoveOutside", cancel);
+	LoaderClass.data.save();
+    }
+    public boolean isCancellledMoveOutside() {
+    	return LoaderClass.data.getConfig().getBoolean("WorldBorder."+w.getName()+".CancelMoveOutside");
     }
 	
 	/**

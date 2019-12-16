@@ -80,8 +80,12 @@ public class PunishmentAPI {
 
 	public void setBanIP(String playerOrIP, String reason) {
 		if(reason==null)reason="Uknown";
+
+		playerOrIP=playerOrIP.replace("_", ".");
 		String ip =playerOrIP;
 		if(!isIP(playerOrIP))ip=getIP(playerOrIP);
+		else
+			ip=ip.replace(".", "_");
 		LoaderClass.data.getConfig().set("bans."+ip+".banip", reason);
 		LoaderClass.data.save();
 		for(String s : findPlayerByIP(ip)) {
@@ -149,10 +153,12 @@ public class PunishmentAPI {
 	}
 	public void setTempBanIP(String playerOrIP, String reason, long time) {
 		if(reason==null)reason="Uknown";
-		
+		playerOrIP=playerOrIP.replace("_", ".");
 		String ip =playerOrIP;
 		if(!isIP(ip))
 		ip=getIP(playerOrIP);
+		else
+			ip=ip.replace(".", "_");
 		LoaderClass.data.getConfig().set("bans."+ip+".tempbanip.time", time);
 		LoaderClass.data.getConfig().set("bans."+ip+".tempbanip.start", System.currentTimeMillis());
 		LoaderClass.data.getConfig().set("bans."+ip+".tempbanip.reason", reason);
@@ -179,16 +185,21 @@ public class PunishmentAPI {
 		return time <= 0;
 		}
 	public boolean hasBanIP(String playerOrIP) {
-		if(isIP(playerOrIP))
-			return LoaderClass.data.getConfig().getString("bans."+playerOrIP+".banip") != null;
+		String test = playerOrIP.replace(".", "_");
+		if(isIP(test))
+			return LoaderClass.data.getConfig().getString("bans."+test+".banip") != null;
 		return LoaderClass.data.getConfig().getString("bans."+getIP(playerOrIP)+".banip") != null;
 	}
 	public boolean hasTempBanIP(String playerOrIP) {
+		
 		try {
-		if(isIP(playerOrIP)) {
-		int time = (int) (getTempBanIPStart(playerOrIP) - System.currentTimeMillis() + getTempBanIPTime(playerOrIP));
+			String test = playerOrIP.replace(".", "_");
+		if(isIP(test)) {
+			if(getTempBanIPStart(test)==0)return false;
+		int time = (int) (getTempBanIPStart(test) - System.currentTimeMillis() + getTempBanIPTime(test));
 		return time <= 0;
 		}else {
+			if(getTempBanIPStart(getIP(playerOrIP))==0)return false;
 			int time = (int) (getTempBanIPStart(getIP(playerOrIP)) - System.currentTimeMillis() + getTempBanIPTime(getIP(playerOrIP)));
 			return time <= 0;
 		}
@@ -198,8 +209,9 @@ public class PunishmentAPI {
 	}
 	
 	public int getTempBanIP_ExpireTime(String playerOrIP){
-		if(isIP(playerOrIP)) {
-			int time = (int) (getTempBanIPStart(playerOrIP) - System.currentTimeMillis() + getTempBanIPTime(playerOrIP));
+		String test = playerOrIP.replace(".", "_");
+		if(isIP(test)) {
+			int time = (int) (getTempBanIPStart(test) - System.currentTimeMillis() + getTempBanIPTime(test));
 			return time;
 			}else {
 				int time = (int) (getTempBanIPStart(getIP(playerOrIP)) - System.currentTimeMillis() + getTempBanIPTime(getIP(playerOrIP)));
@@ -289,13 +301,28 @@ public class PunishmentAPI {
 			LoaderClass.data.getConfig().set("bans."+getIP(playerOrIP)+".banip", null);
 		LoaderClass.data.save();
 	}
-
+	public List<String> getIPBanned(){
+		List<String> banned = new ArrayList<String>();
+		if(LoaderClass.data.getConfig().getString("bans")!=null)
+			for(String s  :LoaderClass.data.getConfig().getConfigurationSection("bans").getKeys(false)) {
+				if(isIP(s))banned.add(s.replace("_", "."));
+			}
+		return banned;
+	}
+	public List<String> getBanned(){
+		List<String> banned = new ArrayList<String>();
+		if(LoaderClass.data.getConfig().getString("bans")!=null)
+			for(String s  :LoaderClass.data.getConfig().getConfigurationSection("bans").getKeys(false)) {
+				if(!isIP(s))banned.add(s);
+			}
+		return banned;
+	}
 	public void unTempBanIP(String playerOrIP) {
-		if(isIP(playerOrIP))
-			LoaderClass.data.getConfig().set("bans."+playerOrIP+".tempbanip", null);
+		String test = playerOrIP.replace("_", ".");
+		if(isIP(test))
+			LoaderClass.data.getConfig().set("bans."+test+".tempbanip", null);
 		else
 			LoaderClass.data.getConfig().set("bans."+getIP(playerOrIP)+".tempbanip", null);
 		LoaderClass.data.save();
 	}
-	
 }
