@@ -81,6 +81,8 @@ public class TheAPICommand implements CommandExecutor, TabCompleter {
 						}
 					}
 				}}
+				LoaderClass.data.getConfig().set("entities", null);
+				LoaderClass.data.save();
 				LoaderClass.actions.clear();
 				double total=old-new File("plugins/TheAPI/Data.dat").getUsableSpace()/1000;
 				if(total<0)total=0.0;

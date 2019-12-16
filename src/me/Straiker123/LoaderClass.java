@@ -6,12 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.World.Environment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.Straiker123.Events.EntityMoveEvent;
 import me.Straiker123.TimeConventorAPI.EndWords;
 import me.Straiker123.Utils.TheAPICommand;
 import me.Straiker123.Utils.TheAPIEventsRegister;
@@ -38,12 +43,42 @@ public class LoaderClass extends JavaPlugin {
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &6Loading plugin.."));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
 	}
+	public void runnable() {
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+			@Override
+			public void run() {
+				for(World w: Bukkit.getWorlds()) {
+					for(Entity e :w.getEntities()) {
+						if(e.getType()==EntityType.SNOWBALL) {
+						if(data.getConfig().getString("entities."+e)!=null) {
+							Location old = (Location)data.getConfig().get("entities."+e);
+							if(move(e,e.getLocation())) {
+								EntityMoveEvent event = new EntityMoveEvent(e,old,e.getLocation());
+								Bukkit.getPluginManager().callEvent(event);
+								if(event.isCancelled())
+									e.teleport(old);
+							}
+					}else
+						data.getConfig().set("entities."+e,e.getLocation());
+					}}
+				}
+			}
+		}, 1, 1);
+	}
+	private boolean move(Entity e,Location a) {
+		if((Location)data.getConfig().get("entities."+e)==a) {
+			return false;
+		}
+		data.getConfig().set("entities."+e,a);
+			return true;
+	}
 	public boolean e;
 	public String motd;
 	public int max;
 	public void onEnable() {
 		plugin=this;
 		createConfig();
+		runnable();
 		new TheAPI();
 		new TimeConventorAPI();
 		Bukkit.getPluginManager().registerEvents(new TheAPIEventsRegister(), this);
@@ -187,6 +222,7 @@ public class LoaderClass extends JavaPlugin {
 		for(EndWords s : EndWords.values())
 			config.getConfig().set("Words."+s.name(), TheAPI.getTimeConventorAPI().getEndWord(s));
 		data.getConfig().set("guis", null);
+		data.getConfig().set("entities", null);
 		for(ConfigAPI s:list) {
 			s.save();
 		}

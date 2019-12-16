@@ -1,10 +1,20 @@
 package me.Straiker123;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.enchantments.Enchantment;
 
 public class EnchantmentAPI {
 	public Enchantment[] values() {
 		return Enchantment.values();
+	}
+	public List<Enchantment> valuesInList() {
+		List<Enchantment> a = new ArrayList<Enchantment>();
+		for(Enchantment e : Enchantment.values())
+			a.add(e);
+		return a;
 	}
 	
 	private String replace(String s) {
@@ -18,7 +28,8 @@ public class EnchantmentAPI {
 				.replace("%CURSE_OF_VANISHING%", "VANISHING_CURSE").replace("%CURSE_OF_BINDING%", "BINDING_CURSE")
 				.replace("%SMITE%", "DAMAGE_UNDEAD").replace("%POWER%", "ARROW_DAMAGE").replace("%ALLDAMAGE%", "DAMAGE_ALL").replace("%DAMAGEALL%", "DAMAGE_ALL")
 				.replace("%BANE_OF_ARTHROPODS%", "DAMAGE_ARTHROPODS").replace("%EFFICIENCY%", "DIG_SPEED").replace("%ALL_DAMAGE%", "DAMAGE_ALL")
-				.replace("%PUNCH%", "ARROW_KNOCKBACK").replace("%LOOTMOBS%", "LOOT_BONUS_MOBS").replace("%LOOTBLOCKS%", "LOOT_BONUS_BLOCKS");
+				.replace("%PUNCH%", "ARROW_KNOCKBACK").replace("%LOOTMOBS%", "LOOT_BONUS_MOBS").replace("%LOOTBLOCKS%", "LOOT_BONUS_BLOCKS")
+				.replace("%UNBREAKABLE%", "UNBREAKABLE");
 	}
 	
 	public boolean isEnchantment(String string) {
@@ -40,8 +51,16 @@ public class EnchantmentAPI {
 		return getByName(string);
 	}
 	
-	public void registerEnchantment(Enchantment e) {
-		if(e!=null)
-		Enchantment.registerEnchantment(e);
+	public boolean registerEnchantment(Enchantment e) {
+		   boolean registered = true;
+		    try {
+		        Field f = Enchantment.class.getDeclaredField("acceptingNew");
+		        f.setAccessible(true);
+		        f.set(null, true);
+		        Enchantment.registerEnchantment(e);
+		    } catch (Exception ea) {
+		        registered = false;
+		    }
+		    return registered;
 	}
 }
