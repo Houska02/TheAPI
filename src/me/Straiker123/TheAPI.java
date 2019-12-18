@@ -84,7 +84,6 @@ public class TheAPI {
 			msg=msg+" "+string;
 		}
 		msg = msg.replaceFirst(" ",	"");
-		msg = msg.substring(0, msg.length()-1);
 		return msg;
 	}
 	return null;
