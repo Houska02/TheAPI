@@ -19,7 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.Straiker123.Events.EntityMoveEvent;
 import me.Straiker123.TimeConventorAPI.EndWords;
 import me.Straiker123.Utils.TheAPICommand;
-import me.Straiker123.Utils.TheAPIEventsRegister;
+import me.Straiker123.Utils.Events;
 import net.milkbowl.vault.economy.Economy;
 
 public class LoaderClass extends JavaPlugin {
@@ -49,7 +49,7 @@ public class LoaderClass extends JavaPlugin {
 			public void run() {
 				for(World w: Bukkit.getWorlds()) {
 					for(Entity e :w.getEntities()) {
-						if(e.getType()==EntityType.SNOWBALL) {
+						if(e.getType()==EntityType.PLAYER)continue;
 						if(data.getConfig().getString("entities."+e)!=null) {
 							Location old = (Location)data.getConfig().get("entities."+e);
 							if(move(e,e.getLocation())) {
@@ -60,7 +60,7 @@ public class LoaderClass extends JavaPlugin {
 							}
 					}else
 						data.getConfig().set("entities."+e,e.getLocation());
-					}}
+					}
 				}
 			}
 		}, 1, 1);
@@ -78,10 +78,9 @@ public class LoaderClass extends JavaPlugin {
 	public void onEnable() {
 		plugin=this;
 		createConfig();
-		runnable();
 		new TheAPI();
 		new TimeConventorAPI();
-		Bukkit.getPluginManager().registerEvents(new TheAPIEventsRegister(), this);
+		Bukkit.getPluginManager().registerEvents(new Events(), this);
 		Bukkit.getPluginCommand("TheAPI").setExecutor(new TheAPICommand());
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &aEnabling plugin, creating config and registering economy.."));
@@ -109,6 +108,8 @@ public class LoaderClass extends JavaPlugin {
 			}
 			
 		}, 200);
+		runnable();
+		Bukkit.getPluginManager().registerEvents(new Testing.Events(), this);
 	}
 	
 	public static Economy economy;

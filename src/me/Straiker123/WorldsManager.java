@@ -56,7 +56,7 @@ public class WorldsManager {
 		if(type!=null)
 		c.type(type);
 		else {
-			if(!TheAPI.getServerVersion().equals("v1_8_R3"))
+			if(!TheAPI.getServerVersion().contains("v1_8_R"))
 		c.generator(new voidGenerator());
 			else
 				c.generator(new voidGenerator_1_8());

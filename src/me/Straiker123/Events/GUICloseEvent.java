@@ -5,7 +5,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 
-import me.Straiker123.Utils.TheAPIEventsRegister;
+import me.Straiker123.Utils.Events;
 
 public class GUICloseEvent extends Event {
 	public GUICloseEvent(Player player, Inventory gui, String title) {
@@ -17,14 +17,15 @@ public class GUICloseEvent extends Event {
 	Inventory gui;
 	Player s;
 	String t;
-	
+
+	private static final HandlerList handler = new HandlerList();
 	@Override
 	public HandlerList getHandlers() {
-		return new HandlerList();
+		return handler;
 	}
 	
-	public HandlerList getHandlerList() {
-		return new HandlerList();
+	public static HandlerList getHandlerList() {
+		return handler;
 	}
 	
 	/**
@@ -56,7 +57,7 @@ public class GUICloseEvent extends Event {
 	 * @return ID of GUI
 	 */
 	public String getID() {
-		return TheAPIEventsRegister.findGUI(t,s);
+		return Events.findGUI(t,s);
 	}
 
 }

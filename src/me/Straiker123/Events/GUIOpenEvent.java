@@ -6,7 +6,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 
-import me.Straiker123.Utils.TheAPIEventsRegister;
+import me.Straiker123.Utils.Events;
 
 public class GUIOpenEvent extends Event implements Cancellable {
 	public GUIOpenEvent(Player player, Inventory gui, String title) {
@@ -19,7 +19,8 @@ public class GUIOpenEvent extends Event implements Cancellable {
 	String t;
 	Player s;
 	Inventory gui;
-	
+
+	private static final HandlerList handler = new HandlerList();
 	/**
 	 * @return is GUI open event cancelled
 	 */
@@ -56,7 +57,7 @@ public class GUIOpenEvent extends Event implements Cancellable {
 	 * @return ID of GUI
 	 */
 	public String getID() {
-		return TheAPIEventsRegister.findGUI(t,s);
+		return Events.findGUI(t,s);
 	}
 	
 	/**
@@ -69,11 +70,11 @@ public class GUIOpenEvent extends Event implements Cancellable {
 	
 	@Override
 	public HandlerList getHandlers() {
-		return new HandlerList();
+		return handler;
 	}
 	
-	public HandlerList getHandlerList() {
-		return new HandlerList();
+	public static HandlerList getHandlerList() {
+		return handler;
 	}
 	
 }

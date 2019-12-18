@@ -90,26 +90,12 @@ public class ItemCreatorAPI {
 	}
 	HashMap<Attribute, AttributeModifier> w = new HashMap<Attribute, AttributeModifier>();
 	public void addAttrubuteModifier(Attribute a, AttributeModifier s) {
-		if(!TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R2")
-				 &&!TheAPI.getServerVersion().equals("v1_11_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+		if(TheAPI.isNewVersion()
 				 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
 		w.put(a, s);
 	}
 	public void addAttrubuteModifiers(HashMap<Attribute, AttributeModifier> s) {
-		if(!TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
-							 &&!TheAPI.getServerVersion().equals("v1_9_R1")
-							 &&!TheAPI.getServerVersion().equals("v1_9_R2")
-							 &&!TheAPI.getServerVersion().equals("v1_9_R3")
-							 &&!TheAPI.getServerVersion().equals("v1_10_R1")
-							 &&!TheAPI.getServerVersion().equals("v1_10_R2")
-							 &&!TheAPI.getServerVersion().equals("v1_11_R1")
-							 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+		if(TheAPI.isNewVersion()
 							 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
 		w=s;
 	}
@@ -144,18 +130,13 @@ public class ItemCreatorAPI {
 					m.setDisplayName(name);
 					
 					if(lore!=null && !lore.isEmpty())m.setLore(lore);
-					if(model != -1 && !TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
-							 &&!TheAPI.getServerVersion().equals("v1_9_R1")
-							 &&!TheAPI.getServerVersion().equals("v1_9_R2")
-							 &&!TheAPI.getServerVersion().equals("v1_9_R3")
-							 &&!TheAPI.getServerVersion().equals("v1_10_R1")
-							 &&!TheAPI.getServerVersion().equals("v1_10_R2")
-							 &&!TheAPI.getServerVersion().equals("v1_11_R1")
-							 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+					if(model != -1 && TheAPI.isNewVersion()
 							 &&!TheAPI.getServerVersion().equals("v1_13_R1")
 							 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
 					m.setCustomModelData(model);
 					 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+								&& !TheAPI.getServerVersion().equals("v1_8_R1")
+								&& !TheAPI.getServerVersion().equals("v1_8_R2")
 							 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
 							 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
 							 &&!TheAPI.getServerVersion().equals("v1_9_R3")
@@ -165,14 +146,8 @@ public class ItemCreatorAPI {
 					if(map != null && !map.isEmpty())
 					for(ItemFlag f: map)
 					m.addItemFlags(f);
-					if(w!=null && !w.isEmpty() && !TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
-							 &&!TheAPI.getServerVersion().equals("v1_9_R1")
-							 &&!TheAPI.getServerVersion().equals("v1_9_R2")
-							 &&!TheAPI.getServerVersion().equals("v1_9_R3")
-							 &&!TheAPI.getServerVersion().equals("v1_10_R1")
-							 &&!TheAPI.getServerVersion().equals("v1_10_R2")
-							 &&!TheAPI.getServerVersion().equals("v1_11_R1")
-							 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+					if(w!=null && !w.isEmpty() 
+							&& TheAPI.isNewVersion()
 							 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
 					m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);	
 					if(owner!=null)
@@ -183,18 +158,13 @@ public class ItemCreatorAPI {
 				if(name!=null)
 				m.setDisplayName(name);
 				if(lore!=null && !lore.isEmpty())m.setLore(lore);
-				if(model != -1 && !TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
-						 &&!TheAPI.getServerVersion().equals("v1_9_R1")
-						 &&!TheAPI.getServerVersion().equals("v1_9_R2")
-						 &&!TheAPI.getServerVersion().equals("v1_9_R3")
-						 &&!TheAPI.getServerVersion().equals("v1_10_R1")
-						 &&!TheAPI.getServerVersion().equals("v1_10_R2")
-						 &&!TheAPI.getServerVersion().equals("v1_11_R1")
-						 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+				if(model != -1 && TheAPI.isNewVersion()
 						 &&!TheAPI.getServerVersion().equals("v1_13_R1")
 						 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
 				m.setCustomModelData(model);
 				 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+							&& !TheAPI.getServerVersion().equals("v1_8_R1")
+							&& !TheAPI.getServerVersion().equals("v1_8_R2")
 						 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
 						 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
 						 &&!TheAPI.getServerVersion().equals("v1_9_R3")
@@ -204,14 +174,8 @@ public class ItemCreatorAPI {
 				if(map != null && !map.isEmpty())
 				for(ItemFlag f: map)
 				m.addItemFlags(f);
-				if(w!=null && !w.isEmpty() && !TheAPI.getServerVersion().equals("glowstone") && !TheAPI.getServerVersion().equals("v1_8_R3")
-						 &&!TheAPI.getServerVersion().equals("v1_9_R1")
-						 &&!TheAPI.getServerVersion().equals("v1_9_R2")
-						 &&!TheAPI.getServerVersion().equals("v1_9_R3")
-						 &&!TheAPI.getServerVersion().equals("v1_10_R1")
-						 &&!TheAPI.getServerVersion().equals("v1_10_R2")
-						 &&!TheAPI.getServerVersion().equals("v1_11_R1")
-						 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+				if(w!=null && !w.isEmpty() && !TheAPI.getServerVersion().equals("glowstone") 
+						&& TheAPI.isNewVersion()
 						 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
 				m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);
 				i.setItemMeta(m);

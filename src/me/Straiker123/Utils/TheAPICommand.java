@@ -70,23 +70,21 @@ public class TheAPICommand implements CommandExecutor, TabCompleter {
 			if(perm("ClearCache")) {
 				s.sendMessage(TheAPI.colorize("&7-----------------"));
 				s.sendMessage(TheAPI.colorize("&6Clearing cache.."));
-				double old = new File("plugins/TheAPI/Data.dat").getUsableSpace()/1000;
 				for(Player p : Bukkit.getOnlinePlayers()) {
 					if( p.getOpenInventory()!=null) {
 					Inventory w = p.getOpenInventory().getTopInventory();
 					if(w!=null) {
-						if(TheAPIEventsRegister.findGUI(p.getOpenInventory().getTitle(),p) != null) {
+						if(Events.findGUI(p.getOpenInventory().getTitle(),p) != null) {
 							p.getOpenInventory().close();
 							LoaderClass.data.getConfig().set("guis."+p.getName(), null);
 						}
 					}
 				}}
+				LoaderClass.data.getConfig().set("guis", null);
 				LoaderClass.data.getConfig().set("entities", null);
 				LoaderClass.data.save();
 				LoaderClass.actions.clear();
-				double total=old-new File("plugins/TheAPI/Data.dat").getUsableSpace()/1000;
-				if(total<0)total=0.0;
-				s.sendMessage(TheAPI.colorize("&6Cache cleared. ("+total+"KB)"));
+				s.sendMessage(TheAPI.colorize("&6Cache cleared."));
 				s.sendMessage(TheAPI.colorize("&7-----------------"));
 				return true;
 			}

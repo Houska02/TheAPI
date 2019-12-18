@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import me.Straiker123.Utils.Error;
 import me.Straiker123.Utils.Packets;
 import net.glowstone.entity.GlowPlayer;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 
 public class TabListAPI {
 
@@ -23,7 +22,7 @@ public class TabListAPI {
 		}
 		if(TheAPI.getServerVersion().equals("glowstone")) {
 		try {
-		((GlowPlayer) p).setPlayerListHeaderFooter(new ComponentBuilder(TheAPI.colorize(header)).create(), new ComponentBuilder(TheAPI.colorize(footer)).create());
+			((GlowPlayer) p).setPlayerListHeaderFooter(TheAPI.colorize(header),TheAPI.colorize(footer));
 			return;
 		}catch (Exception e) {
 			Error.err("sending header/footer to "+p.getName(), "Header/Footer is null");
@@ -33,12 +32,11 @@ public class TabListAPI {
 			Object tabHeader = Packets.getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[] { String.class }).invoke(null, new Object[] { "{\"text\":\"" + TheAPI.colorize(header) + "\"}" });
 			Object tabFooter = Packets.getNMSClass("IChatBaseComponent")
 					.getDeclaredClasses()[0].getMethod("a", new Class[] { String.class }).invoke(null, new Object[] { "{\"text\":\"" + TheAPI.colorize(footer) + "\"}" });
-
 			Constructor<?> titleConstructor = Packets.getNMSClass("PacketPlayOutPlayerListHeaderFooter").getConstructor(new Class[0]);
 			Object packet = titleConstructor.newInstance(new Object[0]);
 			Field aField = null;
 			Field bField = null;
-			if (TheAPI.getServerVersion().equals("v1_14_R1") || TheAPI.getServerVersion().equals("v1_13_R2")) {
+			if (TheAPI.isNewVersion() && !TheAPI.getServerVersion().equals("v1_13_R1")) {
 			    aField = packet.getClass().getDeclaredField("header");
 			    bField = packet.getClass().getDeclaredField("footer");
 			} else {

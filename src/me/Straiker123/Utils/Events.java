@@ -37,7 +37,7 @@ import me.Straiker123.Events.GUICloseEvent;
 import me.Straiker123.Events.PlayerJumpEvent;
 
 @SuppressWarnings("deprecation")
-public class TheAPIEventsRegister implements Listener {
+public class Events implements Listener {
 	
 	private ItemStack createWrittenBook(ItemStack a) {
 		Material ms = Material.matchMaterial("WRITABLE_BOOK");
@@ -46,18 +46,13 @@ public class TheAPIEventsRegister implements Listener {
 		 if(a.getItemMeta().hasDisplayName())
 		 s.setDisplayName(a.getItemMeta().getDisplayName());
 		 if(a.getItemMeta().hasLore())s.setLore(a.getItemMeta().getLore());
-		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R2")
-				 &&!TheAPI.getServerVersion().equals("v1_11_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+		 if(TheAPI.isNewVersion()
 				 &&!TheAPI.getServerVersion().equals("v1_13_R1")
 				 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
 		if(a.getItemMeta().hasCustomModelData()) s.setCustomModelData(a.getItemMeta().getCustomModelData());
 		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+					&& !TheAPI.getServerVersion().equals("v1_8_R1")
+					&& !TheAPI.getServerVersion().equals("v1_8_R2")
 				 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
 				 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
 				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
@@ -72,18 +67,13 @@ public class TheAPIEventsRegister implements Listener {
 		 if(a.getItemMeta().hasDisplayName())
 		 s.setDisplayName(a.getItemMeta().getDisplayName());
 		 if(a.getItemMeta().hasLore())s.setLore(a.getItemMeta().getLore());
-		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R2")
-				 &&!TheAPI.getServerVersion().equals("v1_9_R3")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_10_R2")
-				 &&!TheAPI.getServerVersion().equals("v1_11_R1")
-				 &&!TheAPI.getServerVersion().equals("v1_12_R1")
+		 if(TheAPI.isNewVersion()
 				 &&!TheAPI.getServerVersion().equals("v1_13_R1")
 				 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
 		if(a.getItemMeta().hasCustomModelData()) s.setCustomModelData(a.getItemMeta().getCustomModelData());
 		 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+					&& !TheAPI.getServerVersion().equals("v1_8_R1")
+					&& !TheAPI.getServerVersion().equals("v1_8_R2")
 				 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
 				 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
 				 &&!TheAPI.getServerVersion().equals("v1_9_R3")

@@ -14,6 +14,7 @@ public class PlayerJumpEvent extends Event implements Cancellable {
 		t=to;
 		i=jump;
 	}
+	private static final HandlerList handler = new HandlerList();
 	int i;
 	Location t;
 	Location f;
@@ -44,10 +45,10 @@ public class PlayerJumpEvent extends Event implements Cancellable {
 
 	@Override
 	public HandlerList getHandlers() {
-		return new HandlerList();
+		return handler;
 	}
 	
-	public HandlerList getHandlerList() {
-		return new HandlerList();
+	public static HandlerList getHandlerList() {
+		return handler;
 	}
 }

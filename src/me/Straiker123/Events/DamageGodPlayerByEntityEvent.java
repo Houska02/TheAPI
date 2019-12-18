@@ -20,6 +20,7 @@ public class DamageGodPlayerByEntityEvent extends Event implements Cancellable {
 	public DamageCause getCause() {
 		return cause;
 	}
+	private static final HandlerList handler = new HandlerList();
 	public Entity getEntity() {
 		return entity;
 	}
@@ -47,10 +48,10 @@ public class DamageGodPlayerByEntityEvent extends Event implements Cancellable {
 
 	@Override
 	public HandlerList getHandlers() {
-		return new HandlerList();
+		return handler;
 	}
 	
-	public HandlerList getHandlerList() {
-		return new HandlerList();
+	public static HandlerList getHandlerList() {
+		return handler;
 	}
 }

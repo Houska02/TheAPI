@@ -2,6 +2,7 @@ package me.Straiker123.Events;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -13,14 +14,22 @@ public class EntityMoveEvent extends Event implements Cancellable {
 		f=from;
 		t=to;
 	}
+	private static final HandlerList handler = new HandlerList();
 	Location t;
 	Location f;
 	
 	public Location getTo() {
 		return t;
 	}
-	public Location getToFrom() {
+	public Location getFrom() {
 		return f;
+	}
+	
+	public EntityType getEntityType() {
+		return s.getType();
+	}
+	public String getEntityName() {
+		return s.getCustomName();
 	}
 	
 	@Override
@@ -39,9 +48,9 @@ public class EntityMoveEvent extends Event implements Cancellable {
 
 	@Override
 	public HandlerList getHandlers() {
-		return new HandlerList();
+		return handler;
 	}
 	
-	public HandlerList getHandlerList() {
-		return new HandlerList();
+	public static HandlerList getHandlerList() {
+		return handler;
 	}}

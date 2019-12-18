@@ -46,6 +46,24 @@ public class TheAPI {
 		return new ConfigAPI(name,localization);
 	}
 	/**
+	 * Return is server version 1.13+
+	 * @return boolean
+	 */
+	public static boolean isNewVersion() {
+		return !getServerVersion().equals("glowstone") 
+		&& !getServerVersion().equals("v1_8_R1")
+		&& !getServerVersion().equals("v1_8_R2")
+		&& !getServerVersion().equals("v1_8_R3")
+		 &&!getServerVersion().equals("v1_9_R1")
+		 &&!getServerVersion().equals("v1_9_R2")
+		 &&!getServerVersion().equals("v1_9_R3")
+		 &&!getServerVersion().equals("v1_10_R1")
+		 &&!getServerVersion().equals("v1_10_R2")
+		 &&!getServerVersion().equals("v1_11_R1")
+		 &&!getServerVersion().equals("v1_12_R1");
+	}
+	
+	/**
 	 * @apiNote
 	 * Return time in which server start
 	 * @return long
