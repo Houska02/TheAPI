@@ -62,35 +62,8 @@ public class TheAPI {
 		 &&!getServerVersion().equals("v1_11_R1")
 		 &&!getServerVersion().equals("v1_12_R1");
 	}
-	public static enum ServerVersion {
-		v1_8,
-		v1_9,
-		v1_10,
-		v1_11,
-		v1_12,
-		v1_13,
-		v1_14,
-		v1_15
-	}
+
 	/**
-	 * Return is server version 1.13+
-	 * @return boolean
-	 */
-	public static boolean isServerOlder(ServerVersion version) {
-		return !getServerVersion().equals("glowstone") 
-		&& !getServerVersion().equals("v1_8_R1")
-		&& !getServerVersion().equals("v1_8_R2")
-		&& !getServerVersion().equals("v1_8_R3")
-		 &&!getServerVersion().equals("v1_9_R1")
-		 &&!getServerVersion().equals("v1_9_R2")
-		 &&!getServerVersion().equals("v1_9_R3")
-		 &&!getServerVersion().equals("v1_10_R1")
-		 &&!getServerVersion().equals("v1_10_R2")
-		 &&!getServerVersion().equals("v1_11_R1")
-		 &&!getServerVersion().equals("v1_12_R1");
-	}
-	/**
-	 * @apiNote
 	 * Return time in which server start
 	 * @return long
 	 */
@@ -442,7 +415,6 @@ public class TheAPI {
 	}
 	
 	/**
-	 * @apiNote
 	 * Set player chat format
 	 * @param format
 	 * Set to null to reset chat format
