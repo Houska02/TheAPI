@@ -115,7 +115,7 @@ public class ConfigAPI {
 		LoaderClass.list.add(this);
 		return true;
 		} catch (Exception e) {
-			if(!LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
+			if(LoaderClass.config.getConfig() == null || LoaderClass.config.getConfig() != null && !LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when reloading "+name+"."+end+" config:"));
 			e.printStackTrace();
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
@@ -140,7 +140,7 @@ public class ConfigAPI {
 		LoaderClass.list.add(this);
 		return true;
 		} catch (Exception e) {
-			if(!LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
+			if(LoaderClass.config.getConfig() == null || LoaderClass.config.getConfig() != null && !LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when creating "+name+"."+end+" config:"));
 			e.printStackTrace();
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));

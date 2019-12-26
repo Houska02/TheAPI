@@ -154,9 +154,6 @@ public class LoaderClass extends JavaPlugin {
 	
 	public static HashMap<Player, String> chatformat = new HashMap<Player, String>();
 	private void createConfig() {
-		gameapi=TheAPI.getConfig("TheAPI", "GameAPI");
-		gameapi.setCustomEnd("dat");
-		gameapi.create();
 		config = TheAPI.getConfig("TheAPI", "Config");
 		config.addDefault("Options.HideErrors", false);
 		config.addDefault("Words.Second", "s");
@@ -193,7 +190,9 @@ public class LoaderClass extends JavaPlugin {
 		config.addDefault("GameAPI.StartingIn", "&aStarting in %time%s");
 		config.addDefault("GameAPI.Start", "&aStart");
 		config.create();
-
+		gameapi=TheAPI.getConfig("TheAPI", "GameAPI");
+		gameapi.setCustomEnd("dat");
+		gameapi.create();
 		data = TheAPI.getConfig("TheAPI", "Data");
 		data.setCustomEnd("dat");
 		data.create();
