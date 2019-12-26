@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
 
 public class EnchantmentAPI {
 	public Enchantment[] values() {
@@ -49,6 +50,20 @@ public class EnchantmentAPI {
 	
 	public Enchantment valueOf(String string) {
 		return getByName(string);
+	}
+	
+	
+	public List<String> getEnchantments(ItemStack item) {
+		List<String> list = new ArrayList<String>();
+		return list;
+	}
+	
+	/**
+	 * In this API you can create your own enchantment,
+	 * @return EnchantmentCreatorAPI
+	 */
+	public EnchantmentCreatorAPI getEnchantmentCreatorAPI() {
+		return new EnchantmentCreatorAPI();
 	}
 	
 	public boolean registerEnchantment(Enchantment e) {

@@ -82,12 +82,24 @@ public class Events implements Listener {
 		 s.setUnbreakable(a.getItemMeta().isUnbreakable());
 		 return s.create();
 	}
+	
+	private boolean isUnbreakable(ItemStack i) {
+		boolean is = false;
+		if(i.getItemMeta().hasLore()) {
+			if(i.getItemMeta().getLore().isEmpty()==false) {
+				for(String s :i.getItemMeta().getLore()) {
+					if(s.equals(TheAPI.colorize("&9UNBREAKABLE")))is= true;
+				}
+			}
+		}
+		return is;
+	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onItemDestroy(PlayerItemBreakEvent e) {
 		me.Straiker123.Events.PlayerItemBreakEvent event = new me.Straiker123.Events.PlayerItemBreakEvent(e.getPlayer(),e.getBrokenItem());
 		Bukkit.getPluginManager().callEvent(event);
-		if(event.isCancelled()) {
+		if(event.isCancelled()||isUnbreakable(event.getItem())) {
 		ItemStack a = e.getBrokenItem();
 		a.setDurability((short) 0);
 		TheAPI.giveItem(e.getPlayer(), a);
@@ -149,6 +161,7 @@ public class Events implements Listener {
 		LoaderClass.data.getConfig().set("data."+s+".ip", e.getRealAddress().toString().replace(".", "_"));
 		LoaderClass.data.save();
 		PunishmentAPI a = TheAPI.getPunishmentAPI();
+		try {
 		if(a.hasBan(s)) {
 			e.disallow(Result.KICK_BANNED, TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.Ban")
 					.replace("%player%", s)
@@ -175,11 +188,19 @@ public class Events implements Listener {
 					.replace("%reason%", a.getTempBanIPReason(s))));
 			return;
 		}
+		}catch(Exception ad) {}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
-		LoaderClass.data.getConfig().set("guis."+e.getPlayer().getName(), null);
+		String s = e.getPlayer().getName();
+		PunishmentAPI a = TheAPI.getPunishmentAPI();
+		if(a.hasBan(s)||
+				a.hasBanIP(s)||
+				a.hasTempBanIP(s)||
+				a.hasTempBan(s))
+			e.setQuitMessage(null);
+		LoaderClass.data.getConfig().set("guis."+s, null);
 		if(Bukkit.getOnlinePlayers().size()-1 <= 0) {
 			LoaderClass.data.getConfig().set("guis", null);
 			LoaderClass.actions.clear();
@@ -194,7 +215,7 @@ public class Events implements Listener {
 		if(LoaderClass.plugin.max>0)
 		e.setMaxPlayers(LoaderClass.plugin.max);
 	}
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		String s = e.getPlayer().getName();
 		PunishmentAPI a = TheAPI.getPunishmentAPI();
@@ -235,6 +256,8 @@ public class Events implements Listener {
 			TheAPI.getPlayerAPI(e.getPlayer()).teleport(TheAPI.getPunishmentAPI().getJailAPI().getJailLocation(TheAPI.getPunishmentAPI().getJailAPI().getJailOfPlayer(e.getPlayer().getName())));
 		}
 	}
+	
+	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onBreak(BlockBreakEvent e) {
 		if(TheAPI.getPunishmentAPI().getJailAPI().isJailed(e.getPlayer().getName())) {

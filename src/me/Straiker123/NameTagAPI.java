@@ -22,16 +22,55 @@ public class NameTagAPI {
 	@SuppressWarnings("deprecation")
 	public void setNameTag(String teamName, Scoreboard sb) {
 		if(teamName==null)teamName="z";
+		if(sb==null)sb=p.getScoreboard();
 		if(sb.getTeam(teamName)==null)sb.registerNewTeam(teamName);
 		Team t = sb.getTeam(teamName);
 		
-		if(suffix !=null)
+		if(suffix !=null) {
+			try {
+	            if (suffix.length() > 64) {
+	                suffix = suffix.substring(0, 63);
+	            }
 		t.setSuffix(TheAPI.colorize(suffix));
-
-		if(prefix != null) {
-		t.setPrefix(TheAPI.colorize(prefix));
-		if (isNew())
-			t.setColor(fromPrefix(prefix));
+		}catch(Exception e) {
+			try {
+            if (suffix.length() > 32) {
+                suffix = suffix.substring(0, 31);
+            }
+    		t.setSuffix(TheAPI.colorize(suffix));
+			}catch(Exception es) {
+	            if (suffix.length() > 16) {
+	                suffix = suffix.substring(0, 15);
+	            }
+	    		t.setSuffix(TheAPI.colorize(suffix));
+			}
+		}
+		}
+		if(prefix !=null) {
+			try {
+	            if (prefix.length() > 64) {
+	            	prefix = prefix.substring(0, 63);
+	            }
+	    		t.setPrefix(TheAPI.colorize(prefix));
+	    		if (isNew())
+	    			t.setColor(fromPrefix(prefix));
+		}catch(Exception e) {
+			try {
+            if (prefix.length() > 32) {
+            	prefix = prefix.substring(0, 31);
+            }
+    		t.setPrefix(TheAPI.colorize(prefix));
+    		if (isNew())
+    			t.setColor(fromPrefix(prefix));
+			}catch(Exception es) {
+	            if (prefix.length() > 16) {
+	            	prefix = suffix.substring(0, 15);
+	            }
+	    		t.setPrefix(TheAPI.colorize(prefix));
+	    		if (isNew())
+	    			t.setColor(fromPrefix(prefix));
+			}
+		}
 		}
 		t.addPlayer(p);
 	}

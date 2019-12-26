@@ -36,6 +36,7 @@ public class TheAPI {
 		if(string == null)return null;
 		return ChatColor.translateAlternateColorCodes('&', string);
 	}
+
 	/**
 	 * Create or delete config
 	 * @param localization
@@ -486,31 +487,40 @@ public class TheAPI {
 	/**
 	 * Hide or show player to players on server
 	 * @param p
-	 * @param permission
+	 * @param permission To see player
 	 * @param vanish
 	 */
-	@SuppressWarnings("deprecation")
 	public static void vanish(Player p, String permission, boolean vanish) {
-		if(vanish) {
-			for (Player s : Bukkit.getOnlinePlayers()) {
-	            if (s.hasPermission(permission)) continue;
-	                s.hidePlayer(p);
-	        }
-		}else {
-			for (Player s : Bukkit.getOnlinePlayers()) {
-	                s.showPlayer(p);
-	        }
-		}
+		v(p,vanish,permission);
 	}
+	/**
+	 * Return is player in vanish mode
+	 * @param p
+	 * @return boolean
+	 */
+	public static boolean isVanished(Player p) {
+		return LoaderClass.data.getConfig().getString("data."+p.getName()+".vanish")!=null;
+	}
+	
 	/**
 	 * Hide or show player to players on server
 	 * @param p
 	 * @param vanish
 	 */
-	@SuppressWarnings("deprecation")
 	public static void vanish(Player p, boolean vanish) {
-		if(vanish) {
+		v(p,vanish,null);
+	}
+	private static boolean has(Player s, Player d) {
+		if(LoaderClass.data.getConfig().getString("data."+d.getName()+".vanish.perm")!=null)
+			return s.hasPermission(LoaderClass.data.getConfig().getString("data."+d.getName()+".vanish.perm"));
+		else
+		return true;
+	}
+	@SuppressWarnings("deprecation")
+	private static void hide(Player p) {
+		if(isVanished(p)) {
 			for (Player s : Bukkit.getOnlinePlayers()) {
+				if(s!=p && !has(s,p))
 	                s.hidePlayer(p);
 	        }
 		}else {
@@ -519,6 +529,23 @@ public class TheAPI {
 	        }
 		}
 	}
+	private static void v(Player p, boolean vanish, String perm) {
+		if(vanish) {
+		if(perm!=null)
+			LoaderClass.data.getConfig().set("data."+p.getName()+".vanish", perm);
+		List<String> v= LoaderClass.data.getConfig().getStringList("vanished");
+		v.add(p.getName());
+			LoaderClass.data.getConfig().set("vanished", v);
+		}else {
+			LoaderClass.data.getConfig().set("data."+p.getName()+".vanish", null);
+			List<String> v= LoaderClass.data.getConfig().getStringList("vanished");
+			v.remove(p.getName());
+				LoaderClass.data.getConfig().set("vanished", v);
+		}
+		LoaderClass.data.save();
+		hide(p);
+	}
+	
 	/**
 	 * Return console 
 	 * @return CommandSender

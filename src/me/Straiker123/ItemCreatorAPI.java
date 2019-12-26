@@ -11,6 +11,8 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.BookMeta.Generation;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
@@ -31,8 +33,12 @@ public class ItemCreatorAPI {
 	}
 	
 	public void setMaterial(String byName) {
+		try {
 		if(Material.matchMaterial(byName)!=null)a=new ItemStack(Material.matchMaterial(byName));
 		if(a==null)a=new ItemStack(Material.STONE);
+		}catch(Exception e) {
+			a=new ItemStack(Material.STONE);
+		}
 	}
 	String name;
 	public void setDisplayName(String newName) {
@@ -42,6 +48,7 @@ public class ItemCreatorAPI {
 	
 	List<String> lore = new ArrayList<String>();
 	public void addLore(String line) {
+		if(line!=null)
 		lore.add(TheAPI.colorize(line));
 	}
 	
@@ -65,7 +72,7 @@ public class ItemCreatorAPI {
 	}
 	
 	public void setLore(List<String> lore) {
-		if(lore!=null)
+		if(lore!=null && lore.isEmpty()==false)
 			for(String s:lore)
 				addLore(s);
 	}
@@ -90,13 +97,11 @@ public class ItemCreatorAPI {
 	}
 	HashMap<Attribute, AttributeModifier> w = new HashMap<Attribute, AttributeModifier>();
 	public void addAttrubuteModifier(Attribute a, AttributeModifier s) {
-		if(TheAPI.isNewVersion()
-				 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
+		if(TheAPI.isNewVersion()&&!TheAPI.getServerVersion().equals("v1_13_R1") && a != null && s!=null)
 		w.put(a, s);
 	}
 	public void addAttrubuteModifiers(HashMap<Attribute, AttributeModifier> s) {
-		if(TheAPI.isNewVersion()
-							 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
+		if(TheAPI.isNewVersion()&&!TheAPI.getServerVersion().equals("v1_13_R1") && s!=null)
 		w=s;
 	}
 	int dur=-1;
@@ -108,18 +113,56 @@ public class ItemCreatorAPI {
 	public void setMaterialData(MaterialData data) {
 		this.data=data;
 	}
+	
+	String author = "";
+	List<String> pages = new ArrayList<String>();
+	String title = "UKNOWN";
+
+	public void setBookAuthor(String author) {
+		if(author!=null)
+		this.author=TheAPI.colorize(author);
+	}
+	public void setBookTitle(String title) {
+		if(title!=null)
+		this.title=TheAPI.colorize(title);
+	}
+	public void addBookPage(String lines) {
+		if(lines==null)lines="";
+		pages.add(TheAPI.colorize(lines));
+	}
+	public void addBookPage(int page, String lines) {
+		if(lines==null && pages.get(page)!=null)pages.remove(page);
+		else
+		pages.set(page,TheAPI.colorize(lines));
+	}
+	public void setBookPages(List<String> lines) {
+		pages=new ArrayList<String>();
+		if(lines!=null)
+		for(String s : lines)
+		addBookPage(s);
+	}
+	Generation gen = Generation.ORIGINAL;
+	public void setBookGeneration(Generation generation) {
+		if(generation!=null)
+			gen=generation;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public ItemStack create() {
 		
-		
-		ItemStack i = null;
+		ItemStack i = a;
 		if(type!=null) {
-			i= a;
 			a.setDurability((short)type.ordinal());
 		}else {
-			i=a;
 			if(dur!=-1)
-			i.setDurability((short)dur);
+			a.setDurability((short)dur);
+		}
+		if(i.getType().name().equalsIgnoreCase("WRITABLE_BOOK")||i.getType().name().equalsIgnoreCase("BOOK_AND_QUILL")) {
+			BookMeta b = (BookMeta)i.getItemMeta();
+			b.setAuthor(author);
+			b.setPages(pages);
+			b.setTitle(title);
+			b.setGeneration(gen);
 		}
 		if(data != null)
 		i.setData(data);
@@ -143,6 +186,10 @@ public class ItemCreatorAPI {
 							 &&!TheAPI.getServerVersion().equals("v1_10_R1")
 							 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
 					m.setUnbreakable(unb);
+					 else {
+						 addLore("");
+						 addLore("&9UNBREAKABLE");
+					 }
 					if(map != null && !map.isEmpty())
 					for(ItemFlag f: map)
 					m.addItemFlags(f);
@@ -179,11 +226,7 @@ public class ItemCreatorAPI {
 						 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
 				m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);
 				i.setItemMeta(m);
-
-			
 			}
-		
-		
 		return i;
 	}
 	

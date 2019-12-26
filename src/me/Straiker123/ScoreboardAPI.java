@@ -31,6 +31,7 @@ public class ScoreboardAPI {
 	
 	@SuppressWarnings("deprecation")
 	public void create() {
+		if(s==null)s=p.getServer().getScoreboardManager().getNewScoreboard();
 		Objective d = s.getObjective("a");
 		 if(d!=null)
 			 d.unregister();
@@ -41,12 +42,20 @@ public class ScoreboardAPI {
 		  for(Integer w:map.keySet()) {
 			  String s = map.get(w);
 			  try {
-			  if(s.length() > 40)s=s.substring(0,39);
-			  d.getScore(s).setScore(w);
-			  }catch(Exception e) {
-				  if(s.length() > 16)s=s.substring(0,15);
-				  d.getScore(s).setScore(w);
-			  }
+	        		String tes = s;
+	        	if(tes.length()>64)tes=tes.substring(0,63);
+	        d.getScore(tes).setScore(w);
+	        	}catch(Exception error) {
+	        		try {
+		        		String tes = s;
+			        	if(tes.length()>32)tes=tes.substring(0,31);
+			        d.getScore(tes).setScore(w);
+	        		}catch(Exception error2) {
+		        		String tes = s;
+			        	if(tes.length()>16)tes=tes.substring(0,15);
+			        d.getScore(tes).setScore(w);
+	        		}
+	        	}
 			}
 		p.setScoreboard(s);
 	}
