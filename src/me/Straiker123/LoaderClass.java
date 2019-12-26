@@ -38,11 +38,42 @@ public class LoaderClass extends JavaPlugin {
 	public static ConfigAPI gameapi;
 	
 	public void onLoad() {
-		createConfig();
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &6Loading plugin.."));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
 	}
+	boolean hooked;
+	int vaulthook;
+	int times;
+	public void vaultHooking() {
+		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
+		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &6Looking for Vault Economy.."));
+		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
+		vaulthook=Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+			@Override
+			public void run() {
+				if(getVaultEconomy()) {
+					e=true;
+					Bukkit.getScheduler().cancelTask(vaulthook);
+					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
+					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Found Vault Economy"));
+					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
+					return;
+				}
+				++times;
+				if(times==30) {
+					Bukkit.getScheduler().cancelTask(vaulthook);
+					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
+					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cPlugin not found Vault Economy, EconomyAPI is disabled."));
+					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cYou can enabled EconomyAPI by set custom Economy in EconomyAPI."));
+					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &c *TheAPI will still normally work without problems*"));
+					TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
+					return;
+				}
+			}
+		}, 20, 20);
+	}
+	
 	public void runnable() {
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			@Override
@@ -86,15 +117,15 @@ public class LoaderClass extends JavaPlugin {
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &aEnabling plugin, creating config and registering economy.."));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
 		
-		if(TheAPI.getPluginsManagerAPI().getPlugin("Vault") == null || !getVaultEconomy()) {
+		if(TheAPI.getPluginsManagerAPI().getPlugin("Vault") == null) {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
-			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cPlugin not found Vault Economy, EconomyAPI is disabled."));
+			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cPlugin not found Vault, EconomyAPI is disabled."));
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cYou can enabled EconomyAPI by set custom Economy in EconomyAPI."));
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &c *TheAPI will still normally work without problems*"));
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
 			e=false;
 		}else {
-			e=true;
+			vaultHooking();
 		}
 		new EconomyAPI();
 		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
@@ -109,7 +140,6 @@ public class LoaderClass extends JavaPlugin {
 			
 		}, 200);
 		runnable();
-		Bukkit.getPluginManager().registerEvents(new Testing.Events(), this);
 	}
 	
 	public static Economy economy;

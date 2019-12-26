@@ -1,6 +1,7 @@
 package me.Straiker123;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +46,18 @@ public class ConfigAPI {
 	}
 	
 	public File getFile() {
-		return f;
+		if(new File("plugins/"+loc+"/"+name+"."+end).exists())return new File("plugins/"+loc+"/"+name+"."+end);
+		try {
+			new File("plugins/"+loc+"/"+name+"."+end).createNewFile();
+		} catch (IOException e) {
+			if(!LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
+				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when getting file of "+name+"."+end+" config:"));
+				e.printStackTrace();
+				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
+				}else
+					Error.sendRequest("&bTheAPI&7: &cError when getting file of "+name+"."+end+" config");
+		}
+		return new File("plugins/"+loc+"/"+name+"."+end);
 	}
 	
 	public void setHeader(String header) {
@@ -115,7 +127,8 @@ public class ConfigAPI {
 	
 	public boolean create() {
 		try {
-			f=new File("plugins/"+loc+"/"+name+"."+end);
+			
+		f=getFile();
 		a = YamlConfiguration.loadConfiguration(f);
 		if(h!=null)a.options().header(h);
 		if(c!=null && !c.isEmpty()) {
