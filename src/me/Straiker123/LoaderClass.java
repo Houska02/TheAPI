@@ -38,6 +38,9 @@ public class LoaderClass extends JavaPlugin {
 	public static ConfigAPI gameapi;
 	
 	public void onLoad() {
+		createConfig();
+		new TheAPI();
+		new TimeConventorAPI();
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &6Action: &6Loading plugin.."));
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &8********************"));

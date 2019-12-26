@@ -46,18 +46,22 @@ public class ConfigAPI {
 	}
 	
 	public File getFile() {
-		if(new File("plugins/"+loc+"/"+name+"."+end).exists())return new File("plugins/"+loc+"/"+name+"."+end);
+		if(this.f==null) {
+		File f = new File("plugins/"+loc+"/"+name+"."+end);
+		if(f.exists())return f;
 		try {
-			new File("plugins/"+loc+"/"+name+"."+end).createNewFile();
+			f.createNewFile();
 		} catch (IOException e) {
-			if(!LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
+			if(LoaderClass.config.getConfig() == null || LoaderClass.config.getConfig() != null && !LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
 				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when getting file of "+name+"."+end+" config:"));
 				e.printStackTrace();
 				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
 				}else
 					Error.sendRequest("&bTheAPI&7: &cError when getting file of "+name+"."+end+" config");
 		}
-		return new File("plugins/"+loc+"/"+name+"."+end);
+		return f;
+		}
+		return f;
 	}
 	
 	public void setHeader(String header) {
@@ -91,8 +95,8 @@ public class ConfigAPI {
 		}
 		return false;
 	} catch (Exception e) {
-		if(!LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
-		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when saving "+name+"."+end+" config:"));
+		if(LoaderClass.config.getConfig() == null || LoaderClass.config.getConfig() != null && !LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
+			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when saving "+name+"."+end+" config:"));
 		e.printStackTrace();
 		TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
 		}else
@@ -127,7 +131,6 @@ public class ConfigAPI {
 	
 	public boolean create() {
 		try {
-			
 		f=getFile();
 		a = YamlConfiguration.loadConfiguration(f);
 		if(h!=null)a.options().header(h);
@@ -154,8 +157,9 @@ public class ConfigAPI {
 	}
 	
 	public boolean delete() {
-		if(new File("plugins/"+loc+"/"+name+"."+end).exists()) {
-		new File("plugins/"+loc+"/"+name+"."+end).delete();
+		File f = getFile();
+		if(f.exists()) {
+		f.delete();
 		c.clear();
 		if(LoaderClass.list.contains(this))
 		LoaderClass.list.remove(this);
