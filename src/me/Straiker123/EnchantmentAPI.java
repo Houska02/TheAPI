@@ -58,14 +58,6 @@ public class EnchantmentAPI {
 		return list;
 	}
 	
-	/**
-	 * In this API you can create your own enchantment,
-	 * @return EnchantmentCreatorAPI
-	 */
-	public EnchantmentCreatorAPI getEnchantmentCreatorAPI() {
-		return new EnchantmentCreatorAPI();
-	}
-	
 	public boolean registerEnchantment(Enchantment e) {
 		   boolean registered = true;
 		    try {
