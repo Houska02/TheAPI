@@ -511,10 +511,10 @@ public class TheAPI {
 		v(p,vanish,null);
 	}
 	private static boolean has(Player s, Player d) {
-		if(LoaderClass.data.getConfig().getString("data."+d.getName()+".vanish.perm")!=null)
-			return s.hasPermission(LoaderClass.data.getConfig().getString("data."+d.getName()+".vanish.perm"));
+		if(LoaderClass.data.getConfig().getString("data."+d.getName()+".vanish")!=null)
+			return s.hasPermission(LoaderClass.data.getConfig().getString("data."+d.getName()+".vanish"));
 		else
-		return true;
+		return false;
 	}
 	@SuppressWarnings("deprecation")
 	private static void hide(Player p) {

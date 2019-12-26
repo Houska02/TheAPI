@@ -96,7 +96,6 @@ public class TheAPICommand implements CommandExecutor, TabCompleter {
 			s.sendMessage(TheAPI.colorize("&6Reloading configs.."));
 			for(ConfigAPI a : LoaderClass.list) {
 				a.save();
-				a.reload();
 			}
 			s.sendMessage(TheAPI.colorize("&6Configs reloaded."));
 			s.sendMessage(TheAPI.colorize("&7-----------------"));
