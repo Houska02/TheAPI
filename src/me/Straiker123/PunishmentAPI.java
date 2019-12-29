@@ -20,6 +20,10 @@ public class PunishmentAPI {
 		return findPlayerByIP(getIP(player));
 	}
 	
+	public BanList getBanList() {
+		return new BanList();
+	}
+	
 	public boolean existPlayerOrIP(String string) {
 		return LoaderClass.data.getConfig().getString("bans."+string)!=null;
 	}
@@ -366,22 +370,7 @@ public class PunishmentAPI {
 			LoaderClass.data.getConfig().set("bans."+getIP(playerOrIP)+".banip", null);
 		LoaderClass.data.save();
 	}
-	public List<String> getIPBanned(){
-		List<String> banned = new ArrayList<String>();
-		if(LoaderClass.data.getConfig().getString("bans")!=null)
-			for(String s  :LoaderClass.data.getConfig().getConfigurationSection("bans").getKeys(false)) {
-				if(isIP(s))banned.add(s.replace("_", "."));
-			}
-		return banned;
-	}
-	public List<String> getBanned(){
-		List<String> banned = new ArrayList<String>();
-		if(LoaderClass.data.getConfig().getString("bans")!=null)
-			for(String s  :LoaderClass.data.getConfig().getConfigurationSection("bans").getKeys(false)) {
-				if(!isIP(s))banned.add(s);
-			}
-		return banned;
-	}
+
 	public void unTempBanIP(String playerOrIP) {
 		if(playerOrIP==null)return;
 		String test = playerOrIP.replace("_", ".");

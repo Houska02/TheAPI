@@ -42,6 +42,52 @@ public class PluginManagerAPI {
 		return p;
 	}
 
+	public List<String> getDepend(String plugin){
+		Plugin p = getPlugin(plugin);
+		 if(p !=null && p.isEnabled())
+			if(p.getDescription().getDepend() != null && p.getDescription().getDepend().isEmpty()==false)
+				return p.getDescription().getDepend();
+		return new ArrayList<String>();
+	}
+	public List<String> getSoftDepend(String plugin){
+		Plugin p = getPlugin(plugin);
+		 if(p !=null && p.isEnabled())
+			if(p.getDescription().getSoftDepend() != null && p.getDescription().getSoftDepend().isEmpty()==false)
+				return p.getDescription().getSoftDepend();
+		return new ArrayList<String>();
+	}
+
+	public List<String> getAuthor(String plugin) {
+		Plugin p = getPlugin(plugin);
+		 if(p !=null && p.isEnabled())
+			 return p.getDescription().getAuthors();
+		 return new ArrayList<String>();
+	}
+	public String getAPIVersion(String plugin) {
+		Plugin p = getPlugin(plugin);
+		 if(p !=null && p.isEnabled() && p.getDescription().getAPIVersion() != null)
+			 return p.getDescription().getAPIVersion();
+		 return null;
+	}
+	public String getVersion(String plugin) {
+		Plugin p = getPlugin(plugin);
+		 if(p !=null && p.isEnabled() && p.getDescription().getVersion() != null)
+			 return p.getDescription().getVersion();
+		 return null;
+	}
+	public String getWebsite(String plugin) {
+		Plugin p = getPlugin(plugin);
+		 if(p !=null && p.isEnabled() && p.getDescription().getWebsite() != null)
+			 return p.getDescription().getWebsite();
+		 return null;
+	}
+	public String getMainClass(String plugin) {
+		Plugin p = getPlugin(plugin);
+		 if(p !=null && p.getDescription().getMain() != null)
+			 return p.getDescription().getMain();
+		 return null;
+	}
+	
 	public List<String> getCommands(String plugin) {
 		List<String> list = new ArrayList<String>();
 		for(String s : getPlugin(plugin).getDescription().getCommands().keySet())
@@ -81,7 +127,6 @@ public class PluginManagerAPI {
 		if(new File("plugins").isDirectory()) //is folder
 		for(File f: new File("plugins").listFiles()) {
 			if(f.getName().endsWith(".jar")) {
-				//is plugin, required plugin.yml
 				if(new File("plugins/"+f+"/plugin.yml").exists()) {
 					list.add(f.getName());
 					}

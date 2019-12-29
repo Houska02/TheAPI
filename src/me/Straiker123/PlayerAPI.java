@@ -1,5 +1,6 @@
 package me.Straiker123;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -17,18 +18,10 @@ public class PlayerAPI {
 		s=a;
 	}
 	public void teleport(Location loc) {
-		if(loc.getWorld()!=null && loc!=null)
-		s.teleport(loc);
-		else {
-			Error.err("teleporting "+s.getName(), "Location is null");
-		}
+		teleport(loc,TeleportCause.PLUGIN);
 	}
 	public void teleport(Entity entity) {
-		if(entity!=null)
-		s.teleport(entity);
-		else {
-			Error.err("teleporting "+s.getName(), "Entity is null");
-		}
+		teleport(entity,TeleportCause.PLUGIN);
 	}
 	public void teleport(Location loc,TeleportCause cause) {
 		if(loc.getWorld()!=null && loc!=null) {
@@ -51,6 +44,72 @@ public class PlayerAPI {
 		}else {
 			Error.err("teleporting "+s.getName(), "Entity is null");
 		}
+	}
+
+	public void safeTeleport(Location loc) {
+		if(loc.getBlock().getType().name().contains("AIR")||loc.getBlock().getType().name().contains("LAVA")) {
+			teleport(searchLocation(loc));
+		}else
+			teleport(loc); //is safe
+	}
+	public void safeTeleport(Location loc, TeleportCause cause) {
+		if(loc.getBlock().getType().name().contains("AIR")||loc.getBlock().getType().name().contains("LAVA")) {
+			teleport(searchLocation(loc),cause);
+		}else
+			teleport(loc,cause); //is safe
+	}
+	
+	private Location searchLocation(Location loc) {
+		return new Location(loc.getWorld(),getX(loc),getY(loc),getZ(loc));
+	}
+	
+	private int getY(Location b) {
+				int a=b.getBlockY();
+				for(int i = 1; i>0; ++i) {
+					 Location l = new Location(b.getWorld(),b.getBlockX(),b.getBlockY()-i,b.getBlockZ());
+					 if(!l.getBlock().getType().name().contains("AIR")
+							 &&!l.getBlock().getType().name().contains("LAVA")) {
+						 a=i;
+						 break;
+					 }
+				}
+				return a;
+	}
+	
+	private int getZ(Location b) {
+				int a=b.getBlockZ();
+				boolean random = Boolean.getBoolean(TheAPI.getRandomFromList(Arrays.asList(true,false)).toString());
+				for(int i = 1; i>0; ++i) {
+					int x = b.getBlockY();
+					if(random)x=x+i;
+					else
+						x=x-i;
+					 Location l = new Location(b.getWorld(),b.getBlockX(),b.getBlockY(),x);
+					 if(!l.getBlock().getType().name().contains("AIR")
+							 &&!l.getBlock().getType().name().contains("LAVA")) {
+						 a=i;
+						 break;
+					 }
+				}
+				return a;
+	}
+	
+	private int getX(Location b) {
+		int a=b.getBlockX();
+		boolean random = Boolean.getBoolean(TheAPI.getRandomFromList(Arrays.asList(true,false)).toString());
+		for(int i = 1; i>0; ++i) {
+			int x = b.getBlockX();
+			if(random)x=x+i;
+			else
+				x=x-i;
+			 Location l = new Location(b.getWorld(),x,b.getBlockY(),b.getBlockZ());
+			 if(!l.getBlock().getType().name().contains("AIR")
+					 &&!l.getBlock().getType().name().contains("LAVA")) {
+				 a=i;
+				 break;
+			 }
+		}
+		return a;
 	}
 
 	public void setFreeze(boolean freeze) {

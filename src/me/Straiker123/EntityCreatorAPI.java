@@ -1,9 +1,21 @@
 package me.Straiker123;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.bukkit.Location;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Villager.Profession;
+import org.bukkit.entity.Villager.Type;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.loot.LootTable;
+import org.bukkit.util.EulerAngle;
 
 import me.Straiker123.Utils.Error;
 
@@ -90,6 +102,205 @@ public class EntityCreatorAPI {
 	public void setSilent(boolean setSilent) {
 		silent=setSilent;
 	}
+	public static enum ArmorStandOptions{
+		Arms, //boolean
+		BasePlate, //boolean
+		Small, //boolean
+		Marker, //boolean
+		Visible, //boolean
+		BodyPose, //EulerAngle
+		HeadPose, //EulerAngle
+		LeftLegPose, //EulerAngle
+		LeftArmPose, //EulerAngle
+		RightArmPose, //EulerAngle
+		RightLegPose, //EulerAngle
+		Helmet, //ItemStack
+		ChestPlate, //ItemStack
+		Leggings, //ItemStack
+		Boots, //ItemStack
+		ItemInHand //ItemStack
+	}
+
+	boolean arms;
+	boolean base = true;
+	boolean small;
+	boolean marker;
+	boolean visible_armor = true;
+	EulerAngle body;
+	EulerAngle head;
+
+	EulerAngle l_leg;
+	EulerAngle l_arm;
+	EulerAngle r_leg;
+	EulerAngle r_arm;
+	
+	ItemStack helmet;
+	ItemStack chestplate;
+	ItemStack leggings;
+	ItemStack boots;
+	ItemStack item;
+	
+	public static enum VillagerOptions{
+		Adult, //boolean
+		Baby, //boolean
+		AgeLock, //boolean
+		Breed, //boolean
+		LootTable, //LootTable
+		Recipes, //List<MerchantRecipe>
+		Profession, //villager Profession
+		VillagerType, //villager Type
+		Age, //int
+		VillagerExperience, //int
+		VillagerLevel, //int
+		Seed //long
+	}
+	long v_seed;
+	int v_level;
+	int v_exp;
+	int v_age;
+	Type v_type;
+	Profession v_pro;
+	List<MerchantRecipe> v_rec;
+	LootTable v_loot;
+	boolean v_breed;
+	boolean v_locage;
+	boolean v_baby;
+	boolean v_adult;
+
+	public static enum TNTOptions{
+		IsIncendiary, //boolean
+		FuseTicks, //int
+		Yield //long
+	}
+	public void setTNTOptions(HashMap<TNTOptions, Object> w) {
+		for(TNTOptions a : w.keySet()) {
+			switch(a) {
+			case IsIncendiary:
+				tnt_inc=Boolean.getBoolean(w.get(a).toString());
+				break;
+			case FuseTicks:
+				tnt_fuse=Integer.parseInt(w.get(a).toString());
+				break;
+			case Yield:
+				tnt_yield=Long.parseLong(w.get(a).toString());
+				break;
+			}
+		}}
+	@SuppressWarnings("unchecked")
+	public void setVillagerOptions(HashMap<VillagerOptions, Object> w) {
+		for(VillagerOptions a : w.keySet()) {
+			switch(a) {
+			case Adult:
+				v_adult=Boolean.getBoolean(w.get(a).toString());
+				break;
+			case Baby:
+				v_baby=Boolean.getBoolean(w.get(a).toString());
+				break;
+			case AgeLock:
+				v_locage=Boolean.getBoolean(w.get(a).toString());
+				break;
+			case Breed:
+				v_breed=Boolean.getBoolean(w.get(a).toString());
+				break;
+			case LootTable:
+				if((LootTable)w.get(a)!=null)
+				v_loot=(LootTable)w.get(a);
+				break;
+			case Profession:
+				if((Profession)w.get(a)!=null)
+				v_pro=(Profession)w.get(a);
+				break;
+			case Recipes:
+				if((List<MerchantRecipe>)w.get(a)!=null&&((List<MerchantRecipe>)w.get(a)).isEmpty()==false)
+				v_rec=(List<MerchantRecipe>)w.get(a);
+				break;
+			case VillagerExperience:
+				v_exp=Integer.parseInt(w.get(a).toString());
+				break;
+			case VillagerLevel:
+				v_level=Integer.parseInt(w.get(a).toString());
+				break;
+			case Age:
+				v_age=Integer.parseInt(w.get(a).toString());
+				break;
+			case Seed:
+				v_seed=Long.getLong(w.get(a).toString());
+				break;
+			case VillagerType:
+				if((Type)w.get(a)!=null)
+				v_type=(Type)w.get(a);
+				break;
+			}}}
+	
+	public void setArmorStandOptions(HashMap<ArmorStandOptions, Object> w) {
+		for(ArmorStandOptions a : w.keySet()) {
+			switch(a) {
+			case Arms:
+				arms=Boolean.getBoolean(w.get(a).toString());
+				break;
+			case BasePlate:
+				base=Boolean.getBoolean(w.get(a).toString());
+				break;
+			case Small:
+				small=Boolean.getBoolean(w.get(a).toString());
+				break;
+			case Marker:
+				marker=Boolean.getBoolean(w.get(a).toString());
+				break;
+			case Visible:
+				visible_armor=Boolean.getBoolean(w.get(a).toString());
+				break;
+			case BodyPose:
+				if((EulerAngle)w.get(a)!=null)
+				body=(EulerAngle)w.get(a);
+				break;
+			case HeadPose:
+				if((EulerAngle)w.get(a)!=null)
+				head=(EulerAngle)w.get(a);
+				break;
+			case LeftArmPose:
+				if((EulerAngle)w.get(a)!=null)
+				l_arm=(EulerAngle)w.get(a);
+				break;
+			case LeftLegPose:
+				if((EulerAngle)w.get(a)!=null)
+				l_leg=(EulerAngle)w.get(a);
+				break;
+			case RightArmPose:
+				if((EulerAngle)w.get(a)!=null)
+				r_arm=(EulerAngle)w.get(a);
+				break;
+			case RightLegPose:
+				if((EulerAngle)w.get(a)!=null)
+				r_leg=(EulerAngle)w.get(a);
+				break;
+			case Helmet:
+				if((ItemStack)w.get(a)!=null)
+				helmet=(ItemStack)w.get(a);
+				break;
+			case ChestPlate:
+				if((ItemStack)w.get(a)!=null)
+				chestplate=(ItemStack)w.get(a);
+				break;
+			case Leggings:
+				if((ItemStack)w.get(a)!=null)
+				leggings=(ItemStack)w.get(a);
+				break;
+			case Boots:
+				if((ItemStack)w.get(a)!=null)
+				boots=(ItemStack)w.get(a);
+				break;
+			case ItemInHand:
+				if((ItemStack)w.get(a)!=null)
+				item=(ItemStack)w.get(a);
+				break;
+			}
+		}
+	}
+
+	int tnt_fuse = -1;
+	boolean tnt_inc; //this is ?
+	long tnt_yield = -1;
 	
 	@SuppressWarnings("deprecation")
 	public void summonEntity(Location l) {
@@ -99,6 +310,73 @@ public class EntityCreatorAPI {
 		e.setMaxHealth(hp);
 		e.setHealth(hp);
 		}
+		if(e.getType()==EntityType.ARMOR_STAND) {
+			ArmorStand a = (ArmorStand)e;
+			a.setArms(arms);
+			a.setBasePlate(base);
+			if(body != null)
+			a.setBodyPose(body);
+			if(head!=null)
+			a.setHeadPose(head);
+			if(helmet!=null)
+			a.setHelmet(helmet);
+			if(chestplate!=null)
+			a.setChestplate(chestplate);
+			if(leggings!=null)
+			a.setLeggings(leggings);
+			if(boots!=null)
+			a.setBoots(boots);
+			if(item != null)
+			a.setItemInHand(item);
+			if(l_arm!=null)
+			a.setLeftArmPose(l_arm);
+			if(l_leg!=null)
+			a.setLeftLegPose(l_leg);
+			a.setMarker(marker);
+			if(r_arm!=null)
+			a.setRightArmPose(r_arm);
+			if(r_leg!=null)
+			a.setRightLegPose(r_leg);
+			a.setSmall(small);
+			a.setVisible(visible_armor);
+		}
+		if(e.getType()==EntityType.VILLAGER) {
+			Villager v = (Villager)e;
+			if(v_adult)
+			v.setAdult();
+			v.setAge(v_age);
+			v.setAgeLock(v_locage);
+			if(v_baby)
+			v.setBaby();
+			v.setBreed(v_breed);
+			if(v_loot != null)
+			v.setLootTable(v_loot);
+			if(v_rec != null)
+			v.setRecipes(v_rec);
+			if(v_pro != null)
+			v.setProfession(v_pro);
+			try {
+			v.setVillagerExperience(v_exp);
+			v.setVillagerLevel(v_level);
+			if(v_type!=null)
+			v.setVillagerType(v_type);
+			}catch(Exception er) {
+				//1.13+ only
+			}
+			try {
+			v.setSeed(v_seed);
+			}catch(Exception er) {
+				//1.13+ only ?
+			}
+		}
+		if(e.getType()==EntityType.PRIMED_TNT) {
+		TNTPrimed a = (TNTPrimed)e;
+		if(tnt_fuse!=-1)
+		a.setFuseTicks(tnt_fuse);
+		a.setIsIncendiary(tnt_inc);
+		if(tnt_yield!=-1)
+		a.setYield(tnt_yield);
+		} //Straiker123 is bored ? :( 4:30 AM
 		e.setCustomNameVisible(visible);
 		
 		e.setCustomName(name);

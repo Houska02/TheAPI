@@ -29,8 +29,7 @@ public class EnchantmentAPI {
 				.replace("%CURSE_OF_VANISHING%", "VANISHING_CURSE").replace("%CURSE_OF_BINDING%", "BINDING_CURSE")
 				.replace("%SMITE%", "DAMAGE_UNDEAD").replace("%POWER%", "ARROW_DAMAGE").replace("%ALLDAMAGE%", "DAMAGE_ALL").replace("%DAMAGEALL%", "DAMAGE_ALL")
 				.replace("%BANE_OF_ARTHROPODS%", "DAMAGE_ARTHROPODS").replace("%EFFICIENCY%", "DIG_SPEED").replace("%ALL_DAMAGE%", "DAMAGE_ALL")
-				.replace("%PUNCH%", "ARROW_KNOCKBACK").replace("%LOOTMOBS%", "LOOT_BONUS_MOBS").replace("%LOOTBLOCKS%", "LOOT_BONUS_BLOCKS")
-				.replace("%UNBREAKABLE%", "UNBREAKABLE");
+				.replace("%PUNCH%", "ARROW_KNOCKBACK").replace("%LOOTMOBS%", "LOOT_BONUS_MOBS").replace("%LOOTBLOCKS%", "LOOT_BONUS_BLOCKS");
 	}
 	
 	public boolean isEnchantment(String string) {

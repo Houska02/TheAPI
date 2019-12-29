@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.BookMeta.Generation;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
@@ -157,22 +158,85 @@ public class ItemCreatorAPI {
 			if(dur!=-1)
 			a.setDurability((short)dur);
 		}
-		if(i.getType().name().equalsIgnoreCase("WRITABLE_BOOK")||i.getType().name().equalsIgnoreCase("BOOK_AND_QUILL")) {
-			BookMeta b = (BookMeta)i.getItemMeta();
-			b.setAuthor(author);
-			b.setPages(pages);
-			b.setTitle(title);
-			b.setGeneration(gen);
-		}
+		if(i.getType().name().equalsIgnoreCase("ENCHANTED_BOOK")) {
+		EnchantmentStorageMeta m = (EnchantmentStorageMeta) i.getItemMeta();
 		if(data != null)
-		i.setData(data);
-		if(enchs != null && !enchs.isEmpty())i.addUnsafeEnchantments(enchs);
+			i.setData(data);
+		if(enchs != null && !enchs.isEmpty())
+			for(Enchantment e : enchs.keySet())
+			m.addStoredEnchant(e, enchs.get(e), true);
+		if(name!=null)
+			m.setDisplayName(name);
+			if(model != -1 && TheAPI.isNewVersion() //1.14+
+					 &&!TheAPI.getServerVersion().equals("v1_13_R1")
+					 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
+			m.setCustomModelData(model);
+			 if(!TheAPI.getServerVersion().equals("v1_8_R3") //1.8+
+						&& !TheAPI.getServerVersion().equals("v1_8_R1")
+						&& !TheAPI.getServerVersion().equals("v1_8_R2")
+					 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
+					 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
+					 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+					 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+					 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
+			m.setUnbreakable(unb);
+			 else {
+				 addLore("");
+				 addLore("&9UNBREAKABLE");
+			 }
+				if(lore!=null && !lore.isEmpty())m.setLore(lore);
+			if(map != null && !map.isEmpty())
+			for(ItemFlag f: map)
+			m.addItemFlags(f);
+			if(w!=null && !w.isEmpty() && TheAPI.isNewVersion()
+					 &&!TheAPI.getServerVersion().equals("v1_13_R1"))//1.13.2+
+			m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);
+		i.setItemMeta(m);
+		}else
+		if(i.getType().name().equalsIgnoreCase("WRITABLE_BOOK")||i.getType().name().equalsIgnoreCase("BOOK_AND_QUILL")) {
+			BookMeta m = (BookMeta)i.getItemMeta();
+			m.setAuthor(author);
+			m.setPages(pages);
+			m.setTitle(title);
+			m.setGeneration(gen);
+			if(data != null)
+				i.setData(data);
+			if(enchs != null && !enchs.isEmpty())i.addUnsafeEnchantments(enchs);
+			if(name!=null)
+				m.setDisplayName(name);
+				if(model != -1 && TheAPI.isNewVersion() //1.14+
+						 &&!TheAPI.getServerVersion().equals("v1_13_R1")
+						 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
+				m.setCustomModelData(model);
+				 if(!TheAPI.getServerVersion().equals("v1_8_R3") //1.8+
+							&& !TheAPI.getServerVersion().equals("v1_8_R1")
+							&& !TheAPI.getServerVersion().equals("v1_8_R2")
+						 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
+						 &&!TheAPI.getServerVersion().equals("v1_9_R2") 
+						 &&!TheAPI.getServerVersion().equals("v1_9_R3")
+						 &&!TheAPI.getServerVersion().equals("v1_10_R1")
+						 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
+				m.setUnbreakable(unb);
+				 else {
+					 addLore("");
+					 addLore("&9UNBREAKABLE");
+				 }
+					if(lore!=null && !lore.isEmpty())m.setLore(lore);
+				if(map != null && !map.isEmpty())
+				for(ItemFlag f: map)
+				m.addItemFlags(f);
+				if(w!=null && !w.isEmpty() && TheAPI.isNewVersion()
+						 &&!TheAPI.getServerVersion().equals("v1_13_R1"))//1.13.2+
+				m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);
+				i.setItemMeta(m);
+		}else
 			if(type!=null) {
 				SkullMeta m=(SkullMeta)i.getItemMeta();
+				if(data != null)
+					i.setData(data);
+					if(enchs != null && !enchs.isEmpty())i.addUnsafeEnchantments(enchs);
 					if(name!=null)
 					m.setDisplayName(name);
-					
-					if(lore!=null && !lore.isEmpty())m.setLore(lore);
 					if(model != -1 && TheAPI.isNewVersion()
 							 &&!TheAPI.getServerVersion().equals("v1_13_R1")
 							 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
@@ -190,6 +254,7 @@ public class ItemCreatorAPI {
 						 addLore("");
 						 addLore("&9UNBREAKABLE");
 					 }
+						if(lore!=null && !lore.isEmpty())m.setLore(lore);
 					if(map != null && !map.isEmpty())
 					for(ItemFlag f: map)
 					m.addItemFlags(f);
@@ -202,14 +267,16 @@ public class ItemCreatorAPI {
 					i.setItemMeta(m);
 			}else{
 			ItemMeta m=i.getItemMeta();
+			if(data != null)
+				i.setData(data);
+				if(enchs != null && !enchs.isEmpty())i.addUnsafeEnchantments(enchs);
 				if(name!=null)
 				m.setDisplayName(name);
-				if(lore!=null && !lore.isEmpty())m.setLore(lore);
-				if(model != -1 && TheAPI.isNewVersion()
+				if(model != -1 && TheAPI.isNewVersion() //1.14+
 						 &&!TheAPI.getServerVersion().equals("v1_13_R1")
 						 &&!TheAPI.getServerVersion().equals("v1_13_R2"))
 				m.setCustomModelData(model);
-				 if(!TheAPI.getServerVersion().equals("v1_8_R3")
+				 if(!TheAPI.getServerVersion().equals("v1_8_R3") //1.8+
 							&& !TheAPI.getServerVersion().equals("v1_8_R1")
 							&& !TheAPI.getServerVersion().equals("v1_8_R2")
 						 &&!TheAPI.getServerVersion().equals("v1_9_R1")  
@@ -218,12 +285,16 @@ public class ItemCreatorAPI {
 						 &&!TheAPI.getServerVersion().equals("v1_10_R1")
 						 &&!TheAPI.getServerVersion().equals("v1_10_R2"))
 				m.setUnbreakable(unb);
+				 else {
+					 addLore("");
+					 addLore("&9UNBREAKABLE");
+				 }
+					if(lore!=null && !lore.isEmpty())m.setLore(lore);
 				if(map != null && !map.isEmpty())
 				for(ItemFlag f: map)
 				m.addItemFlags(f);
-				if(w!=null && !w.isEmpty() && !TheAPI.getServerVersion().equals("glowstone") 
-						&& TheAPI.isNewVersion()
-						 &&!TheAPI.getServerVersion().equals("v1_13_R1"))
+				if(w!=null && !w.isEmpty() && TheAPI.isNewVersion()
+						 &&!TheAPI.getServerVersion().equals("v1_13_R1"))//1.13.2+
 				m.setAttributeModifiers((Multimap<Attribute, AttributeModifier>) w);
 				i.setItemMeta(m);
 			}

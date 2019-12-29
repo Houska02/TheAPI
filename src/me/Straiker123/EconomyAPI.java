@@ -17,6 +17,15 @@ public class EconomyAPI {
 			LoaderClass.plugin.e=false;
 		}
 	}
+	/**
+	 * Warning, this FakeEconomyAPI return Economy stored in config.
+	 * Isn't connect to the Vault plugin.
+	 * Working if is EconomyAPI disabled too.
+	 * @return FakeEconomyAPI
+	 */
+	public FakeEconomyAPI getFakeEconomyAPI(){
+		return new FakeEconomyAPI();
+	}
 
 	public boolean hasBankSupport() {
 		if(e!=null && LoaderClass.plugin.e)

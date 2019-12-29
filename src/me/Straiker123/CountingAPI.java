@@ -1,7 +1,7 @@
 package me.Straiker123;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,19 +13,22 @@ public class CountingAPI {
 		return Bukkit.getMaxPlayers();
 	}
 	
-	public Collection<? extends Player> getOnlinePlayers(){
-		return Bukkit.getOnlinePlayers();
+	public List<Player> getOnlinePlayers(){
+		List<Player> a = new ArrayList<Player>();
+		for(Player p : Bukkit.getOnlinePlayers())
+			a.add(p);
+		return a;
 	}
 
-	public Collection<Plugin> getEnabledPlugins(){
-		 Collection<Plugin> a = new ArrayList<Plugin>();
+	public List<Plugin> getEnabledPlugins(){
+		List<Plugin> a = new ArrayList<Plugin>();
 		 for(Plugin p : Bukkit.getPluginManager().getPlugins()) {
 			 if(p.isEnabled())a.add(p);
 		 }
 		 return a;
 	}
-	public Collection<Plugin> getDisabledPlugins(){
-		 Collection<Plugin> a = new ArrayList<Plugin>();
+	public List<Plugin> getDisabledPlugins(){
+		 List<Plugin> a = new ArrayList<Plugin>();
 		 for(Plugin p : Bukkit.getPluginManager().getPlugins()) {
 			 if(!p.isEnabled())a.add(p);
 		 }
@@ -33,8 +36,8 @@ public class CountingAPI {
 	}
 	
 
-	public Collection<Plugin> getPlugins(){
-		 Collection<Plugin> a = new ArrayList<Plugin>();
+	public List<Plugin> getPlugins(){
+		List<Plugin> a = new ArrayList<Plugin>();
 		 for(Plugin p : Bukkit.getPluginManager().getPlugins()) {
 			a.add(p);
 		 }
@@ -42,13 +45,11 @@ public class CountingAPI {
 	}
 	
 	
-	public Collection<Plugin> getPluginsUsingTheAPI() {
-		 Collection<Plugin> a = new ArrayList<Plugin>();
-		 for(Plugin p : Bukkit.getPluginManager().getPlugins()) {
-			 if(p ==null ||p.isEnabled()==false)continue;
-				if(p.getDescription().getDepend() != null && p.getDescription().getDepend().contains("TheAPI")
-						||p.getDescription().getSoftDepend() != null && p.getDescription().getSoftDepend().contains("TheAPI"))a.add(p);
-			}
+	public List<Plugin> getPluginsUsingTheAPI() {
+		List<Plugin> a = new ArrayList<Plugin>();
+		for(Plugin all : getPlugins())
+		 if(TheAPI.getPluginsManagerAPI().getDepend(all.getName()).contains("TheAPI")
+				 ||TheAPI.getPluginsManagerAPI().getSoftDepend(all.getName()).contains("TheAPI"))a.add(all);
 		 return a;
 	}
 }

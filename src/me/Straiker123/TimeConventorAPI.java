@@ -1,7 +1,17 @@
 package me.Straiker123;
 
 public class TimeConventorAPI {
-	
+	public TimeConventorAPI() {
+		 sec =LoaderClass.config.getConfig().getString("Words.Second");
+		 min =LoaderClass.config.getConfig().getString("Words.Minute");
+		 h =LoaderClass.config.getConfig().getString("Words.Hour");
+		 d =LoaderClass.config.getConfig().getString("Words.Day");
+		 w =LoaderClass.config.getConfig().getString("Words.Week");
+		 mon = LoaderClass.config.getConfig().getString("Words.Month");
+		 y =LoaderClass.config.getConfig().getString("Words.Year");
+		 c = LoaderClass.config.getConfig().getString("Words.Century");
+		 mil =LoaderClass.config.getConfig().getString("Words.Millenium");
+	}
 	public static enum EndWords{
 		Millenium,
 		Century,
@@ -13,15 +23,15 @@ public class TimeConventorAPI {
 		Minute,
 		Second
 	}
-	String sec =LoaderClass.config.getConfig().getString("Words.Second");
-	String min =LoaderClass.config.getConfig().getString("Words.Minute");
-	String h =LoaderClass.config.getConfig().getString("Words.Hour");
-	String d =LoaderClass.config.getConfig().getString("Words.Day");
-	String w =LoaderClass.config.getConfig().getString("Words.Week");
-	String mon = LoaderClass.config.getConfig().getString("Words.Month");
-	String y =LoaderClass.config.getConfig().getString("Words.Year");
-	String c = LoaderClass.config.getConfig().getString("Words.Century");
-	String mil =LoaderClass.config.getConfig().getString("Words.Millenium");
+	String sec;
+	String min;
+	String h;
+	String d;
+	String w ;
+	String mon;
+	String y;
+	String c;
+	String mil;
 	/**
 	 * Return current end word
 	 * @param a

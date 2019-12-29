@@ -18,7 +18,13 @@ import me.Straiker123.Utils.voidGenerator_1_8;
 
 public class WorldsManager {
 	
-	
+	/**
+	 * This method ReCreate world, working as Import world commmand in Multiverse
+	 * @param world
+	 * @param generator
+	 * @param type
+	 * @return
+	 */
 	public boolean load(String world, Environment generator, WorldType type) {
 		if(Bukkit.getWorld(world)!=null)return false;
 		return TheAPI.getWorldsManager().create(world, generator, type, true, 0);
@@ -56,7 +62,7 @@ public class WorldsManager {
 		if(type!=null)
 		c.type(type);
 		else {
-			if(!TheAPI.getServerVersion().contains("v1_8_R"))
+			if(!TheAPI.getServerVersion().contains("v1_8"))
 		c.generator(new voidGenerator());
 			else
 				c.generator(new voidGenerator_1_8());
@@ -71,16 +77,19 @@ public class WorldsManager {
 	}return false;}
 	private static boolean deleteDirectory(File path) {
 		if(path.exists()) {
-		File[] files = path.listFiles();
-		for(int i=0; i<files.length; i++) {
-		if(files[i].isDirectory()) {
-		deleteDirectory(files[i]);
+		for(File f : path.listFiles()) {
+		if(f.isDirectory()) {
+		deleteDirectory(f);
 		}else {
-		files[i].delete();
+		f.delete();
 		}}}
-		return( path.delete() );
+		return(path.delete());
 	}
 	public boolean delete(World name, boolean safeUnloadWorld) {
+		return delete(name,safeUnloadWorld,false);
+}
+	
+	public boolean delete( World name, boolean safeUnloadWorld, boolean keepFolder) {
 		if (name==null)
 			return false;
 		if(!safeUnloadWorld) {
@@ -88,19 +97,28 @@ public class WorldsManager {
 			w.remove(name);
 			if(w.isEmpty()==false) {
 			Bukkit.unloadWorld(name, false);
+			if(!keepFolder) {
 			boolean delete = deleteDirectory(name.getWorldFolder());
 			 return delete;
+			}else
+				return true;
 			}return false;
 		}else {
 			List<World> w = Bukkit.getWorlds();
 			w.remove(name);
 			if(w.isEmpty()==false) {
 			Bukkit.unloadWorld(name, true);
-			boolean delete = deleteDirectory(name.getWorldFolder());
-			 return delete;
+			if(!keepFolder) {
+				boolean delete = deleteDirectory(name.getWorldFolder());
+				 return delete;
+				}else
+					return true;
 		}return false;
 	}
-}
+	}
+	public boolean unloadWorld(String name) {
+		return unloadWorld(name,true);
+	}
 	public boolean unloadWorld(String name, boolean saveWorld) {
 		if (name==null)
 			return false;

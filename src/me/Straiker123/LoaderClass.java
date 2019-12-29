@@ -159,6 +159,8 @@ public class LoaderClass extends JavaPlugin {
 	private void createConfig() {
 		config = TheAPI.getConfig("TheAPI", "Config");
 		config.addDefault("Options.HideErrors", false);
+		config.addDefault("Options.FakeEconomyAPI.Symbol", "$");
+		config.addDefault("Options.FakeEconomyAPI.Format", "$%money%");
 		config.addDefault("Words.Second", "s");
 		config.addDefault("Words.Minute", "min");
 		config.addDefault("Words.Hour", "h");

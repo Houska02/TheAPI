@@ -25,7 +25,7 @@ public class ConfigAPI {
 	 * @return boolean if exist string in config (Can be used before create a config)
 	 */
 	public boolean existPath(String string) {
-		return new File("plugins/"+loc+"/"+name+"."+end).exists() && YamlConfiguration.loadConfiguration(new File("plugins/"+loc+"/"+name+"."+end)).getString(string) != null;
+		return existFile() && YamlConfiguration.loadConfiguration(getFile()).getString(string) != null;
 	}
 	
 	public void addDefault(String path, Object value) {
@@ -46,9 +46,10 @@ public class ConfigAPI {
 	}
 	
 	public File getFile() {
-		if(this.f==null) {
+		if(!existFile()) {
 		File f = new File("plugins/"+loc+"/"+name+"."+end);
 		if(f.exists())return f;
+		else {
 		try {
 			f.createNewFile();
 		} catch (IOException e) {
@@ -60,6 +61,7 @@ public class ConfigAPI {
 					Error.sendRequest("&bTheAPI&7: &cError when getting file of "+name+"."+end+" config");
 		}
 		return f;
+		}
 		}
 		return f;
 	}
@@ -80,7 +82,7 @@ public class ConfigAPI {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cFileConfiguration is null"));
 			return false;
 		}else
-		if(f==null) {
+		if(!existFile()) {
 			TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cFile is null"));
 			return false;
 		}else
@@ -106,17 +108,18 @@ public class ConfigAPI {
 	}
 	
 	public boolean reload() {
-		try {
-		f=new File("plugins/"+loc+"/"+name+"."+end);
-		a = YamlConfiguration.loadConfiguration(f);
-		if(h!=null)a.options().header(h);
-		if(c!=null && !c.isEmpty()) {
-		a.addDefaults(c);
-		}
-		a.options().copyDefaults(true).copyHeader(true);
 		save();
-		if(!LoaderClass.list.contains(this))
-		LoaderClass.list.add(this);
+		try {
+			f=getFile();
+			a = YamlConfiguration.loadConfiguration(f);
+			if(h!=null)a.options().header(h);
+			if(c!=null && !c.isEmpty()) {
+			a.addDefaults(c);
+			}
+			a.options().copyDefaults(true).copyHeader(true);
+			save();
+			if(!LoaderClass.list.contains(this))
+			LoaderClass.list.add(this);
 		return true;
 		} catch (Exception e) {
 			if(LoaderClass.config.getConfig() == null || LoaderClass.config.getConfig() != null && !LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
