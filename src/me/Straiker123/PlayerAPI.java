@@ -113,10 +113,11 @@ public class PlayerAPI {
 	}
 
 	public void setFreeze(boolean freeze) {
-		s.setAI(!freeze);
+		LoaderClass.data.getConfig().set("data."+s.getName()+".freeze",true);
+		LoaderClass.data.save();
 	}
 	public boolean isFreezen() {
-		return !s.hasAI();
+		return LoaderClass.data.getConfig().getBoolean("data."+s.getName()+".freeze");
 	}
 	
 	public static enum InvseeType {

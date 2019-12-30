@@ -1,19 +1,36 @@
 package me.Straiker123.Utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Cow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -23,7 +40,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
-
 import me.Straiker123.ItemCreatorAPI;
 import me.Straiker123.LoaderClass;
 import me.Straiker123.PunishmentAPI;
@@ -32,6 +48,7 @@ import me.Straiker123.TheAPI.SudoType;
 import me.Straiker123.WorldBorderAPI.WarningMessageType;
 import me.Straiker123.Events.DamageGodPlayerByEntityEvent;
 import me.Straiker123.Events.DamageGodPlayerEvent;
+import me.Straiker123.Events.EntityBreedEvent;
 import me.Straiker123.Events.GUIClickEvent;
 import me.Straiker123.Events.GUICloseEvent;
 import me.Straiker123.Events.PlayerJumpEvent;
@@ -94,7 +111,252 @@ public class Events implements Listener {
 		}
 		return is;
 	}
-
+	HashMap<Player, List<Entity>> list = new HashMap<Player, List<Entity>>();
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onClick(PlayerInteractAtEntityEvent e) {
+		if(e.getRightClicked().getType()==EntityType.COW) {
+			Cow c = (Cow)e.getRightClicked();
+			if(c.canBreed() && e.getPlayer().getItemInHand().getType()==Material.WHEAT) {
+				List<Entity> l = list.get(e.getPlayer());
+				l.add(e.getRightClicked());
+				list.put(e.getPlayer(), l);
+			}
+		}
+		if(e.getRightClicked().getType()==EntityType.PIG) {
+			Pig c = (Pig)e.getRightClicked();
+			if(c.canBreed() && e.getPlayer().getItemInHand().getType().name().contains("CARROT")) {
+				List<Entity> l = list.get(e.getPlayer());
+				l.add(e.getRightClicked());
+				list.put(e.getPlayer(), l);
+			}
+		}
+		if(e.getRightClicked().getType()==EntityType.SHEEP) {
+			Sheep c = (Sheep)e.getRightClicked();
+			if(c.canBreed() && e.getPlayer().getItemInHand().getType()==Material.WHEAT) {
+				List<Entity> l = list.get(e.getPlayer());
+				l.add(e.getRightClicked());
+				list.put(e.getPlayer(), l);
+			}
+		}
+		if(e.getRightClicked().getType()==EntityType.CHICKEN) {
+			Chicken c = (Chicken)e.getRightClicked();
+			if(c.canBreed() && e.getPlayer().getItemInHand().getType().name().contains("SEEDS")) {
+				List<Entity> l = list.get(e.getPlayer());
+				l.add(e.getRightClicked());
+				list.put(e.getPlayer(), l);
+			}
+		}
+		if(e.getRightClicked().getType()==EntityType.HORSE) {
+			Horse c = (Horse)e.getRightClicked();
+			if(c.canBreed()) {
+				if(e.getPlayer().getItemInHand().getType()==Material.WHEAT
+						||e.getPlayer().getItemInHand().getType()==Material.APPLE
+						||e.getPlayer().getItemInHand().getType()==Material.GOLDEN_APPLE
+						||e.getPlayer().getItemInHand().getType()==Material.GOLDEN_CARROT) {
+				List<Entity> l = list.get(e.getPlayer());
+				l.add(e.getRightClicked());
+				list.put(e.getPlayer(), l);
+			}
+		}}
+		if(e.getRightClicked().getType()==EntityType.WOLF) {
+			Wolf c = (Wolf)e.getRightClicked();
+			if(c.canBreed())
+				if(e.getPlayer().getItemInHand().getType().name().equals("RAW_BEEF")) {
+				List<Entity> l = list.get(e.getPlayer());
+				l.add(e.getRightClicked());
+				list.put(e.getPlayer(), l);
+			}
+		}
+		if(e.getRightClicked().getType()==EntityType.OCELOT) {
+			Ocelot c = (Ocelot)e.getRightClicked();
+			if(c.canBreed() && e.getPlayer().getItemInHand().getType().name().equals("RAW_FISH")) {
+				List<Entity> l = list.get(e.getPlayer());
+				l.add(e.getRightClicked());
+				list.put(e.getPlayer(), l);
+			}
+		}
+	}
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onSpawn(CreatureSpawnEvent e) {
+		if(e.getSpawnReason()==SpawnReason.BREEDING) {
+			if(e.getEntity().getType()==EntityType.COW) {
+				Cow c = (Cow)e.getEntity();
+				if(!c.isAdult()) {
+					List<Entity> entity = new ArrayList<Entity>();
+					for(Entity d : c.getWorld().getNearbyEntities(c.getLocation(), 20, 20, 20)) {
+						if(d.getType()==EntityType.COW) {
+							entity.add(d);
+						}
+					}
+					for(Player p : list.keySet()) {
+						List<Entity> es = list.get(p);
+						for(Entity f : es) {
+							if(entity.contains(f)) {
+								es.remove(f);
+								list.remove(p);
+								list.put(p, es);
+								EntityBreedEvent event = new EntityBreedEvent(p,e.getLocation(),e.getEntity());
+								Bukkit.getPluginManager().callEvent(event);
+								if(event.isCancelled())e.setCancelled(true);
+							}
+						}
+					}
+				}
+			}
+			if(e.getEntity().getType()==EntityType.PIG) {
+				Pig c = (Pig)e.getEntity();
+				if(!c.isAdult()) {
+					List<Entity> entity = new ArrayList<Entity>();
+					for(Entity d : c.getWorld().getNearbyEntities(c.getLocation(), 20, 20, 20)) {
+						if(d.getType()==EntityType.PIG) {
+							entity.add(d);
+						}
+					}
+					for(Player p : list.keySet()) {
+						List<Entity> es = list.get(p);
+						for(Entity f : es) {
+							if(entity.contains(f)) {
+								es.remove(f);
+								list.remove(p);
+								list.put(p, es);
+								EntityBreedEvent event = new EntityBreedEvent(p,e.getLocation(),e.getEntity());
+								Bukkit.getPluginManager().callEvent(event);
+								if(event.isCancelled())e.setCancelled(true);
+							}
+						}
+					}
+				}
+			}
+			if(e.getEntity().getType()==EntityType.CHICKEN) {
+				Chicken c = (Chicken)e.getEntity();
+				if(!c.isAdult()) {
+					List<Entity> entity = new ArrayList<Entity>();
+					for(Entity d : c.getWorld().getNearbyEntities(c.getLocation(), 20, 20, 20)) {
+						if(d.getType()==EntityType.CHICKEN) {
+							entity.add(d);
+						}
+					}
+					for(Player p : list.keySet()) {
+						List<Entity> es = list.get(p);
+						for(Entity f : es) {
+							if(entity.contains(f)) {
+								es.remove(f);
+								list.remove(p);
+								list.put(p, es);
+								EntityBreedEvent event = new EntityBreedEvent(p,e.getLocation(),e.getEntity());
+								Bukkit.getPluginManager().callEvent(event);
+								if(event.isCancelled())e.setCancelled(true);
+							}
+						}
+					}
+				}
+			}
+			if(e.getEntity().getType()==EntityType.SHEEP) {
+				Sheep c = (Sheep)e.getEntity();
+				if(!c.isAdult()) {
+					List<Entity> entity = new ArrayList<Entity>();
+					for(Entity d : c.getWorld().getNearbyEntities(c.getLocation(), 20, 20, 20)) {
+						if(d.getType()==EntityType.SHEEP) {
+							entity.add(d);
+						}
+					}
+					for(Player p : list.keySet()) {
+						List<Entity> es = list.get(p);
+						for(Entity f : es) {
+							if(entity.contains(f)) {
+								es.remove(f);
+								list.remove(p);
+								list.put(p, es);
+								EntityBreedEvent event = new EntityBreedEvent(p,e.getLocation(),e.getEntity());
+								Bukkit.getPluginManager().callEvent(event);
+								if(event.isCancelled())e.setCancelled(true);
+							}
+						}
+					}
+				}
+			}
+			if(e.getEntity().getType()==EntityType.HORSE) {
+				Horse c = (Horse)e.getEntity();
+				if(!c.isAdult()) {
+					List<Entity> entity = new ArrayList<Entity>();
+					for(Entity d : c.getWorld().getNearbyEntities(c.getLocation(), 20, 20, 20)) {
+						if(d.getType()==EntityType.HORSE) {
+							entity.add(d);
+						}
+					}
+					for(Player p : list.keySet()) {
+						List<Entity> es = list.get(p);
+						for(Entity f : es) {
+							if(entity.contains(f)) {
+								es.remove(f);
+								list.remove(p);
+								list.put(p, es);
+								EntityBreedEvent event = new EntityBreedEvent(p,e.getLocation(),e.getEntity());
+								Bukkit.getPluginManager().callEvent(event);
+								if(event.isCancelled())e.setCancelled(true);
+							}
+						}
+					}
+				}
+			}
+			if(e.getEntity().getType()==EntityType.WOLF) {
+				Wolf c = (Wolf)e.getEntity();
+				if(!c.isAdult()) {
+					List<Entity> entity = new ArrayList<Entity>();
+					for(Entity d : c.getWorld().getNearbyEntities(c.getLocation(), 20, 20, 20)) {
+						if(d.getType()==EntityType.WOLF) {
+							entity.add(d);
+						}
+					}
+					for(Player p : list.keySet()) {
+						List<Entity> es = list.get(p);
+						for(Entity f : es) {
+							if(entity.contains(f)) {
+								es.remove(f);
+								list.remove(p);
+								list.put(p, es);
+								EntityBreedEvent event = new EntityBreedEvent(p,e.getLocation(),e.getEntity());
+								Bukkit.getPluginManager().callEvent(event);
+								if(event.isCancelled())e.setCancelled(true);
+							}
+						}
+					}
+				}
+			}
+			if(e.getEntity().getType()==EntityType.OCELOT) {
+				Ocelot c = (Ocelot)e.getEntity();
+				if(!c.isAdult()) {
+					List<Entity> entity = new ArrayList<Entity>();
+					for(Entity d : c.getWorld().getNearbyEntities(c.getLocation(), 20, 20, 20)) {
+						if(d.getType()==EntityType.OCELOT) {
+							entity.add(d);
+						}
+					}
+					for(Player p : list.keySet()) {
+						List<Entity> es = list.get(p);
+						for(Entity f : es) {
+							if(entity.contains(f)) {
+								es.remove(f);
+								list.remove(p);
+								list.put(p, es);
+								EntityBreedEvent event = new EntityBreedEvent(p,e.getLocation(),e.getEntity());
+								Bukkit.getPluginManager().callEvent(event);
+								if(event.isCancelled())e.setCancelled(true);
+							}
+						}
+					}
+				}
+			}
+			if(e.getEntity().getType()==EntityType.VILLAGER) {
+				Villager c = (Villager)e.getEntity();
+				if(!c.isAdult()) {
+				EntityBreedEvent event = new EntityBreedEvent(null,e.getLocation(),e.getEntity());
+				Bukkit.getPluginManager().callEvent(event);
+				if(event.isCancelled())e.setCancelled(true);
+				}
+			}
+		}
+	}
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onItemDestroy(PlayerItemBreakEvent e) {
 		me.Straiker123.Events.PlayerItemBreakEvent event = new me.Straiker123.Events.PlayerItemBreakEvent(e.getPlayer(),e.getBrokenItem());
@@ -108,6 +370,10 @@ public class Events implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onMove(PlayerMoveEvent e) {
+		if(TheAPI.getPlayerAPI(e.getPlayer()).isFreezen()) {
+			e.setCancelled(true);
+			return;
+		}
 		int jump = (int) (e.getFrom().getY()-e.getTo().getY());
 		if(jump>0) {
 			PlayerJumpEvent event = new PlayerJumpEvent(e.getPlayer(),e.getFrom(),e.getTo(),jump);
@@ -188,7 +454,14 @@ public class Events implements Listener {
 					.replace("%reason%", a.getTempBanIPReason(s))));
 			return;
 		}
-		}catch(Exception ad) {}
+		}catch(Exception ad) {
+			if(LoaderClass.config.getConfig() == null || LoaderClass.config.getConfig() != null && !LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
+				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when processing PunishmentAPI:"));
+				ad.printStackTrace();
+				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
+				}else
+					Error.sendRequest("&bTheAPI&7: &cError when processing PunishmentAPI");
+		}
 	}
 
 	@EventHandler
@@ -219,6 +492,7 @@ public class Events implements Listener {
 	public void onJoin(PlayerJoinEvent e) {
 		String s = e.getPlayer().getName();
 		PunishmentAPI a = TheAPI.getPunishmentAPI();
+		try {
 		if(a.hasBan(s)) {
 			e.setJoinMessage(null);
 			Bukkit.getScheduler().runTaskLater(LoaderClass.plugin, new Runnable() { @Override public void run() {
@@ -226,7 +500,7 @@ public class Events implements Listener {
 					.replace("%player%", s)
 					.replace("%reason%", a.getBanReason(s))));
 			return;
-		}},40);}
+		}},25);}
 		if(a.hasTempBan(s)) {
 			e.setJoinMessage(null);
 			Bukkit.getScheduler().runTaskLater(LoaderClass.plugin, new Runnable() { @Override public void run() {
@@ -235,7 +509,7 @@ public class Events implements Listener {
 							.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(a.getTempBan_ExpireTime(s)))
 							.replace("%reason%", a.getTempBanReason(s))));
 				return;
-		}},40);}
+		}},25);}
 		if(a.hasBanIP(s)) {
 			e.setJoinMessage(null);
 			Bukkit.getScheduler().runTaskLater(LoaderClass.plugin, new Runnable() { @Override public void run() {
@@ -243,7 +517,7 @@ public class Events implements Listener {
 					.replace("%player%", s)
 					.replace("%reason%",a.getBanReason(s))));
 			return;
-		}},40);}
+		}},25);}
 		if(a.hasTempBanIP(s)) {
 			e.setJoinMessage(null);
 			Bukkit.getScheduler().runTaskLater(LoaderClass.plugin, new Runnable() { @Override public void run() {
@@ -251,9 +525,17 @@ public class Events implements Listener {
 			e.getPlayer().kickPlayer(TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.TempBanIP")
 					.replace("%player%", s)
 					.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(a.getTempBanIP_ExpireTime(s)))));
-		}},40);}
+		}},25);}
 		if(TheAPI.getPunishmentAPI().getJailAPI().isJailed(e.getPlayer().getName())) {
 			TheAPI.getPlayerAPI(e.getPlayer()).teleport(TheAPI.getPunishmentAPI().getJailAPI().getJailLocation(TheAPI.getPunishmentAPI().getJailAPI().getJailOfPlayer(e.getPlayer().getName())));
+		}
+		}catch(Exception ad) {
+			if(LoaderClass.config.getConfig() == null || LoaderClass.config.getConfig() != null && !LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
+				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when processing PunishmentAPI:"));
+				ad.printStackTrace();
+				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cEnd of error."));
+				}else
+					Error.sendRequest("&bTheAPI&7: &cError when processing PunishmentAPI");
 		}
 	}
 	
@@ -301,20 +583,19 @@ public class Events implements Listener {
 				return;
 			}
 		}
-			
-		if(e.getDamager().getScoreboardTags().isEmpty()==false) {
+		try {
 			double set = 0;
 			double min = 0;
 			double max = 0;
-			for(String t : e.getDamager().getScoreboardTags()) {
-				if(t.startsWith("damage:set:")) {
-					t.replaceFirst("damage:set:", "");
-					set=TheAPI.getNumbersAPI(t).getDouble();
+			if(e.getDamager().hasMetadata("damage:min")) {
+				min=e.getDamager().getMetadata("damage:min").get(0).asDouble();	
 				}
-				if(t.startsWith("damage:min:"))
-					t.replaceFirst("damage:min:", "");
-				min=TheAPI.getNumbersAPI(t).getDouble();
-			}
+			if(e.getDamager().hasMetadata("damage:max")) {
+				max=e.getDamager().getMetadata("damage:max").get(0).asDouble();	
+				}
+			if(e.getDamager().hasMetadata("damage:set")) {
+				set=e.getDamager().getMetadata("damage:set").get(0).asDouble();	
+				}
 			if(set==0) {
 				if(max!=0 && max>min) {
 			double damage = TheAPI.generateRandomDouble(max);
@@ -324,6 +605,9 @@ public class Events implements Listener {
 				}}else {
 				e.setDamage(set);
 				}
+		
+		}catch(Exception err) {
+			
 		}
 	}
 	

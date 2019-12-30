@@ -15,6 +15,8 @@ import org.bukkit.entity.Villager.Type;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.loot.LootTable;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.util.EulerAngle;
 
 import me.Straiker123.Utils.Error;
@@ -203,8 +205,12 @@ public class EntityCreatorAPI {
 				v_breed=Boolean.getBoolean(w.get(a).toString());
 				break;
 			case LootTable:
+				try {
 				if((LootTable)w.get(a)!=null)
 				v_loot=(LootTable)w.get(a);
+				}catch(Exception e) {
+					
+				}
 				break;
 			case Profession:
 				if((Profession)w.get(a)!=null)
@@ -227,8 +233,12 @@ public class EntityCreatorAPI {
 				v_seed=Long.getLong(w.get(a).toString());
 				break;
 			case VillagerType:
+				try {
 				if((Type)w.get(a)!=null)
 				v_type=(Type)w.get(a);
+				}catch(Exception e){
+					
+				}
 				break;
 			}}}
 	
@@ -349,10 +359,14 @@ public class EntityCreatorAPI {
 			if(v_baby)
 			v.setBaby();
 			v.setBreed(v_breed);
+			try {
 			if(v_loot != null)
 			v.setLootTable(v_loot);
 			if(v_rec != null)
 			v.setRecipes(v_rec);
+			}catch(Exception err) {
+				
+			}
 			if(v_pro != null)
 			v.setProfession(v_pro);
 			try {
@@ -381,24 +395,43 @@ public class EntityCreatorAPI {
 		
 		e.setCustomName(name);
 		if(set==0) {
-		if(min>0)
-		e.addScoreboardTag("damage:min:"+min);
-		if(max>0)
-		e.addScoreboardTag("damage:max:"+max);
-		}else {
-			e.addScoreboardTag("damage:set:"+set);
+		if(min>0) {
+
+			MetadataValue metadataValue = new FixedMetadataValue(LoaderClass.plugin, min);
+			e.setMetadata("damage:min", metadataValue);
 		}
+		if(max>0){
+
+			MetadataValue metadataValue = new FixedMetadataValue(LoaderClass.plugin, max);
+			e.setMetadata("damage:max", metadataValue);
+		}
+		}else {
+			MetadataValue metadataValue = new FixedMetadataValue(LoaderClass.plugin, set);
+			e.setMetadata("damage:set", metadataValue);
+		}
+		try {
 		e.setAI(ai);
 		e.setCollidable(collidable);
+		}catch(Exception err) {
+			
+		}
 		e.setCanPickupItems(items);
+		try {
 		e.setGravity(gravity);
 		e.setGlowing(glow);
 		e.setInvulnerable(isGod);
+		}catch(Exception err) {
+			
+		}
 		if(god>0)
 		e.setNoDamageTicks(20*god);
 		if(entity!=null)
 		e.setPassenger(entity);
+		try {
 		e.setSilent(silent);
+		}catch(Exception err) {
+			
+		}
 		}catch(Exception es) {
 			if(!LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
 				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when spawning entity using EnttiyCreatorAPI:"));

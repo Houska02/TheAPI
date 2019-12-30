@@ -3,30 +3,29 @@ package me.Straiker123.Events;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class EntityMoveEvent extends Event implements Cancellable {
+public class EntityBreedEvent extends Event implements Cancellable {
 	Entity s;
-	public EntityMoveEvent(Entity p,Location from, Location to) {
-		s=p;
-		f=from;
-		t=to;
+	Location loc;
+	Player p;
+	public EntityBreedEvent(Player p, Location location, Entity entity) {
+		s=entity;
+		loc=location;
+		this.p=p;
 	}
 	private static final HandlerList handler = new HandlerList();
-	Location t;
-	Location f;
-	
-	public Location getTo() {
-		return t;
-	}
-	public Location getFrom() {
-		return f;
-	}
-	
 	public EntityType getEntityType() {
 		return s.getType();
+	}
+	public Player getBreeder() {
+		return p;
+	}
+	public Location getLocation() {
+		return loc;
 	}
 	@Override
 	public boolean isCancelled() {

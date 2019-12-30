@@ -65,8 +65,12 @@ public class PluginManagerAPI {
 	}
 	public String getAPIVersion(String plugin) {
 		Plugin p = getPlugin(plugin);
+		try {
 		 if(p !=null && p.isEnabled() && p.getDescription().getAPIVersion() != null)
 			 return p.getDescription().getAPIVersion();
+		}catch(Exception e) {
+			
+		}
 		 return null;
 	}
 	public String getVersion(String plugin) {

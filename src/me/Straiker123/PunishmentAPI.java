@@ -231,7 +231,7 @@ public class PunishmentAPI {
 	public boolean hasTempMute(String player) {
 		if(player==null)return false;
 		if(getTempMuteStart(player)==-0)return false;
-		int time = (int) (getTempMuteStart(player) - System.currentTimeMillis() + getTempMuteTime(player));
+		long time = getTempMuteStart(player)/1000 - System.currentTimeMillis()/1000 + getTempMuteTime(player);
 		return time > 0;
 		}
 	public boolean hasBanIP(String playerOrIP) {
@@ -247,11 +247,11 @@ public class PunishmentAPI {
 			String test = playerOrIP.replace(".", "_");
 		if(isIP(test)) {
 			if(getTempBanIPStart(test)==-0)return false;
-		int time = (int) (getTempBanIPStart(test) - System.currentTimeMillis() + getTempBanIPTime(test));
+		long time = getTempBanIPStart(test)/1000 - System.currentTimeMillis()/1000 + getTempBanIPTime(test);
 		return time > 0;
 		}else {
 			if(getTempBanIPStart(getIP(playerOrIP))==-0)return false;
-			int time = (int) (getTempBanIPStart(getIP(playerOrIP)) - System.currentTimeMillis() + getTempBanIPTime(getIP(playerOrIP)));
+			long time =getTempBanIPStart(getIP(playerOrIP))/1000 - System.currentTimeMillis()/1000 + getTempBanIPTime(getIP(playerOrIP));
 			return time > 0;
 		}
 		}catch(Exception e) {
@@ -262,11 +262,11 @@ public class PunishmentAPI {
 		if(playerOrIP==null)return -0;
 		String test = playerOrIP.replace(".", "_");
 		if(isIP(test)) {
-			int time = (int) (getTempBanIPStart(test) - System.currentTimeMillis() + getTempBanIPTime(test));
-			return time;
+			long time =getTempBanIPStart(test)/1000 - System.currentTimeMillis()/1000 + getTempBanIPTime(test);
+			return (int)time;
 			}else {
-				int time = (int) (getTempBanIPStart(getIP(playerOrIP)) - System.currentTimeMillis() + getTempBanIPTime(getIP(playerOrIP)));
-				return time;
+				long time =getTempBanIPStart(getIP(playerOrIP))/1000 - System.currentTimeMillis()/1000 + getTempBanIPTime(getIP(playerOrIP));
+				return (int)time;
 			}
 	}
 	public boolean hasMute(String player) {
@@ -276,13 +276,13 @@ public class PunishmentAPI {
 	public boolean hasTempBan(String player) {
 		if(player==null)return false;
 		if(getTempBanStart(player)==-0)return false;
-		int time = (int) (getTempBanStart(player) - System.currentTimeMillis() + getTempBanTime(player));
+		long time = getTempBanStart(player)/1000 - System.currentTimeMillis()/1000 + getTempBanTime(player);
 		return time > 0;
 		}
 	public int getTempBan_ExpireTime(String player) {
 		if(player==null)return -0;
-		int time = (int) (getTempBanStart(player) - System.currentTimeMillis() + getTempBanTime(player));
-		return time;
+		long time = getTempBanStart(player)/1000 - System.currentTimeMillis()/1000 + getTempBanTime(player);
+		return (int)time;
 	}
 	public String getBanReason(String player) {
 		if(player==null)return null;

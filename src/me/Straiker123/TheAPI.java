@@ -52,16 +52,11 @@ public class TheAPI {
 	 */
 	public static boolean isNewVersion() {
 		return !getServerVersion().equals("glowstone") 
-		&& !getServerVersion().equals("v1_8_R1")
-		&& !getServerVersion().equals("v1_8_R2")
-		&& !getServerVersion().equals("v1_8_R3")
-		 &&!getServerVersion().equals("v1_9_R1")
-		 &&!getServerVersion().equals("v1_9_R2")
-		 &&!getServerVersion().equals("v1_9_R3")
-		 &&!getServerVersion().equals("v1_10_R1")
-		 &&!getServerVersion().equals("v1_10_R2")
-		 &&!getServerVersion().equals("v1_11_R1")
-		 &&!getServerVersion().equals("v1_12_R1");
+				&& !getServerVersion().contains("v1_8")
+				&& !getServerVersion().contains("v1_9")
+				&& !getServerVersion().contains("v1_10")
+				&& !getServerVersion().contains("v1_11")
+				&& !getServerVersion().contains("v1_12");
 	}
 
 	/**
@@ -184,8 +179,8 @@ public class TheAPI {
 	    	 Error.err("sending ActionBar", "Player is null");
 		   return;
 	   }
-		if(getServerVersion().equals("v1_8_R3")) {
-			Error.err("sending bossbar to "+p.getName(), "Servers version 1.8.8 doesn't have this method");
+		if(getServerVersion().contains("v1_8")) {
+			Error.err("sending bossbar to "+p.getName(), "Servers version 1.8.X doesn't have this method");
 			return;
 		}
 	try {
@@ -217,8 +212,8 @@ public class TheAPI {
 	    	 Error.err("sending ActionBar", "Player is null");
 		   return;
 	   }
-		if(getServerVersion().equals("v1_8_R3")) {
-			Error.err("sending bossbar to "+p.getName(), "Servers version 1.8.8 doesn't have this method");
+		if(getServerVersion().contains("v1_8")) {
+			Error.err("sending bossbar to "+p.getName(), "Servers version 1.8.X doesn't have this method");
 			return;
 		}
 		Bukkit.getBossBars().forEachRemaining(KeyedBossBar -> {
@@ -237,8 +232,8 @@ public class TheAPI {
 	    	 Error.err("sending ActionBar", "Player is null");
 		   return null;
 	   }
-		if(getServerVersion().equals("v1_8_R3")) {
-			Error.err("sending bossbar to "+p.getName(), "Servers version 1.8.8 doesn't have this method");
+		if(getServerVersion().contains("v1_8")) {
+			Error.err("sending bossbar to "+p.getName(), "Servers version 1.8.X doesn't have this method");
 			return null;
 		}
 		List<BossBar> bossBars = new ArrayList<BossBar>();
@@ -279,7 +274,7 @@ public class TheAPI {
 				    	 Error.err("sending ActionBar to "+p.getName(), "Text is null");}
 					}
 		   
-		   if(getServerVersion().equals("v1_8_R3")) {
+		   if(getServerVersion().contains("v1_8")) {
 			   sendActionBarOld(p,text);
 			   return;
 		   }
@@ -407,7 +402,7 @@ public class TheAPI {
 	 * @param firstLine
 	 * @param nextLine
 	 */
-	public void sendTitle(Player p, String firstLine, String nextLine) {
+	public static void sendTitle(Player p, String firstLine, String nextLine) {
 		 if(p == null) {
 	    	 Error.err("sending Title", "Player is null");
 		   return;
@@ -763,10 +758,10 @@ public class TheAPI {
 	        try {
 	            Object ppoc;
 	            Class<?> c2, c3,
-	                    c4 = Class.forName("net.minecraft.server.v1_8_R3.PacketPlayOutChat");
+	                    c4 = Class.forName("net.minecraft.server."+getServerVersion()+".PacketPlayOutChat");
 	            Object o;
-	                c2 = Class.forName("net.minecraft.server.v1_8_R3.ChatComponentText");
-	                c3 = Class.forName("net.minecraft.server.v1_8_R3.IChatBaseComponent");
+	                c2 = Class.forName("net.minecraft.server."+getServerVersion()+".ChatComponentText");
+	                c3 = Class.forName("net.minecraft.server."+getServerVersion()+".IChatBaseComponent");
 	                o = c2.getConstructor(new Class<?>[]{String.class}).newInstance(TheAPI.colorize(text));
 	           
 	            ppoc = c4.getConstructor(new Class<?>[]{c3, byte.class}).newInstance(o, (byte) 2);

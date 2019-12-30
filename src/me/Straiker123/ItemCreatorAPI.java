@@ -144,8 +144,12 @@ public class ItemCreatorAPI {
 	}
 	Generation gen = Generation.ORIGINAL;
 	public void setBookGeneration(Generation generation) {
+		try {
 		if(generation!=null)
 			gen=generation;
+		}catch(Exception e) {
+			
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -198,7 +202,11 @@ public class ItemCreatorAPI {
 			m.setAuthor(author);
 			m.setPages(pages);
 			m.setTitle(title);
+			try {
 			m.setGeneration(gen);
+			}catch(Exception e) {
+				
+			}
 			if(data != null)
 				i.setData(data);
 			if(enchs != null && !enchs.isEmpty())i.addUnsafeEnchantments(enchs);

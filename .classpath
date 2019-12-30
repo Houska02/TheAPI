@@ -4,6 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/EclipseUtils/Vault.jar"/>
 	<classpathentry kind="lib" path="C:/EclipseUtils/Spigot.jar"/>
-	<classpathentry kind="lib" path="F:/Games/Minecraft/Server/glowstone.jar"/>
+	<classpathentry kind="lib" path="C:/EclipseUtils/glowstone.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
