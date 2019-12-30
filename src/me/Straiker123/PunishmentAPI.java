@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import me.Straiker123.Utils.Error;
 
 public class PunishmentAPI {
-
 	public List<String> getAccounts(String player){
 		if(player==null) {
 			Error.err("getting accounts of player", "Player is null");
@@ -19,26 +18,23 @@ public class PunishmentAPI {
 		}
 		return findPlayerByIP(getIP(player));
 	}
-	
 	public BanList getBanList() {
 		return new BanList();
 	}
-	
 	public boolean existPlayerOrIP(String string) {
 		return LoaderClass.data.getConfig().getString("bans."+string)!=null;
 	}
-	
 	public void setBan(String player, String reason) {
 		if(player==null) {
 			Error.err("banning player", "Player is null");
 			return;
 		}
 		if(reason==null)reason="Uknown";
+		LoaderClass.data.getConfig().set("bans."+player+".tempban", null);
 		LoaderClass.data.getConfig().set("bans."+player+".ban", reason);
 		LoaderClass.data.save();
 		Player p = Bukkit.getPlayer(player);
 		if(p!=null)
-		
 			p.kickPlayer(TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.Ban")
 				.replace("%player%", player)
 				.replace("%reason%", reason)));
@@ -47,7 +43,7 @@ public class PunishmentAPI {
 						.replace("%player%", player)
 						.replace("%reason%", reason));
 			}else {
-			TheAPI.broadcast(LoaderClass.config.getConfig().getString("Format.Broadcast-Ban")
+			TheAPI.broadcast(LoaderClass.config.getConfig().getString("Format.Broadcast.Ban")
 					.replace("%player%", player)
 					.replace("%reason%", reason),LoaderClass.config.getConfig().getString("Format.Broadcast-Ban-Permission"));
 			}
@@ -56,17 +52,16 @@ public class PunishmentAPI {
 	public void setSilent(boolean silent) {
 		PunishmentAPI.silent=silent;
 	}
-	
 	public Jail getJailAPI() {
 		return new Jail();
 	}
-
 	public void setTempBan(String player, String reason, long time) {
 		if(player==null) {
 			Error.err("temp-banning player", "Player is null");
 			return;
 		}
 		if(reason==null)reason="Uknown";
+		LoaderClass.data.getConfig().set("bans."+player+".ban", null);
 		LoaderClass.data.getConfig().set("bans."+player+".tempban.reason", reason);
 		LoaderClass.data.getConfig().set("bans."+player+".tempban.start", System.currentTimeMillis());
 		LoaderClass.data.getConfig().set("bans."+player+".tempban.time", time);
@@ -78,12 +73,12 @@ public class PunishmentAPI {
 				.replace("%reason%", reason)
 				.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time)))); 
 		if(!silent) {
-			TheAPI.broadcastMessage(LoaderClass.config.getConfig().getString("Format.TempBan")
+			TheAPI.broadcastMessage(LoaderClass.config.getConfig().getString("Format.Broadcast.TempBan")
 					.replace("%player%", player)
 					.replace("%reason%", reason)
 					.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time)));
 		}else {
-			TheAPI.broadcast(LoaderClass.config.getConfig().getString("Format.Broadcast-TempBan")
+			TheAPI.broadcast(LoaderClass.config.getConfig().getString("Format.Broadcast.TempBan")
 					.replace("%player%", player)
 					.replace("%reason%", reason)
 					.replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time)),LoaderClass.config.getConfig().getString("Format.Broadcast-TempBan-Permission"));
@@ -97,22 +92,24 @@ public class PunishmentAPI {
 	}
 
 	public void setBanIP(String playerOrIP, String reason) {
-
 		if(playerOrIP==null) {
 			Error.err("ip-banning player/IP", "Player/IP is null");
 			return;
 		}
 		if(reason==null)reason="Uknown";
-
 		playerOrIP=playerOrIP.replace("_", ".");
 		String ip =playerOrIP;
 		if(!isIP(playerOrIP))ip=getIP(playerOrIP);
 		else
 			ip=ip.replace(".", "_");
+		if(ip==null) {
+			Error.err("temp ip-banning IP", "IP is null");
+			return;
+		}
+		LoaderClass.data.getConfig().set("bans."+ip+".tempbanip", null);
 		LoaderClass.data.getConfig().set("bans."+ip+".banip", reason);
 		LoaderClass.data.save();
 		for(String s : findPlayerByIP(ip)) {
-	
 		Player p = Bukkit.getPlayer(s);
 		if(p!=null)
 			p.kickPlayer(TheAPI.colorize(LoaderClass.config.getConfig().getString("Format.BanIP")
@@ -120,17 +117,16 @@ public class PunishmentAPI {
 					.replace("%reason%", reason))); 
 		}
 		if(!silent) {
-			TheAPI.broadcastMessage(LoaderClass.config.getConfig().getString("Format.Broadcast-BanIP")
+			TheAPI.broadcastMessage(LoaderClass.config.getConfig().getString("Format.Broadcast.BanIP")
 					.replace("%target%", ip)
 					.replace("%reason%", reason));
 		}else {
-			TheAPI.broadcast(LoaderClass.config.getConfig().getString("Format.Broadcast-BanIP")
+			TheAPI.broadcast(LoaderClass.config.getConfig().getString("Format.Broadcast.BanIP")
 					.replace("%target%", ip)
-					.replace("%reason%", reason),LoaderClass.config.getConfig().getString("Format.Broadcast-BanIP-Permission"));
+					.replace("%reason%", reason),LoaderClass.config.getConfig().getString("Format.Broadcast.BanIP-Permission"));
 		}
 	}
 	public List<String> findPlayerByIP(String ip) {
-
 		if(ip==null) {
 			Error.err("finding player by IP", "IP is null");
 			return new ArrayList<String>();
@@ -144,12 +140,15 @@ public class PunishmentAPI {
 	}
 	
 	public String getIP(String player) {
-
 		if(player==null) {
 			Error.err("getting IP of player", "Player is null");
 			return null;
 		}
+		if(LoaderClass.data.getConfig().getString("data."+player+".ip")!=null)
 		return LoaderClass.data.getConfig().getString("data."+player+".ip").replace("_", ".");
+				Error.err("getting IP of player", "Player's IP is null");
+				return null;
+			
 	}
 	
 	public void setMute(String player, String reason) {
@@ -158,6 +157,7 @@ public class PunishmentAPI {
 			return;
 		}
 		if(reason==null)reason="Uknown"; 
+		LoaderClass.data.getConfig().set("bans."+player+".tempmute", null);
 		LoaderClass.data.getConfig().set("bans."+player+".mute", reason);
 		LoaderClass.data.save(); 
 		if(!silent) {
@@ -167,7 +167,7 @@ public class PunishmentAPI {
 		}else {
 			TheAPI.broadcast(LoaderClass.config.getConfig().getString("Format.Broadcast.Mute")
 					.replace("%player%", player)
-					.replace("%reason%", reason),LoaderClass.config.getConfig().getString("Format.Broadcast-Mute-Permission"));
+					.replace("%reason%", reason),LoaderClass.config.getConfig().getString("Format.Broadcast.Mute-Permission"));
 		}
 	}
 	public void setTempMute(String player, String reason, long time) {
@@ -176,12 +176,12 @@ public class PunishmentAPI {
 			return;
 		}
 		if(reason==null)reason="Uknown";
+		LoaderClass.data.getConfig().set("bans."+player+".mute", null);
 		LoaderClass.data.getConfig().set("bans."+player+".tempmute.time", time);
 		LoaderClass.data.getConfig().set("bans."+player+".tempmute.start", System.currentTimeMillis());
 		LoaderClass.data.getConfig().set("bans."+player+".tempmute.reason", reason);
 		LoaderClass.data.save(); 
 		if(!silent) {
-
 			TheAPI.broadcastMessage(LoaderClass.config.getConfig().getString("Format.Broadcast.TempMute")
 					.replace("%player%", player)
 					.replace("%reason%", reason).replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time)));
@@ -189,7 +189,7 @@ public class PunishmentAPI {
 			TheAPI.broadcast(LoaderClass.config.getConfig().getString("Format.Broadcast.TempMute")
 					.replace("%player%", player)
 					.replace("%reason%", reason).replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time))
-					,LoaderClass.config.getConfig().getString("Format.Broadcast-TempMute-Permission"));
+					,LoaderClass.config.getConfig().getString("Format.Broadcast.TempMute-Permission"));
 		}
 	}
 	public void setTempBanIP(String playerOrIP, String reason, long time) {
@@ -204,12 +204,16 @@ public class PunishmentAPI {
 		ip=getIP(playerOrIP);
 		else
 			ip=ip.replace(".", "_");
+		if(ip==null) {
+			Error.err("temp ip-banning IP", "IP is null");
+			return;
+		}
+		LoaderClass.data.getConfig().set("bans."+ip+".banip", null);
 		LoaderClass.data.getConfig().set("bans."+ip+".tempbanip.time", time);
 		LoaderClass.data.getConfig().set("bans."+ip+".tempbanip.start", System.currentTimeMillis());
 		LoaderClass.data.getConfig().set("bans."+ip+".tempbanip.reason", reason);
 		LoaderClass.data.save(); 
 		if(!silent) {
-
 			TheAPI.broadcastMessage(LoaderClass.config.getConfig().getString("Format.Broadcast.TempBanIP")
 					.replace("%target%", ip)
 					.replace("%reason%", reason).replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time)));
@@ -217,10 +221,9 @@ public class PunishmentAPI {
 			TheAPI.broadcast(LoaderClass.config.getConfig().getString("Format.Broadcast.TempBanIP")
 					.replace("%target%", ip)
 					.replace("%reason%", reason).replace("%time%", TheAPI.getTimeConventorAPI().setTimeToString(time))
-					,LoaderClass.config.getConfig().getString("Format.Broadcast-TempBanIP-Permission"));
+					,LoaderClass.config.getConfig().getString("Format.Broadcast.TempBanIP-Permission"));
 		}
 	}
-
 	public boolean hasBan(String player) {
 		if(player==null)return false;
 		return LoaderClass.data.getConfig().getString("bans."+player+".ban") != null;
@@ -229,7 +232,7 @@ public class PunishmentAPI {
 		if(player==null)return false;
 		if(getTempMuteStart(player)==-0)return false;
 		int time = (int) (getTempMuteStart(player) - System.currentTimeMillis() + getTempMuteTime(player));
-		return time <= 0;
+		return time > 0;
 		}
 	public boolean hasBanIP(String playerOrIP) {
 		if(playerOrIP==null)return false;
@@ -245,17 +248,16 @@ public class PunishmentAPI {
 		if(isIP(test)) {
 			if(getTempBanIPStart(test)==-0)return false;
 		int time = (int) (getTempBanIPStart(test) - System.currentTimeMillis() + getTempBanIPTime(test));
-		return time <= 0;
+		return time > 0;
 		}else {
 			if(getTempBanIPStart(getIP(playerOrIP))==-0)return false;
 			int time = (int) (getTempBanIPStart(getIP(playerOrIP)) - System.currentTimeMillis() + getTempBanIPTime(getIP(playerOrIP)));
-			return time <= 0;
+			return time > 0;
 		}
 		}catch(Exception e) {
 			return false;
 		}
 	}
-	
 	public int getTempBanIP_ExpireTime(String playerOrIP){
 		if(playerOrIP==null)return -0;
 		String test = playerOrIP.replace(".", "_");
@@ -275,7 +277,7 @@ public class PunishmentAPI {
 		if(player==null)return false;
 		if(getTempBanStart(player)==-0)return false;
 		int time = (int) (getTempBanStart(player) - System.currentTimeMillis() + getTempBanTime(player));
-		return time <= 0;
+		return time > 0;
 		}
 	public int getTempBan_ExpireTime(String player) {
 		if(player==null)return -0;
@@ -340,8 +342,6 @@ public class PunishmentAPI {
 			return LoaderClass.data.getConfig().getString("bans."+player+".tempbanip.reason");
 		return LoaderClass.data.getConfig().getString("bans."+getIP(player)+".tempbanip.reason");
 	}
-
-	
 	public void unMute(String player) {
 		if(player==null)return;
 		LoaderClass.data.getConfig().set("bans."+player+".mute", null);

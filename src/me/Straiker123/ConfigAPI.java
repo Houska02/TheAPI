@@ -47,11 +47,14 @@ public class ConfigAPI {
 	
 	public File getFile() {
 		if(!existFile()) {
-		File f = new File("plugins/"+loc+"/"+name+"."+end);
-		if(f.exists())return f;
-		else {
-		try {
-			f.createNewFile();
+			File ff = new File("plugins/"+loc+"/"+name+"."+end);
+			try {
+			return ff;
+			
+		} catch (Exception es) {
+			try {
+			ff.createNewFile();
+			return ff;
 		} catch (IOException e) {
 			if(LoaderClass.config.getConfig() == null || LoaderClass.config.getConfig() != null && !LoaderClass.config.getConfig().getBoolean("Options.HideErrors")) {
 				TheAPI.getConsole().sendMessage(TheAPI.colorize("&bTheAPI&7: &cError when getting file of "+name+"."+end+" config:"));
@@ -60,7 +63,7 @@ public class ConfigAPI {
 				}else
 					Error.sendRequest("&bTheAPI&7: &cError when getting file of "+name+"."+end+" config");
 		}
-		return f;
+		return ff;
 		}
 		}
 		return f;
